@@ -14,7 +14,7 @@ namespace Elight.Entity.Sys
         /// 主键ID
         /// </summary>
         [SugarColumn(ColumnName = "ID", IsPrimaryKey = true, IsIdentity = true)]
-        public int? ID { get; set; }
+        public int ID { get; set; }
         /// <summary>
         /// 名称
         /// </summary>

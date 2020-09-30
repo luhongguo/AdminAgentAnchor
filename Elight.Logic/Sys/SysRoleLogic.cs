@@ -23,7 +23,7 @@ namespace Elight.Logic.Sys
         {
             using (var db = GetInstance())
             {
-                return db.Queryable<SysRole>().Where((A) => A.DeleteMark == "0" && A.ShopID==ShopID).Select((A) => new SysRole
+                return db.Queryable<SysRole>().Where((A) => A.DeleteMark == "0" && A.ShopID == ShopID).Select((A) => new SysRole
                 {
                     Id = A.Id,
                     Name = A.Name,
@@ -43,17 +43,19 @@ namespace Elight.Logic.Sys
         {
             using (var db = GetInstance())
             {
-                return db.Queryable<SysRole>()
+                return db.Queryable<SysRole, SysShopEntity>((it, at) => new object[] { JoinType.Left, it.ShopID == at.ID })
                              .WhereIF(!keyWord.IsNullOrEmpty(), it => it.Name.Contains(keyWord))
-                             .Where(it => it.DeleteMark == "0" && it.ShopID == ShopID)
-                             .OrderBy((A) => A.SortCode).Select((A) => new SysRole
+                             .Where(it => it.DeleteMark == "0")
+                             .OrderBy((it, at) => at.ID).Select((it, at) => new SysRole
                              {
-                                 Id = A.Id,
-                                 Name = A.Name,
-                                 IsEnabled = A.IsEnabled,
-                                 Remark = A.Remark,
-                                 SortCode = A.SortCode,
-                                 Type = A.Type
+                                 Id = it.Id,
+                                 ShopID = it.ShopID,
+                                 Name = it.Name,
+                                 IsEnabled = it.IsEnabled,
+                                 Remark = it.Remark,
+                                 SortCode = it.SortCode,
+                                 Type = it.Type,
+                                 ShopName = at.Name
                              }).ToPageList(pageIndex, pageSize, ref totalCount);
             }
         }
@@ -103,7 +105,7 @@ namespace Elight.Logic.Sys
                     it.ModifyUser,
                     it.ModifyTime,
                     it.Type,
-            }).ExecuteCommand();
+                }).ExecuteCommand();
             }
         }
 
@@ -120,6 +122,7 @@ namespace Elight.Logic.Sys
                 return db.Queryable<SysRole>().Where((A) => A.Id == primaryKey).Select((A) => new SysRole
                 {
                     Id = A.Id,
+                    ShopID = A.ShopID,
                     Name = A.Name,
                     DeleteMark = A.DeleteMark,
                     IsEnabled = A.IsEnabled,
@@ -138,7 +141,20 @@ namespace Elight.Logic.Sys
         {
             using (var db = GetInstance())
             {
-                return db.Deleteable<SysRole>().In(primaryKeys).ExecuteCommand();
+                try
+                {
+                    db.Ado.BeginTran();
+                    db.Deleteable<SysRole>().In(primaryKeys).ExecuteCommand();
+                    db.Deleteable<SysRoleAuthorize>().In(it => it.RoleId, primaryKeys).ExecuteCommand();//角色权限
+                    db.Deleteable<SysUserRoleRelation>().In(it => it.RoleId, primaryKeys).ExecuteCommand();//用户角色
+                    db.Ado.CommitTran();
+                }
+                catch (Exception)
+                {
+                    db.Ado.RollbackTran();
+                    return 0;
+                }
+                return 1;
             }
         }
     }

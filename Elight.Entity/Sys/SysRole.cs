@@ -61,9 +61,11 @@ namespace Elight.Entity.Sys
 
         [SugarColumn(ColumnName = "ModifyTime")]
         public DateTime? ModifyTime { get; set; }
-
+        /// <summary>
+        /// 商户名称
+        /// </summary>
         [SugarColumn(IsIgnore = true)]
-        public string DeptName { get; set; }// { get { return this.OrganizeSingle.FullName; } }
+        public string ShopName { get; set; }// { get { return this.OrganizeSingle.FullName; } }
 
         //[SugarColumn(IsIgnore = true)]
         //public SysOrganize OrganizeSingle

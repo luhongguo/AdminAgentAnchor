@@ -13,10 +13,18 @@
             </div>
         </div>
         <div class="layui-inline">
+            <label class="layui-form-label label-required">商户名称</label>
+            <div class="layui-input-block">
+                <select name="ShopID" id="ShopNameReload" lay-filter="Level" lay-search>
+                </select>
+            </div>
+
+        </div>
+        <div class="layui-inline">
             <label class="layui-form-label label-required">角色类型</label>
             <div class="layui-input-inline">
                 <select name="Type" lay-verify="required">
-                    <option value="2" selected>经纪人角色</option>
+                    <option value="2">经纪人角色</option>
                     <option value="1">管理员角色</option>
                     <option value="3">其他角色</option>
                 </select>
@@ -52,25 +60,37 @@
 <script>
     layui.use('form', function () {
         var form = layui.form;
-        $("#OrganizeId").bindSelect({
-            url: "/System/Organize/GetListTreeSelect"
-        });
-
         var primaryKey = $.getQueryString("primaryKey");
-        if (primaryKey) {
-            $.ajax({
-                url: "/System/Role/GetForm",
-                data: { primaryKey: primaryKey },
-                type: "post",
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    $("#form").formSerialize(data);
+        $.ajax({
+            url: "/System/Shop/GetShopSelectList",
+            type: "get",
+            success: function (data) {
+                console.log(JSON.stringify(data))
+                var $html = " <option value='0'>超管商户</option>";
+                $.each(eval("(" + data + ")"), function (i, v) {
+                    $html += "<option value='" + v.ID + "'>" + v.Name + "</option>";
+                })
+                $("select[name='ShopID']").append($html);
+                //append后必须从新渲染
+                form.render('select');
+                //修改复制
+                if (primaryKey) {
+                    $.ajax({
+                        url: "/System/Role/GetForm",
+                        data: { primaryKey: primaryKey },
+                        type: "post",
+                        dataType: "json",
+                        async: false,
+                        success: function (data) {
+                            $("#form").formSerialize(data);
+                            $("#ShopNameReload").find("option[value='" + data.ShopID + "']").prop("selected", true);
+                            form.render();  //必须要加
+                            $("#ShopNameReload").prop("disabled", true);  
+                        }
+                    });
                 }
-            });
-        }
-
-        form.render();
+            }
+        }, 'json');
 
         form.on('submit(add)', function (data) {
             $.formSubmit({

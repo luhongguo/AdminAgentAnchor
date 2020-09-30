@@ -119,5 +119,20 @@ namespace Elight.Logic.Sys
                 return db.Deleteable<SysShopEntity>().In(idList).ExecuteCommand();
             }
         }
+        /// <summary>
+        /// 获取商户下拉框
+        /// </summary>
+        /// <returns></returns>
+        public List<SelectModel> GetShopSelectList()
+        {
+            using (var db = GetInstance())
+            {
+                return db.Queryable<SysShopEntity>().Select(it => new SelectModel
+                {
+                    ID = it.ID,
+                    Name = it.Name
+                }).ToList();
+            }
+        }
     }
 }

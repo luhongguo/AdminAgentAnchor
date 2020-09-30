@@ -32,7 +32,9 @@
                 <thead>
                     <tr>
                         <th>
-                            <input type="checkbox" lay-skin="primary"></th>
+                            <input type="checkbox" lay-skin="primary">
+                        </th>
+                        <th>商户名称</th>
                         <th>角色名称</th>
                         <th>角色类型</th>
                         <th>排序码</th>
@@ -56,6 +58,12 @@
         <td>
             <input type="checkbox" lay-skin="primary" value="{{item.Id}}">
         </td>
+        <td>
+            {{# if(item.ShopName==null){ }}
+            超管
+            {{# }else{ }}{{ item.ShopName }}
+            {{# } }}
+        </td>
         <td>{{item.Name}}</td>
         <td>
             {{# if(item.Type==1){ }} 管理员角色
@@ -76,10 +84,10 @@
         </td>
     </tr>
     {{#  }); }}
-     {{# if(d.list.length<=0) { }}
-        <tr style="color: red">
-            <td colspan="8">查无数据。</td>
-        </tr>
+    {{# if(d.list.length<=0) { }}
+    <tr style="color: red">
+        <td colspan="8">查无数据。</td>
+    </tr>
     {{# } }}
 </script>
 <script type="text/javascript">

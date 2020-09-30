@@ -18,11 +18,13 @@ namespace Elight.WebUI.Areas.System.Controllers
     {
         private SysRoleAuthorizeLogic roleAuthorizeLogic;
         private SysPermissionLogic permissionLogic;
+        private readonly SysRoleLogic _sysRoleLogic;
 
         public RoleAuthorizeController()
         {
             roleAuthorizeLogic = new SysRoleAuthorizeLogic();
-            permissionLogic =new SysPermissionLogic();
+            permissionLogic = new SysPermissionLogic();
+            _sysRoleLogic = new SysRoleLogic();
         }
 
         [HttpGet]
@@ -34,8 +36,9 @@ namespace Elight.WebUI.Areas.System.Controllers
         [HttpPost]
         public ActionResult Index(string roleId)
         {
+            var roleModel = _sysRoleLogic.Get(roleId);
             var listPerIds = roleAuthorizeLogic.GetList(roleId).Select(c => c.ModuleId).ToList();
-            var listAllPers = permissionLogic.GetShopPowersList(OperatorProvider.Instance.Current.ShopID);
+            var listAllPers = permissionLogic.GetShopPowersList(roleModel.ShopID);
             List<ZTreeNode> result = new List<ZTreeNode>();
             foreach (var item in listAllPers)
             {
@@ -74,7 +77,7 @@ namespace Elight.WebUI.Areas.System.Controllers
         public ActionResult ShopPowersIndex(string shopID)
         {
             //商户权限 用编码标识是否存在
-            var listPerIds = permissionLogic.GetShopPowersList(Convert.ToInt32(shopID)).Select(it=>it.EnCode);
+            var listPerIds = permissionLogic.GetShopPowersList(Convert.ToInt32(shopID)).Select(it => it.EnCode);
             //超管权限
             var listAllPers = permissionLogic.GetShopPowersList(OperatorProvider.Instance.Current.ShopID);
             List<ZTreeNode> result = new List<ZTreeNode>();

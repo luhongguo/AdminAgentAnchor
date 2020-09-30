@@ -78,7 +78,11 @@ namespace Elight.WebUI.Areas.System.Controllers
             entity.IsEnabled = entity.IsEnabled == "1" ? "true" : "false";
             return Content(entity.ToJson());
         }
-
+        /// <summary>
+        /// 删除角色
+        /// </summary>
+        /// <param name="primaryKey"></param>
+        /// <returns></returns>
         [HttpPost, AuthorizeChecked]
         public ActionResult Delete(string primaryKey)
         {
