@@ -185,9 +185,9 @@ namespace Elight.Logic.Sys
         {
             using (var db = GetInstance())
             {
-                return db.Queryable<SysUser>()
+                return db.Queryable<SysUser,SysShopEntity>((A,B)=>new object[] {JoinType.Left,A.ShopID==B.ID })
                          .WhereIF(!keyWord.IsNullOrEmpty(), it => (it.Account.Contains(keyWord) || it.RealName.Contains(keyWord)))
-                         .Where((A) => A.DeleteMark == "0").OrderBy((A) => A.SortCode).Select((A) => new SysUser
+                         .Where((A) => A.DeleteMark == "0").OrderBy((A) => A.SortCode).Select((A,B) => new SysUser
                          {
                              Id = A.Id,
                              Account = A.Account,
@@ -195,6 +195,7 @@ namespace Elight.Logic.Sys
                              Avatar = A.Avatar,
                              CompanyCode = A.CompanyCode,
                              IsEnabled = A.IsEnabled,
+                             ShopName=B.Name
                          }).ToPageList(pageIndex, pageSize, ref totalCount);
             }
         }

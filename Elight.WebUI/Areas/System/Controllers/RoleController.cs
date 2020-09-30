@@ -91,9 +91,9 @@ namespace Elight.WebUI.Areas.System.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetListTreeSelect()
+        public ActionResult GetListTreeSelect(int shopID)
         {
-            List<SysRole> listRole = roleLogic.GetList();
+            List<SysRole> listRole = roleLogic.GetList(shopID);
             var listTree = new List<TreeSelect>();
             foreach (var item in listRole)
             {

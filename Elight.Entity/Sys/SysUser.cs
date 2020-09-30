@@ -78,11 +78,13 @@ namespace Elight.Entity.Sys
 
         [SugarColumn(ColumnName = "ModifyTime")]
         public DateTime? ModifyTime { get; set; }
-       
+
         [SugarColumn(IsIgnore = true)]
         public string StrBirthday { get; set; }
 
         [SugarColumn(IsIgnore = true)]
         public List<string> RoleId { set; get; }
+        [SugarColumn(IsIgnore = true)]
+        public string ShopName { set; get; }
     }
 }

@@ -99,7 +99,7 @@ namespace Elight.WebUI.Areas.System.Controllers
         [HttpPost, AuthorizeChecked]
         public ActionResult Delete(string userIds)
         {
-            //多用户删除。
+            //多用户删除。删除用户角色，用户登录，用户主播
             int row = userLogic.Delete(userIds.ToStrArray());
             userRoleRelationLogic.Delete(userIds.ToStrArray());
             userLogOnLogic.Delete(userIds.ToStrArray());

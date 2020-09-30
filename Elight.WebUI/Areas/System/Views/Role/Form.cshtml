@@ -14,7 +14,7 @@
         </div>
         <div class="layui-inline">
             <label class="layui-form-label label-required">商户名称</label>
-            <div class="layui-input-block">
+            <div class="layui-input-inline">
                 <select name="ShopID" id="ShopNameReload" lay-filter="Level" lay-search>
                 </select>
             </div>
@@ -65,7 +65,6 @@
             url: "/System/Shop/GetShopSelectList",
             type: "get",
             success: function (data) {
-                console.log(JSON.stringify(data))
                 var $html = " <option value='0'>超管商户</option>";
                 $.each(eval("(" + data + ")"), function (i, v) {
                     $html += "<option value='" + v.ID + "'>" + v.Name + "</option>";

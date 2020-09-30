@@ -14,16 +14,15 @@ namespace Elight.Logic.Sys
 {
     public class SysRoleLogic : BaseLogic
     {
-        public readonly int ShopID = OperatorProvider.Instance.Current.ShopID;
         /// <summary>
         /// 得到角色列表(树形)
         /// </summary>
         /// <returns></returns>
-        public List<SysRole> GetList()
+        public List<SysRole> GetList(int shopID)
         {
             using (var db = GetInstance())
             {
-                return db.Queryable<SysRole>().Where((A) => A.DeleteMark == "0" && A.ShopID == ShopID).Select((A) => new SysRole
+                return db.Queryable<SysRole>().Where((A) => A.DeleteMark == "0" && A.ShopID == shopID).Select((A) => new SysRole
                 {
                     Id = A.Id,
                     Name = A.Name,

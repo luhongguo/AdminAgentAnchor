@@ -27,9 +27,10 @@
             </div>
         </div>
         <div class="layui-inline">
-            <label class="layui-form-label label-required">公司代码</label>
+            <label class="layui-form-label label-required">商户名称</label>
             <div class="layui-input-inline">
-                <input type="text" name="CompanyCode" lay-verify="required" placeholder="请输入公司代码" autocomplete="off" class="layui-input">
+                <select name="ShopID" id="ShopNameReload" lay-filter="Level" lay-verify="required" lay-search>
+                </select>
             </div>
         </div>
     </div>
@@ -37,11 +38,10 @@
         <div class="layui-inline">
             <label class="layui-form-label label-required">角色属性</label>
             <div class="layui-input-inline">
-                <select lay-ignore name="RoleId" class="select2" id="RoleId" multiple="multiple" style="width: 514px;" lay-verify="required"></select>
+                @*<select lay-ignore name="RoleId" class="select2" id="RoleId" multiple="multiple" style="width: 514px;" lay-verify="required"></select>*@
+                <select name="RoleId" id="RoleId" lay-filter="Level2" lay-verify="required" lay-search>  </select>
             </div>
         </div>
-    </div>
-    <div class="layui-form-item">
         <div class="layui-inline">
             <label class="layui-form-label ">移动电话</label>
             <div class="layui-input-inline">
@@ -79,10 +79,10 @@
         //    url: "/System/Organize/GetListTreeSelect"
         //});
 
-        $("#RoleId").bindSelect({
-            url: "/System/Role/GetListTreeSelect",
-            title: '请选择角色'
-        });
+        //$("#RoleId").bindSelect({
+        //    url: "/System/Role/GetListTreeSelect",
+        //    title: '请选择角色'
+        //});
 
         //$('#Account').blur(function () {
         //    var userName = $('#Account').val();
@@ -97,23 +97,87 @@
         //});
 
         var primaryKey = $.getQueryString("primaryKey");
-        if (primaryKey) {
-           // $('#Account').attr('disabled', true).addClass('layui-disabled');
-            //$('#Password').attr('disabled', true).val('******').addClass('layui-disabled');
-            $.ajax({
-                url: "/System/User/GetForm",
-                data: { primaryKey: primaryKey },
-                type: "post",
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    $("#form").formSerialize(data);
+        $.ajax({
+            url: "/System/Shop/GetShopSelectList",
+            type: "get",
+            success: function (data) {
+                var $html = " <option value='0'>超管商户</option>";
+                $.each(eval("(" + data + ")"), function (i, v) {
+                    $html += "<option value='" + v.ID + "'>" + v.Name + "</option>";
+                })
+                $("select[name='ShopID']").append($html);
+                //append后必须从新渲染
+                form.render('select');
+                //修改复制
+                if (primaryKey) {
+                    // $('#Account').attr('disabled', true).addClass('layui-disabled');
+                    //$('#Password').attr('disabled', true).val('******').addClass('layui-disabled');
+                    $.ajax({
+                        url: "/System/User/GetForm",
+                        data: { primaryKey: primaryKey },
+                        type: "post",
+                        dataType: "json",
+                        async: false,
+                        success: function (data) {
+                            $("#ShopNameReload").find("option[value='" + data.ShopID + "']").prop("selected", true);
+                            $("#ShopNameReload").attr("disabled", true).addClass('layui-disabled');  
+                            $.ajax({
+                                url: "/System/Role/GetListTreeSelect",
+                                type: "post",
+                                data: { shopID: data.ShopID },
+                                success: function (dataTwo) {
+                                    var $htmlTwo = "";
+                                    $.each(eval("(" + dataTwo + ")"), function (i, v) {
+                                        $htmlTwo += "<option value='" + v.id + "'>" + v.text + "</option>";
+                                    })
+                                    $("select[name='RoleId']").append($htmlTwo);
+                                    $("#RoleId").find("option[value='" + data.RoleId + "']").prop("selected", true);
+                                    //append后必须从新渲染
+                                    form.render('select');
+                                }
+                            }, 'json');
+                            $("#form").formSerialize(data);
+                            form.render();  //必须要加
+                        }
+                    });
+                } else {
+                    //新增默认选商户0
+                    $.ajax({
+                        url: "/System/Role/GetListTreeSelect",
+                        type: "post",
+                        data: { shopID: 0 },
+                        success: function (dataTwo) {
+                            var $htmlTwo = "";
+                            $.each(eval("(" + dataTwo + ")"), function (i, v) {
+                                $htmlTwo += "<option value='" + v.id + "'>" + v.text + "</option>";
+                            })
+                            $("select[name='RoleId']").append($htmlTwo);
+                            //append后必须从新渲染
+                            form.render('select');
+                        }
+                    }, 'json');
                 }
-            });
-        }
-
-        form.render();
-
+            }
+        }, 'json');
+        //监听下拉框
+        form.on('select(Level)', function (data) {
+            $("#RoleId").empty();
+            $.ajax({
+                url: "/System/Role/GetListTreeSelect",
+                type: "post",
+                data: { shopID: data.value },
+                success: function (dataTwo) {
+                    var $htmlTwo = "";
+                    $.each(eval("(" + dataTwo + ")"), function (i, v) {
+                        $htmlTwo += "<option value='" + v.id + "'>" + v.text + "</option>";
+                    })
+                    $("select[name='RoleId']").append($htmlTwo);
+                    //append后必须从新渲染
+                    form.render('select');
+                }
+            }, 'json');
+        });
+        form.render();  //必须要加
         form.on('submit(add)', function (form) {
             //角色信息。
             if ($("#RoleId").val() == "" || $("#RoleId").val() == null) {
