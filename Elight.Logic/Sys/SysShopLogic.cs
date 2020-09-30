@@ -6,6 +6,8 @@ using Elight.Utility.Operator;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using SqlSugar;
+using System.Linq;
 
 namespace Elight.Logic.Sys
 {
@@ -133,6 +135,161 @@ namespace Elight.Logic.Sys
                     Name = it.Name
                 }).ToList();
             }
+        }
+        /// <summary>
+        /// 商户获取 拥有的主播分页
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="keyWord"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
+        public List<SysAnchor> GetShopAnchorList(int pageIndex, int pageSize, string keyWord, ref int totalCount)
+        {
+            Dictionary<string, object> dic = new Dictionary<string, object>();
+            if (!string.IsNullOrEmpty(keyWord))
+            {
+                dic = JsonConvert.DeserializeObject<Dictionary<string, object>>(keyWord);
+            }
+            var result = new List<SysAnchor>();
+            try
+            {
+                //lmstatus  连麦状态 live 直播 offline 离线 disabled禁用 normal正常 kickline踢线
+                //statu 	正常unlock 禁用 lock 审核中 audit
+                using (var db = GetInstance())
+                {
+                    result = db.Queryable<SysShopAnchorEntity, SysAnchor>((st, it) => new object[] { JoinType.Left, st.AnchorID == it.id })
+                                 .WhereIF(dic.ContainsKey("anchorUserName") && !string.IsNullOrEmpty(dic["anchorUserName"].ToString()), (st, it) => it.username.Contains(dic["anchorUserName"].ToString()) || it.nickname.Contains(dic["anchorUserName"].ToString()))
+                                 .WhereIF(dic.ContainsKey("userID") && !string.IsNullOrEmpty(dic["userID"].ToString()), (st, it) => st.ShopID == Convert.ToInt32(dic["userID"]))
+                                 .WhereIF(dic.ContainsKey("isCollet") && Convert.ToInt32(dic["isCollet"]) != -1, (st, it) => it.isCollet == Convert.ToInt32(dic["isCollet"]))
+                                 .WhereIF(dic.ContainsKey("isColletCode") && dic["isColletCode"].ToString() != "-1", (st, it) => it.isColletCode == dic["isColletCode"].ToString())
+                                 .Select((st, it) => new SysAnchor
+                                 {
+                                     id = it.id,
+                                     username = it.username,
+                                     nickname = it.nickname,
+                                     photo = it.photo,
+                                     balance = it.balance,
+                                     atteCount = it.atteCount,
+                                     ishot = it.ishot,
+                                     isrecommend = it.isrecommend,
+                                     regtime = it.regtime,
+                                     viplevel = it.viplevel,
+                                     birthday = it.birthday,
+                                 }).ToPageList(pageIndex, pageSize, ref totalCount);
+                }
+            }
+            catch (Exception ex)
+            {
+                new LogLogic().Write(Level.Error, "商户获取 拥有的主播分页", ex.Message, ex.StackTrace);
+            }
+            return result;
+        }
+        /// <summary>
+        /// 商户不拥有的主播 数据分页
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="keyWord">查询条件</param>
+        /// <param name="totalCount">数据总数</param>
+        /// <returns></returns>
+        public List<SysAnchor> GetShopNoOwnedAnchorList(int pageIndex, int pageSize, string keyWord, ref int totalCount)
+        {
+            Dictionary<string, object> dic = new Dictionary<string, object>();
+            if (!string.IsNullOrEmpty(keyWord))
+            {
+                dic = JsonConvert.DeserializeObject<Dictionary<string, object>>(keyWord);
+            }
+            var result = new List<SysAnchor>();
+            try
+            {
+                //lmstatus  连麦状态 live 直播 offline 离线 disabled禁用 normal正常 kickline踢线
+                //statu 	正常unlock 禁用 lock 审核中 audit
+                using (var db = GetSqlSugarDB(DbConnType.QPVideoAnchorDB))
+                {
+                    result = db.Queryable<SysAnchor>()
+                                 .WhereIF(dic.ContainsKey("anchorUserName") && !string.IsNullOrEmpty(dic["anchorUserName"].ToString()), it => it.username.Contains(dic["anchorUserName"].ToString()) || it.nickname.Contains(dic["anchorUserName"].ToString()))
+                                 .WhereIF(dic.ContainsKey("isCollet") && Convert.ToInt32(dic["isCollet"]) != -1, (it) => it.isCollet == Convert.ToInt32(dic["isCollet"]))
+                                 .WhereIF(dic.ContainsKey("isColletCode") && dic["isColletCode"].ToString() != "-1", (it) => it.isColletCode == dic["isColletCode"].ToString())
+                                 .Where(it => SqlFunc.Subqueryable<SysShopAnchorEntity>().Where(st => st.ShopID == Convert.ToInt32(dic["userID"])).Where(st => st.AnchorID == it.id).NotAny())
+                                 .Select(it => new SysAnchor
+                                 {
+                                     id = it.id,
+                                     username = it.username,
+                                     nickname = it.nickname,
+                                     photo = it.photo,
+                                     balance = it.balance,
+                                     atteCount = it.atteCount,
+                                     ishot = it.ishot,
+                                     isrecommend = it.isrecommend,
+                                     regtime = it.regtime,
+                                     viplevel = it.viplevel,
+                                     birthday = it.birthday,
+                                 }).ToPageList(pageIndex, pageSize, ref totalCount);
+                }
+            }
+            catch (Exception ex)
+            {
+                new LogLogic().Write(Level.Error, "商户不拥有的主播 数据分页", ex.Message, ex.StackTrace);
+            }
+            return result;
+        }
+        /// <summary>
+        /// 添加主播给商户
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="idList">主播ID集合</param>
+        /// <param name="userID">用户ID</param>
+        /// <returns></returns>
+        public bool AddShopAnchor(string[] idList, int userID)
+        {
+            var result = true;
+            try
+            {
+                using (var db = GetInstance())
+                {
+                    List<SysShopAnchorEntity> list = new List<SysShopAnchorEntity>();
+                    foreach (var item in idList)
+                    {
+                        list.Add(new SysShopAnchorEntity { ShopID = userID, AnchorID = Convert.ToInt32(item), CreateTime = DateTime.Now });
+                    }
+                    var count = db.Insertable(list.ToArray()).ExecuteCommand();
+                    result = count == idList.Count() ? true : false;
+                }
+            }
+            catch (Exception ex)
+            {
+                new LogLogic().Write(Level.Error, "添加主播给经纪人", ex.Message, ex.StackTrace);
+                result = false;
+            }
+            return result;
+        }
+        /// <summary>
+        /// 删除商户主播
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="idList">主播ID集合</param>
+        /// <param name="userID">商户ID</param>
+        /// <returns></returns>
+        public bool Delete(string[] idList, int userID)
+        {
+            var result = true;
+            try
+            {
+                using (var db = GetInstance())
+                {
+                    var count = db.Deleteable<SysShopAnchorEntity>().Where(it => it.ShopID == userID).In(it => it.AnchorID, idList).ExecuteCommand();
+                    result = count == idList.Count() ? true : false;
+                }
+            }
+            catch (Exception ex)
+            {
+                new LogLogic().Write(Level.Error, "删除商户主播", ex.Message, ex.StackTrace);
+                result = false;
+            }
+            return result;
         }
     }
 }

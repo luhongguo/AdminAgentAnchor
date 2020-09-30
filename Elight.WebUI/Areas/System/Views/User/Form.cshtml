@@ -39,7 +39,7 @@
             <label class="layui-form-label label-required">角色属性</label>
             <div class="layui-input-inline">
                 @*<select lay-ignore name="RoleId" class="select2" id="RoleId" multiple="multiple" style="width: 514px;" lay-verify="required"></select>*@
-                <select name="RoleId" id="RoleId" lay-filter="Level2" lay-verify="required" lay-search>  </select>
+                <select name="RoleId" id="RoleId" lay-filter="Level2" lay-verify="required"  lay-search>  </select>
             </div>
         </div>
         <div class="layui-inline">
@@ -185,7 +185,7 @@
                 return false
             }
             //角色信息。
-            form.field.roleIds = $("#RoleId").val().join();
+            form.field.roleIds = $("#RoleId").val();
             //密码加密。
             form.field.password = $.md5(form.field['Password']);
             $.formSubmit({

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Elight.Utility.Operator;
 using Elight.Utility.Security;
 using Elight.Utility.Extension;
+using Elight.Utility.Log;
 
 namespace Elight.Logic.Sys
 {
@@ -134,9 +135,10 @@ namespace Elight.Logic.Sys
                     db.Ado.CommitTran();
                     return row;
                 }
-                catch
+                catch(Exception ex)
                 {
                     db.Ado.RollbackTran();
+                    new LogLogic().Write(Level.Error, "新增用户", ex.Message, ex.StackTrace);
                     return 0;
                 }
 

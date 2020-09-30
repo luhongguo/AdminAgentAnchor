@@ -165,7 +165,7 @@ namespace Elight.Logic.Sys
             }
             catch (Exception ex)
             {
-                new LogLogic().Write(Level.Error, "添加主播给经纪人", ex.Message, ex.StackTrace);
+                new LogLogic().Write(Level.Error, "删除经纪人主播", ex.Message, ex.StackTrace);
                 result = false;
             }
             return result;

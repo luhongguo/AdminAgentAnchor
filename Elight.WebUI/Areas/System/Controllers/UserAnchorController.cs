@@ -114,7 +114,7 @@ namespace Elight.WebUI.Areas.System.Controllers
             return Error();
         }
         /// <summary>
-        /// 添加经纪人的主播
+        /// 删除经纪人的主播
         /// </summary>
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>

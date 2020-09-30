@@ -3,6 +3,7 @@ using Elight.Logic.Sys;
 using Elight.Utility.Extension;
 using Elight.Utility.Format;
 using Elight.Utility.Model;
+using Elight.Utility.ResponseModels;
 using Elight.WebUI.Controllers;
 using Elight.WebUI.Filters;
 using Microsoft.Ajax.Utilities;
@@ -104,8 +105,105 @@ namespace Elight.WebUI.Areas.System.Controllers
         [HttpGet]
         public ActionResult GetShopSelectList()
         {
-            var result= sysShopLogic.GetShopSelectList();
+            var result = sysShopLogic.GetShopSelectList();
             return Content(result.ToJson());
+        }
+
+        /// <summary>
+        /// 商户授权主播页面
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, AuthorizeChecked]
+        public ActionResult Distribution()
+        {
+            return View();
+        }
+        /// <summary>
+        /// 商户名下主播
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="keyWord">查询条件</param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult GetUserAnchorList(int pageIndex, int pageSize, PageParm pageParm)
+        {
+            int totalCount = 0;
+            var pageData = sysShopLogic.GetShopAnchorList(pageIndex, pageSize, pageParm.where, ref totalCount);
+            var result = new LayPadding<SysAnchor>()
+            {
+                result = true,
+                msg = "success",
+                list = pageData,
+                count = totalCount// pageData.Count
+            };
+            return Content(result.ToJson());
+        }
+        /// <summary>
+        /// 商户新增主播页面
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult AddUserAnchor()
+        {
+            return View();
+        }
+        /// <summary>
+        /// 经纪人不拥有的主播
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="keyWord">查询条件</param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult GetUserNoOwnedAnchorList(int pageIndex, int pageSize, PageParm pageParm)
+        {
+            int totalCount = 0;
+            var pageData = sysShopLogic.GetShopNoOwnedAnchorList(pageIndex, pageSize, pageParm.where, ref totalCount);
+            var result = new LayPadding<SysAnchor>()
+            {
+                result = true,
+                msg = "success",
+                list = pageData,
+                count = totalCount// pageData.Count
+            };
+            return Content(result.ToJson());
+        }
+        /// <summary>
+        /// 添加主播给商户
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="idList">主播ID集合</param>
+        /// <param name="userID">商户ID</param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult addShopAnchor(string idList, int userID)
+        {
+            var result = sysShopLogic.AddShopAnchor(idList.ToStrArray(), userID);
+            if (result)
+            {
+                return Success();
+            }
+            return Error();
+        }
+        /// <summary>
+        /// 删除商户的主播
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="idList">主播ID集合</param>
+        /// <param name="userID">商户ID</param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult DeleteShopAnchor(string idList, int userID)
+        {
+            var result = sysShopLogic.Delete(idList.ToStrArray(), userID);
+            if (result)
+            {
+                return Success();
+            }
+            return Error();
         }
     }
 }
