@@ -87,12 +87,6 @@
             , type: 'datetime'
             , value: getNowFormatDate("data", 1) + " 00:00:00"
         });
-        var type = @ViewData["type"];
-    //判断是否是管理员 不是就隐藏
-        if (type != 1) {
-            $("#isColletDiv").hide();
-            $("#isColletCodeDiv").hide()
-        } 
         function renderTable(where) {
             table.render({
                 elem: '#table'

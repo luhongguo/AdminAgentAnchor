@@ -12,6 +12,10 @@ namespace Elight.Entity.Sys
     {
         [SugarColumn(ColumnName = "Id", IsPrimaryKey = true)]
         public string Id { get; set; }
+        /// <summary>
+        /// 商户ID
+        /// </summary>
+        public int ShopID { get; set; }
 
         [SugarColumn(ColumnName = "OrganizeId")]
         public string OrganizeId { get; set; }

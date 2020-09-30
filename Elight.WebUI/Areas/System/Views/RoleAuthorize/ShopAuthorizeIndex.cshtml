@@ -32,7 +32,7 @@
 
 <script type="text/javascript">
 
-    var roleId = $.getQueryString("primaryKey");
+    var roleId = $.getQueryString("primaryKey");//这里是商户ID
     if (roleId == '' || roleId == undefined) {
         $.layerMsg('未捕获到ID，请关闭后重试。', 'error');
     } else {
@@ -49,10 +49,10 @@
             },
             async: {
                 enable: true,
-                url: "/System/RoleAuthorize/Index",
+                url: "/System/RoleAuthorize/ShopPowersIndex",
                 dataType: "text",
                 autoParam: ["id", "name"],
-                otherParam: { roleId: roleId }
+                otherParam: { shopID: roleId }
             }
         };
         var zTreeObj = $.fn.zTree.init($("#treePermission"), setting);
@@ -66,8 +66,8 @@
             nodeIds.push(item.id);
         });
         $.formSubmit({
-            url: "/System/RoleAuthorize/Form",
-            data: { roleId: roleId, perIds: nodeIds.join() }
+            url: "/System/RoleAuthorize/ShopPowersForm",
+            data: { shopID: roleId, perIds: nodeIds.join() }
         });
     }
 

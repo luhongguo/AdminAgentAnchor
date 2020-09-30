@@ -23,7 +23,7 @@ namespace Elight.Logic.Sys
         {
             using (var db = GetInstance())
             {
-                return db.Queryable<SysUser, SysUserRoleRelation, SysRole>((A, B, C) => new object[] { JoinType.Left, A.Id == B.UserId, JoinType.Left, B.RoleId == C.Id }).Where((A, B, C) => A.Account == account).Select((A, B, C) => new SysUser
+                return db.Queryable<SysUser>().Where((A) => A.Account == account && A.ShopID == 0).Select((A) => new SysUser
                 {
                     Id = A.Id,
                     Account = A.Account,
@@ -45,7 +45,6 @@ namespace Elight.Logic.Sys
                     CreateTime = A.CreateTime,
                     ModifyUser = A.ModifyUser,
                     ModifyTime = A.ModifyTime,
-                    Type = C.Type
                 }).First();
             }
         }
@@ -123,7 +122,7 @@ namespace Elight.Logic.Sys
                     userLogOnEntity.Id = Guid.NewGuid().ToString().Replace("-", "");
                     userLogOnEntity.UserId = model.Id;
                     userLogOnEntity.SecretKey = userLogOnEntity.Id.DESEncrypt().Substring(0, 8);
-                    userLogOnEntity.Password =password.MD5Encrypt().DESEncrypt(userLogOnEntity.SecretKey).MD5Encrypt();
+                    userLogOnEntity.Password = password.MD5Encrypt().DESEncrypt(userLogOnEntity.SecretKey).MD5Encrypt();
                     userLogOnEntity.LoginCount = 0;
                     userLogOnEntity.IsOnLine = "0";
                     row = db.Insertable<SysUserLogOn>(userLogOnEntity).ExecuteCommand();

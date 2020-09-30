@@ -14,6 +14,7 @@ namespace Elight.Logic.Sys
 {
     public class SysRoleLogic : BaseLogic
     {
+        public readonly int ShopID = OperatorProvider.Instance.Current.ShopID;
         /// <summary>
         /// 得到角色列表(树形)
         /// </summary>
@@ -22,7 +23,7 @@ namespace Elight.Logic.Sys
         {
             using (var db = GetInstance())
             {
-                return db.Queryable<SysRole>().Where((A) => A.DeleteMark == "0").Select((A) => new SysRole
+                return db.Queryable<SysRole>().Where((A) => A.DeleteMark == "0" && A.ShopID==ShopID).Select((A) => new SysRole
                 {
                     Id = A.Id,
                     Name = A.Name,
@@ -44,7 +45,7 @@ namespace Elight.Logic.Sys
             {
                 return db.Queryable<SysRole>()
                              .WhereIF(!keyWord.IsNullOrEmpty(), it => it.Name.Contains(keyWord))
-                             .Where(it => it.DeleteMark == "0")
+                             .Where(it => it.DeleteMark == "0" && it.ShopID == ShopID)
                              .OrderBy((A) => A.SortCode).Select((A) => new SysRole
                              {
                                  Id = A.Id,
@@ -75,6 +76,7 @@ namespace Elight.Logic.Sys
                 model.CreateTime = DateTime.Now;
                 model.ModifyUser = model.CreateUser;
                 model.ModifyTime = model.CreateTime;
+                model.ShopID = model.ShopID;
                 return db.Insertable<SysRole>(model).ExecuteCommand();
             }
         }
@@ -100,8 +102,8 @@ namespace Elight.Logic.Sys
                     it.SortCode,
                     it.ModifyUser,
                     it.ModifyTime,
-                    it.Type
-                }).ExecuteCommand();
+                    it.Type,
+            }).ExecuteCommand();
             }
         }
 

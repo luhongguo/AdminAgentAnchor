@@ -109,28 +109,7 @@
             elem: '#endTimeReload' //指定元素
             , type: 'datetime'
         });
-         var type = @ViewData["type"];
-    //判断是否是管理员 不是就隐藏
-        if (type != 1) {
-            $("#isColletDiv").hide();
-            $("#isColletCodeDiv").hide()
-        }
-        //} else {
-        //    $.ajax({
-        //        url: "/System/UserAnchor/selectCompanyCodeList",
-        //        type: "get",
-        //        success: function (data) {
-        //            var $html = " <option value='-1'>全部</option>";
-        //            $.each(eval("(" + data + ")"), function (i, v) {
-        //                $html += "<option value='" + v.Name + "'>" + v.Name + "</option>";
-        //            })
-        //            $("select[name='companyCode']").append($html);
-        //            //append后必须从新渲染
-        //            form.render('select');
-        //            renderTable(getWhere());
-        //        }
-        //    }, 'json');
-        //}
+      
         function renderTable(where) {
             table.render({
                 elem: '#table'

@@ -109,8 +109,8 @@ namespace Elight.Utility.Operator
         public DateTime LoginTime { get; set; }
         public string ClientUrl { get; set; }
         /// <summary>
-        /// 用户角色类型 1管理员，2经纪人，3其他
+        /// 商户ID
         /// </summary>
-        public int? Type { get; set; }
+        public int ShopID { get; set; }
     }
 }

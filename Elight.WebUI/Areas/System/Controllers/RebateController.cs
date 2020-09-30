@@ -34,14 +34,7 @@ namespace Elight.WebUI.Areas.System.Controllers
         {
             int totalCount = 0;
             var res = sysRebateLogic.GetHourDetailsPage(parm, ref totalCount);
-            var result = new
-            {
-                code = 0,
-                msg = "success",
-                data = res,
-                count = totalCount,// pageData.Count
-            };
-            return Content(result.ToJson());
+            return pageSuccess(res,totalCount);
         }
     }
 }

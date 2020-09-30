@@ -29,7 +29,35 @@ namespace Elight.Utility.ResponseModels
         /// </summary>
         public object data { get; set; }
     }
-
+    /// <summary>
+    /// 通用AJAX请求响应数据格式模型 新版。
+    /// </summary>
+    public class TableResult
+    {
+        public TableResult(int code, string message, object data , int count)
+        {
+            this.code = code;
+            this.msg = message;
+            this.data = data;
+            this.count = count;
+        }
+        /// <summary>
+        /// 结果类型。 0成功，1失败
+        /// </summary>
+        public object code { get; set; }
+        /// <summary>
+        /// 消息内容。
+        /// </summary>
+        public string msg { get; set; }
+        /// <summary>
+        /// 返回数据。
+        /// </summary>
+        public object data { get; set; }
+        /// <summary>
+        /// 数据总长度
+        /// </summary>
+        public int count { get; set; }
+    }
     /// <summary>
     /// 结果类型枚举。
     /// </summary>

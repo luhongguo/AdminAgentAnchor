@@ -172,7 +172,7 @@ namespace Elight.Logic.Sys
         }
 
         /// <summary>
-        /// 经纪人查看自己的主播信息
+        /// 超管查看自己的主播信息
         /// </summary>
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
@@ -193,9 +193,7 @@ namespace Elight.Logic.Sys
                 //statu 	正常unlock 禁用 lock 审核中 audit
                 using (var db = GetInstance())
                 {
-                    if (OperatorProvider.Instance.Current.Type == 1)//超管数据
-                    {
-                        result = db.Queryable<SysAnchor>()
+                    result = db.Queryable<SysAnchor>()
                                 .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (it) => it.username.Contains(dic["Name"].ToString()) || it.nickname.Contains(dic["Name"].ToString()))
                                 .WhereIF(dic.ContainsKey("startTime") && !string.IsNullOrEmpty(dic["startTime"].ToString()) && !string.IsNullOrEmpty(dic["endTime"].ToString()), (it) => it.regtime >= Convert.ToDateTime(dic["startTime"]) && it.regtime <= Convert.ToDateTime(dic["endTime"]))
                                 .WhereIF(dic.ContainsKey("isCollet") && Convert.ToInt32(dic["isCollet"]) != -1, (it) => it.isCollet == Convert.ToInt32(dic["isCollet"]))
@@ -216,31 +214,6 @@ namespace Elight.Logic.Sys
                                     lmstatus = it.lmstatus,
                                     isCollet = it.isCollet
                                 }).ToPageList(parm.page, parm.limit, ref totalCount);
-                    }
-                    else
-                    {
-                        result = db.Queryable<SysUserAnchor, SysAnchor>((st, it) => new object[] { JoinType.Left, st.AnchorID == it.id })
-                                .Where((st, it) => st.UserID == OperatorProvider.Instance.Current.UserId)
-                                .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (st, it) => it.username.Contains(dic["Name"].ToString()) || it.nickname.Contains(dic["Name"].ToString()))
-                                .WhereIF(dic.ContainsKey("startTime") && !string.IsNullOrEmpty(dic["startTime"].ToString()) && !string.IsNullOrEmpty(dic["endTime"].ToString()), (st, it) => it.regtime >= Convert.ToDateTime(dic["startTime"]) && it.regtime <= Convert.ToDateTime(dic["endTime"]))
-                                //.WhereIF(dic.ContainsKey("isCollet") && Convert.ToInt32(dic["isCollet"]) != -1, (st, it) => it.isCollet == Convert.ToInt32(dic["isCollet"]))
-                                .Select((st, it) => new SysAnchor
-                                {
-                                    id = it.id,
-                                    username = it.username,
-                                    nickname = it.nickname,
-                                    photo = it.photo,
-                                    balance = it.balance,
-                                    atteCount = it.atteCount,
-                                    ishot = it.ishot,
-                                    isrecommend = it.isrecommend,
-                                    regtime = it.regtime,
-                                    viplevel = it.viplevel,
-                                    birthday = it.birthday,
-                                    lmstatus = it.lmstatus,
-                                    isCollet = it.isCollet
-                                }).ToPageList(parm.page, parm.limit, ref totalCount);
-                    }
                 }
             }
             catch (Exception ex)
@@ -276,125 +249,65 @@ namespace Elight.Logic.Sys
                     decimal test_income = 0;
                     decimal Balance = 0;
                     var tableList = GetSqlSugarDB(DbConnType.QPAnchorRecordDB).DbMaintenance.GetTableInfoList();//获取数据库所有表名
-                    if (OperatorProvider.Instance.Current.Type == 1)//超管信息
-                    {
-                        var query = db.Queryable<SysAnchor>()
-                                .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (st) => st.username.Contains(dic["Name"].ToString()) || st.nickname.Contains(dic["Name"].ToString()))
-                                .WhereIF(dic.ContainsKey("isCollet") && Convert.ToInt32(dic["isCollet"]) != -1, (it) => it.isCollet == Convert.ToInt32(dic["isCollet"]))
-                                .WhereIF(dic.ContainsKey("isColletCode") && dic["isColletCode"].ToString() != "-1", (it) => it.isColletCode == dic["isColletCode"].ToString())
-                                .Select((st) => new IncomeTemplateModel
-                                {
-                                    AnchorID = st.id,
-                                    AnchorName = st.username,
-                                    NickName = st.nickname,
-                                    Balance = st.balance,
-                                    isCollet = st.isCollet,
-                                }).WithCache(120);//缓存120秒
+                    var query = db.Queryable<SysAnchor>()
+                            .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (st) => st.username.Contains(dic["Name"].ToString()) || st.nickname.Contains(dic["Name"].ToString()))
+                            .WhereIF(dic.ContainsKey("isCollet") && Convert.ToInt32(dic["isCollet"]) != -1, (it) => it.isCollet == Convert.ToInt32(dic["isCollet"]))
+                            .WhereIF(dic.ContainsKey("isColletCode") && dic["isColletCode"].ToString() != "-1", (it) => it.isColletCode == dic["isColletCode"].ToString())
+                            .Select((st) => new IncomeTemplateModel
+                            {
+                                AnchorID = st.id,
+                                AnchorName = st.username,
+                                NickName = st.nickname,
+                                Balance = st.balance,
+                                isCollet = st.isCollet,
+                            }).WithCache(120);//缓存120秒
 
-                        res = query.Clone()
-                            .Mapper((it, cache) =>
-                                  {
-                                      if (tableList.Any(st => st.Name.Equals($@"income_{it.AnchorName}")))//判断表是否存在
+                    res = query.Clone()
+                        .Mapper((it, cache) =>
+                              {
+                                  if (tableList.Any(st => st.Name.Equals($@"income_{it.AnchorName}")))//判断表是否存在
                                       {
                                           //isnull(sum(tip_income),0) tip_income,   
                                           var table = db.SqlQueryable<IncomeTemplateModel>($@"select  isnull(sum(hour_income),0) hour_income,isnull(sum(agent_income),0) agent_income,isnull(sum(test_income),0) test_income  
 from QPAnchorRecordDB.dbo.income_{it.AnchorName} where opdate>='{dic["startTime"].ToString()}' and opdate<'{dic["endTime"].ToString()}'")
-                                                        .First();
-                                          it.hour_income = table.hour_income;
-                                          it.agent_income = table.agent_income;
-                                          it.test_income = table.test_income;
-                                      }
-                                      if (tableList.Any(st => st.Name.Equals($@"tip_{it.AnchorName}")))//判断表是否存在
+                                                    .First();
+                                      it.hour_income = table.hour_income;
+                                      it.agent_income = table.agent_income;
+                                      it.test_income = table.test_income;
+                                  }
+                                  if (tableList.Any(st => st.Name.Equals($@"tip_{it.AnchorName}")))//判断表是否存在
                                       {
                                           //礼物金额
                                           var totalamount = db.SqlQueryable<TipTemplateModel>($@"select sum(totalamount) as totalamount from QPAnchorRecordDB.dbo.tip_{it.AnchorName}
 where sendtime>='{dic["startTime"].ToString()}' and sendtime<'{dic["endTime"].ToString()}'").First().totalamount;
-                                          it.tip_income = totalamount;
-                                      }
-                                  })
-                            .ToList().OrderByDescending(it => it.tip_income).Skip((parm.page - 1) * parm.limit).Take(parm.limit).ToList();
-                        //.ToPageList(parm.page,m, ref totalCount);
-
-                        totalCount = query.Mapper((it, cache) =>//求和
-                        {
-                            if (tableList.Any(st => st.Name.Equals($@"income_{it.AnchorName}")))//判断表是否存在
-                            {
-                                //isnull(sum(tip_income),0) tip_income,   
-                                var table = db.SqlQueryable<IncomeTemplateModel>($@"select  isnull(sum(hour_income),0) hour_income,isnull(sum(agent_income),0) agent_income,isnull(sum(test_income),0) test_income  
-from QPAnchorRecordDB.dbo.income_{it.AnchorName} where opdate>='{dic["startTime"].ToString()}' and opdate<'{dic["endTime"].ToString()}'")
-                                              .First();
-                                hour_income += table.hour_income;
-                                agent_income += table.agent_income;
-                                test_income += table.test_income;
-                            }
-                            if (tableList.Any(st => st.Name.Equals($@"tip_{it.AnchorName}")))//判断表是否存在
-                            {
-                                //礼物金额
-                                var totalamount = db.SqlQueryable<TipTemplateModel>($@"select sum(totalamount) as totalamount from QPAnchorRecordDB.dbo.tip_{it.AnchorName}
-where sendtime>='{dic["startTime"].ToString()}' and sendtime<'{dic["endTime"].ToString()}'").First().totalamount;
-                                tip_income += totalamount;
-                            }
-                            Balance += it.Balance;
-                        }).ToList().Count();
-                    }
-                    else
-                    {
-                        var query = db.Queryable<SysUserAnchor, SysAnchor>((it, st) => new object[] { JoinType.Left, it.AnchorID == st.id })
-                                   .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (it, st) => st.username.Contains(dic["Name"].ToString()) || st.nickname.Contains(dic["Name"].ToString()))
-                                   .Where((it, st) => it.UserID == OperatorProvider.Instance.Current.UserId)
-                                   .Select((it, st) => new IncomeTemplateModel
-                                   {
-                                       AnchorID = st.id,
-                                       AnchorName = st.username,
-                                       NickName = st.nickname,
-                                       Balance = st.balance,
-                                       isCollet = st.isCollet
-                                   }).WithCache(120);
-                        res = query.Clone().Mapper((it, cache) =>
-                        {
-                            if (tableList.Any(st => st.Name.Equals($@"income_{it.AnchorName}")))//判断表是否存在
-                            {
-                                //isnull(sum(tip_income),0) tip_income,   
-                                var table = db.SqlQueryable<IncomeTemplateModel>($@"select  isnull(sum(hour_income),0) hour_income,isnull(sum(agent_income),0) agent_income,isnull(sum(test_income),0) test_income  
-from QPAnchorRecordDB.dbo.income_{it.AnchorName} where opdate>='{dic["startTime"].ToString()}' and opdate<'{dic["endTime"].ToString()}'")
-                                              .First();
-                                it.hour_income = table.hour_income;
-                                it.agent_income = table.agent_income;
-                                it.test_income = table.test_income;
-                            }
-                            if (tableList.Any(st => st.Name.Equals($@"tip_{it.AnchorName}")))//判断表是否存在
-                            {
-                                //礼物金额
-                                var totalamount = db.SqlQueryable<TipTemplateModel>($@"select sum(totalamount) as totalamount from QPAnchorRecordDB.dbo.tip_{it.AnchorName}
-where sendtime>='{dic["startTime"].ToString()}' and sendtime<'{dic["endTime"].ToString()}'").First().totalamount;
-                                it.tip_income = totalamount;
-                            }
-                        })
+                                      it.tip_income = totalamount;
+                                  }
+                              })
                         .ToList().OrderByDescending(it => it.tip_income).Skip((parm.page - 1) * parm.limit).Take(parm.limit).ToList();
-                        // .ToPageList(parm.page, parm.limit, ref totalCount);
+                    //.ToPageList(parm.page,m, ref totalCount);
 
-                        totalCount = query.Mapper((it, cache) =>//求和
-                        {
-                            if (tableList.Any(st => st.Name.Equals($@"income_{it.AnchorName}")))//判断表是否存在
+                    totalCount = query.Mapper((it, cache) =>//求和
+                    {
+                        if (tableList.Any(st => st.Name.Equals($@"income_{it.AnchorName}")))//判断表是否存在
                             {
                                 //isnull(sum(tip_income),0) tip_income,   
                                 var table = db.SqlQueryable<IncomeTemplateModel>($@"select  isnull(sum(hour_income),0) hour_income,isnull(sum(agent_income),0) agent_income,isnull(sum(test_income),0) test_income  
 from QPAnchorRecordDB.dbo.income_{it.AnchorName} where opdate>='{dic["startTime"].ToString()}' and opdate<'{dic["endTime"].ToString()}'")
-                                              .First();
-                                hour_income += table.hour_income;
-                                agent_income += table.agent_income;
-                                test_income += table.test_income;
-                            }
-                            if (tableList.Any(st => st.Name.Equals($@"tip_{it.AnchorName}")))//判断表是否存在
+                                          .First();
+                            hour_income += table.hour_income;
+                            agent_income += table.agent_income;
+                            test_income += table.test_income;
+                        }
+                        if (tableList.Any(st => st.Name.Equals($@"tip_{it.AnchorName}")))//判断表是否存在
                             {
                                 //礼物金额
                                 var totalamount = db.SqlQueryable<TipTemplateModel>($@"select sum(totalamount) as totalamount from QPAnchorRecordDB.dbo.tip_{it.AnchorName}
 where sendtime>='{dic["startTime"].ToString()}' and sendtime<'{dic["endTime"].ToString()}'").First().totalamount;
-                                tip_income += totalamount;
-                            }
-                            Balance += it.Balance;
-                        }).ToList().Count();
-                    }
+                            tip_income += totalamount;
+                        }
+                        Balance += it.Balance;
+                    }).ToList().Count();
+
                     sumModel = new IncomeTemplateModel
                     {
                         hour_income = hour_income,
@@ -468,55 +381,26 @@ where sendtime>='{dic["startTime"].ToString()}' and sendtime<'{dic["endTime"].To
                 {
                     if (dic.ContainsKey("userName") && dic["userName"].ToString() == "-1")//选中全部
                     {
-                        if (OperatorProvider.Instance.Current.Type == 1)//超管信息
-                        {
-                            var query = db.Queryable<LiveCallbackHourEntity, SysAnchor>((it, st) => new object[] { JoinType.Left, it.stream_id == st.id })
-                                  .Where(it => it.begintime >= Convert.ToDateTime(dic["startTime"]) && it.begintime < Convert.ToDateTime(dic["endTime"]))
-                                  .WhereIF(dic.ContainsKey("isLive") && Convert.ToInt32(dic["isLive"]) != -1, it => it.islive == Convert.ToInt32(dic["isLive"]));
-                            var sumReuslt = query.Clone().Select((it, st) => new { amount = SqlFunc.AggregateSum(it.amount), duration = SqlFunc.AggregateSum(it.duration) }).First();
-                            sumAmount = sumReuslt.amount;
-                            sumDuration = sumReuslt.duration;
-                            return query
-                                  .Select((it, st) => new HourModel
-                                  {
-                                      AnchorName = st.username,
-                                      NickName = st.nickname,
-                                      begintime = it.begintime,
-                                      endtime = it.endtime,
-                                      duration = it.duration,
-                                      source = it.source,
-                                      status = it.status,
-                                      islive = it.islive
-                                  }).WithCache(30)//缓存30秒
-                                  .OrderBy(it => it.begintime, OrderByType.Desc)
-                                  .ToPageList(parm.page, parm.limit, ref totalCount);
-                        }
-                        else//经纪人
-                        {
-                            var query = db.Queryable<SysUserAnchor, SysAnchor, LiveCallbackHourEntity>((it, st, gt) => new object[] { JoinType.Left, it.AnchorID == st.id, JoinType.Left, st.id == gt.stream_id })
-                                  .Where((it, st, gt) => it.UserID == OperatorProvider.Instance.Current.UserId)
-                                  .Where((it, st, gt) => gt.begintime >= Convert.ToDateTime(dic["startTime"]) && gt.begintime < Convert.ToDateTime(dic["endTime"]))
-                                  .WhereIF(dic.ContainsKey("isLive") && Convert.ToInt32(dic["isLive"]) != -1, (it, st, gt) => gt.islive == Convert.ToInt32(dic["isLive"]));
-                            var sumReuslt = query.Clone().Select((it, st, gt) => new { amount = SqlFunc.AggregateSum(gt.amount), duration = SqlFunc.AggregateSum(gt.duration) }).First();
-                            sumAmount = sumReuslt.amount;
-                            sumDuration = sumReuslt.duration;
-                            return query
-                                 .Select((it, st, gt) => new HourModel
-                                 {
-                                     AnchorName = st.username,
-                                     NickName = st.nickname,
-                                     begintime = gt.begintime,
-                                     endtime = gt.endtime,
-                                     duration = gt.duration,
-                                     source = gt.source,
-                                     status = gt.status,
-                                     amount = gt.amount,
-                                     islive = gt.islive
-                                 }).WithCache(30)
-                                 .MergeTable()
-                                .OrderBy(it => it.begintime, OrderByType.Desc)
-                                .ToPageList(parm.page, parm.limit, ref totalCount);
-                        }
+                        var query = db.Queryable<LiveCallbackHourEntity, SysAnchor>((it, st) => new object[] { JoinType.Left, it.stream_id == st.id })
+                                   .Where(it => it.begintime >= Convert.ToDateTime(dic["startTime"]) && it.begintime < Convert.ToDateTime(dic["endTime"]))
+                                   .WhereIF(dic.ContainsKey("isLive") && Convert.ToInt32(dic["isLive"]) != -1, it => it.islive == Convert.ToInt32(dic["isLive"]));
+                        var sumReuslt = query.Clone().Select((it, st) => new { amount = SqlFunc.AggregateSum(it.amount), duration = SqlFunc.AggregateSum(it.duration) }).First();
+                        sumAmount = sumReuslt.amount;
+                        sumDuration = sumReuslt.duration;
+                        return query
+                              .Select((it, st) => new HourModel
+                              {
+                                  AnchorName = st.username,
+                                  NickName = st.nickname,
+                                  begintime = it.begintime,
+                                  endtime = it.endtime,
+                                  duration = it.duration,
+                                  source = it.source,
+                                  status = it.status,
+                                  islive = it.islive
+                              }).WithCache(30)//缓存30秒
+                              .OrderBy(it => it.begintime, OrderByType.Desc)
+                              .ToPageList(parm.page, parm.limit, ref totalCount);
                     }
                     else//查询单个用户
                     {
@@ -566,30 +450,17 @@ where sendtime>='{dic["startTime"].ToString()}' and sendtime<'{dic["endTime"].To
             {
                 using (var db = GetInstance())
                 {
-                    if (OperatorProvider.Instance.Current.Type == 1)//超管
-                    {
-                        result = db.Queryable<SysAnchor>()
+                    result = db.Queryable<SysAnchor>()
                                 .Select((it) => new
                                 {
                                     nickName = string.IsNullOrEmpty(it.nickname) ? it.username : it.nickname,
                                     userName = it.username,
                                 }).ToJson();
-                    }
-                    else
-                    {
-                        result = db.Queryable<SysUserAnchor, SysAnchor>((st, it) => new object[] { JoinType.Left, st.AnchorID == it.id })
-                                    .Where((st, it) => st.UserID == OperatorProvider.Instance.Current.UserId)
-                                    .Select((st, it) => new
-                                    {
-                                        nickName = string.IsNullOrEmpty(it.nickname) ? it.username : it.nickname,
-                                        userName = it.username,
-                                    }).ToJson();
-                    }
                 }
             }
             catch (Exception ex)
             {
-                new LogLogic().Write(Level.Error, "主播名称下拉框", ex.Message,ex.StackTrace);
+                new LogLogic().Write(Level.Error, "主播名称下拉框", ex.Message, ex.StackTrace);
             }
             return result;
         }
@@ -608,25 +479,12 @@ where sendtime>='{dic["startTime"].ToString()}' and sendtime<'{dic["endTime"].To
             {
                 using (var db = GetInstance())
                 {
-                    if (OperatorProvider.Instance.Current.Type == 1)//超管
-                    {
-                        result = db.Queryable<SysAnchor>()
+                    result = db.Queryable<SysAnchor>()
                                 .Select((it) => new
                                 {
                                     nickName = string.IsNullOrEmpty(it.nickname) ? it.username : it.nickname,
                                     it.id,
                                 }).ToJson();
-                    }
-                    else
-                    {
-                        result = db.Queryable<SysUserAnchor, SysAnchor>((st, it) => new object[] { JoinType.Left, st.AnchorID == it.id })
-                                    .Where((st, it) => st.UserID == OperatorProvider.Instance.Current.UserId)
-                                    .Select((st, it) => new
-                                    {
-                                        nickName = string.IsNullOrEmpty(it.nickname) ? it.username : it.nickname,
-                                        it.id
-                                    }).ToJson();
-                    }
                 }
             }
             catch (Exception ex)

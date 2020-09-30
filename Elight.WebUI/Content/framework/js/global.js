@@ -244,6 +244,7 @@ $.fn.bindChangeEvent = function ($event) {
             $toolbar.css('height', '50px');
         }
     }
+   
 
 /**
  * 获取数据表格选中行主键值。

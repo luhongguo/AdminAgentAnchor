@@ -50,7 +50,6 @@ namespace Elight.WebUI.Areas.System.Controllers
         [HttpGet, AuthorizeChecked]
         public ActionResult GetAnchorInfo()
         {
-            ViewData["type"] = OperatorProvider.Instance.Current.Type;
             return View();
         }
 
@@ -161,7 +160,6 @@ namespace Elight.WebUI.Areas.System.Controllers
         [HttpGet, AuthorizeChecked]
         public ActionResult AnchorReport()
         {
-            ViewData["type"] = OperatorProvider.Instance.Current.Type;
             return View();
         }
         /// <summary>
@@ -201,7 +199,6 @@ namespace Elight.WebUI.Areas.System.Controllers
         [HttpGet, AuthorizeChecked]
         public ActionResult FlowDetails()
         {
-            ViewData["type"] = OperatorProvider.Instance.Current.Type;
             return View();
         }
         /// <summary>

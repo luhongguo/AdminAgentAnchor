@@ -13,6 +13,10 @@ namespace Elight.Entity.Sys
     {
         [SugarColumn(ColumnName = "Id", IsPrimaryKey = true)]
         public string Id { get; set; }
+        /// <summary>
+        /// 商户ID
+        /// </summary>
+        public int ShopID { get; set; }
 
         [SugarColumn(ColumnName = "Account")]
         public string Account { get; set; }
@@ -74,12 +78,7 @@ namespace Elight.Entity.Sys
 
         [SugarColumn(ColumnName = "ModifyTime")]
         public DateTime? ModifyTime { get; set; }
-        /// <summary>
-        /// 角色类型 1管理员，2经纪人，3其他
-        /// </summary>
-        [SugarColumn(IsIgnore = true)]
-        public int? Type { get; set; } //{ get { return OrganizeSingle == null ? "" : OrganizeSingle.FullName; } }
-
+       
         [SugarColumn(IsIgnore = true)]
         public string StrBirthday { get; set; }
 

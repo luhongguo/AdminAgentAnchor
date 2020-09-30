@@ -38,17 +38,10 @@ namespace Elight.Logic.Sys
                 {
                     if (dic.ContainsKey("userName") && dic["userName"].ToString() == "-1")//选中全部
                     {
-                        if (OperatorProvider.Instance.Current.Type == 1)//超管信息
-                        {
-                            return db.Queryable<SysRebateEntity, SysAnchor>((it, gt) => new object[] { JoinType.Left, it.anchorID == gt.id })
-                                  .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (it, gt) => gt.username.Contains(dic["Name"].ToString()) || gt.nickname.Contains(dic["Name"].ToString()))
-                                  .Select(it => it)
-                                  .ToPageList(parm.page, parm.limit, ref totalCount);
-                        }
-                        else//经纪人
-                        {
-                         
-                        }
+                        return db.Queryable<SysRebateEntity, SysAnchor>((it, gt) => new object[] { JoinType.Left, it.anchorID == gt.id })
+                                   .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (it, gt) => gt.username.Contains(dic["Name"].ToString()) || gt.nickname.Contains(dic["Name"].ToString()))
+                                   .Select(it => it)
+                                   .ToPageList(parm.page, parm.limit, ref totalCount);
                     }
                 }
             }

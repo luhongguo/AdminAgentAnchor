@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Elight.Utility.Extension.DataCache;
 using Elight.Utility.Extension.SqlSugar;
+using Elight.Utility.Operator;
 
 namespace Elight.Logic.Base
 {
@@ -62,6 +63,7 @@ namespace Elight.Logic.Base
             {
                 ConnectionString = QPAgentAnchorDB,
                 DbType = DbType.SqlServer,
+                InitKeyType = InitKeyType.Attribute,//InitKeyType 是读取主键和自增列信息的方式
                 IsAutoCloseConnection = true,
                 ConfigureExternalServices = new ConfigureExternalServices()
                 {
@@ -69,13 +71,6 @@ namespace Elight.Logic.Base
                     DataInfoCacheService = cacheService
                 }
             });
-            //用来打印Sql方便你调式    
-            //db.Aop.OnLogExecuting = (sql, pars) =>
-            //{
-            //    Console.WriteLine(sql + "\r\n" +
-            //    db.Utilities.SerializeObject(pars.ToDictionary(it => it.ParameterName, it => it.Value)));
-            //    Console.WriteLine();
-            //};
             return db;
         }
         /// <summary>
@@ -120,6 +115,7 @@ namespace Elight.Logic.Base
             {
                 ConnectionString = strConnectionString,
                 DbType = DbType.SqlServer,
+                InitKeyType = InitKeyType.Attribute,//InitKeyType 是读取主键和自增列信息的方式
                 IsAutoCloseConnection = true,
                 ConfigureExternalServices = new ConfigureExternalServices()
                 {
@@ -127,13 +123,6 @@ namespace Elight.Logic.Base
                     DataInfoCacheService = cacheService
                 }
             });
-            //用来打印Sql方便你调式    
-            //db.Aop.OnLogExecuting = (sql, pars) =>
-            //{
-            //    Console.WriteLine(sql + "\r\n" +
-            //    db.Utilities.SerializeObject(pars.ToDictionary(it => it.ParameterName, it => it.Value)));
-            //    Console.WriteLine();
-            //};
             return db;
         }
     }

@@ -168,6 +168,7 @@
     <Compile Include="Sys\SysRebateEntity.cs" />
     <Compile Include="Sys\SysRole.cs" />
     <Compile Include="Sys\SysRoleAuthorize.cs" />
+    <Compile Include="Sys\SysShopEntity.cs" />
     <Compile Include="Sys\SysUser.cs" />
     <Compile Include="Sys\SysUserAnchor.cs" />
     <Compile Include="Sys\SysUserLogOn.cs" />

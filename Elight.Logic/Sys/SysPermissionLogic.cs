@@ -12,8 +12,13 @@ using Elight.Utility.Extension;
 
 namespace Elight.Logic.Sys
 {
+    /// <summary>
+    /// 权限处理
+    /// </summary>
     public class SysPermissionLogic : BaseLogic
     {
+
+        public readonly int ShopID = OperatorProvider.Instance.Current.ShopID;
         public bool ActionValidate(string userId, string action)
         {
             var authorizeModules = GetList(userId);
@@ -31,7 +36,11 @@ namespace Elight.Logic.Sys
             return false;
         }
 
-
+        /// <summary>
+        /// 根据用户ID获取权限集合
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public List<SysPermission> GetList(string userId)
         {
             using (var db = GetInstance())
@@ -41,7 +50,7 @@ namespace Elight.Logic.Sys
                       JoinType.Left,A.RoleId == B.RoleId,
                       JoinType.Left,C.Id == B.ModuleId,
                     })
-                    .Where((A, B, C) => A.UserId == userId && C.IsEnable == "1" && C.DeleteMark == "0")
+                    .Where((A, B, C) => A.UserId == userId && C.IsEnable == "1" && C.DeleteMark == "0" && C.ShopID == ShopID)
                     .OrderBy((A, B, C) => C.SortCode)
                     .Select((A, B, C) => new SysPermission
                     {
@@ -66,18 +75,17 @@ namespace Elight.Logic.Sys
             }
         }
 
-
         public List<SysPermission> GetList(int pageIndex, int pageSize, string keyWord, ref int totalCount)
         {
             using (var db = GetInstance())
             {
                 if (keyWord.IsNullOrEmpty())
                 {
-                    totalCount = db.Queryable<SysPermission>().Where(it => it.DeleteMark == "0").Count();
-                    return db.Queryable<SysPermission>().Where(it => it.DeleteMark == "0").OrderBy(it => it.SortCode).ToPageList(pageIndex, pageSize);
+                    totalCount = db.Queryable<SysPermission>().Where(it => it.DeleteMark == "0" && it.ShopID == ShopID).Count();
+                    return db.Queryable<SysPermission>().Where(it => it.DeleteMark == "0" && it.ShopID == ShopID).OrderBy(it => it.SortCode).ToPageList(pageIndex, pageSize);
                 }
-                totalCount = db.Queryable<SysPermission>().Where(it => it.DeleteMark == "0" && (it.Name.Contains(keyWord) || it.EnCode.Contains(keyWord))).Count();
-                return db.Queryable<SysPermission>().Where(it => it.DeleteMark == "0" && (it.Name.Contains(keyWord) || it.EnCode.Contains(keyWord))).OrderBy(it => it.SortCode).ToPageList(pageIndex, pageSize);
+                totalCount = db.Queryable<SysPermission>().Where(it => it.DeleteMark == "0" && it.ShopID == ShopID && (it.Name.Contains(keyWord) || it.EnCode.Contains(keyWord))).Count();
+                return db.Queryable<SysPermission>().Where(it => it.DeleteMark == "0" && it.ShopID == ShopID && (it.Name.Contains(keyWord) || it.EnCode.Contains(keyWord))).OrderBy(it => it.SortCode).ToPageList(pageIndex, pageSize);
             }
         }
 
@@ -112,12 +120,16 @@ namespace Elight.Logic.Sys
                 return db.Queryable<SysPermission>().Where(it => it.ParentId == parentId).ToList().Count();
             }
         }
-
-        public List<SysPermission> GetList()
+        /// <summary>
+        /// 根据商户获取权限集合
+        /// </summary>
+        /// <param name="shopID">商户ID</param>
+        /// <returns></returns>
+        public List<SysPermission> GetShopPowersList(int shopID)
         {
             using (var db = GetInstance())
             {
-                return db.Queryable<SysPermission>().Where(it => it.DeleteMark == "0").OrderBy(it => it.SortCode).ToList();
+                return db.Queryable<SysPermission>().Where(it => it.DeleteMark == "0" && it.ShopID == shopID).OrderBy(it => it.SortCode).ToList();
             }
         }
 
@@ -139,12 +151,13 @@ namespace Elight.Logic.Sys
                 model.Layer = model.ParentId == "1" ? 0 : Get(model.ParentId).Layer += 1;
                 model.IsEnable = model.IsEnable == null ? "0" : "1";
                 model.IsEdit = "1";
-                model.IsPublic ="1";
+                model.IsPublic = "1";
                 model.DeleteMark = "0";
                 model.CreateUser = OperatorProvider.Instance.Current.Account;
                 model.CreateTime = DateTime.Now;
                 model.ModifyUser = model.CreateUser;
                 model.ModifyTime = model.CreateTime;
+                model.ShopID = ShopID;
                 return db.Insertable<SysPermission>(model).ExecuteCommand();
             }
         }
@@ -153,7 +166,7 @@ namespace Elight.Logic.Sys
         {
             using (var db = GetInstance())
             {
-                model.Layer = model.ParentId == "1" ? 0 :  Get(model.ParentId).Layer += 1;
+                model.Layer = model.ParentId == "1" ? 0 : Get(model.ParentId).Layer += 1;
                 model.IsEnable = model.IsEnable == null ? "0" : "1";
                 //model.IsEdit = model.IsEdit == null ? "0" : "1";
                 //model.IsPublic = model.IsPublic == null ? "0" : "1";

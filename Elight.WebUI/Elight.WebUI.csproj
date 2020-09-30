@@ -276,6 +276,7 @@
     <Compile Include="Areas\System\Controllers\RebateController.cs" />
     <Compile Include="Areas\System\Controllers\RoleAuthorizeController.cs" />
     <Compile Include="Areas\System\Controllers\RoleController.cs" />
+    <Compile Include="Areas\System\Controllers\ShopController.cs" />
     <Compile Include="Areas\System\Controllers\UserAnchorController.cs" />
     <Compile Include="Areas\System\Controllers\UserController.cs" />
     <Compile Include="Areas\System\Controllers\UserLogOnController.cs" />
@@ -2094,6 +2095,9 @@
     <Content Include="Areas\System\Views\UserAnchor\HourDetails.cshtml" />
     <Content Include="Areas\System\Views\UserAnchor\GetAnchorInfo.cshtml" />
     <Content Include="Areas\System\Views\Rebate\Index.cshtml" />
+    <Content Include="Areas\System\Views\Shop\Index.cshtml" />
+    <Content Include="Areas\System\Views\Shop\Form.cshtml" />
+    <Content Include="Areas\System\Views\RoleAuthorize\ShopAuthorizeIndex.cshtml" />
     <None Include="Properties\PublishProfiles\发布.pubxml" />
     <Content Include="Scripts\buttons.js" />
     <Content Include="Scripts\index.js.flow" />

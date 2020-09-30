@@ -160,6 +160,7 @@
     <Compile Include="Sys\SysRebateLogic.cs" />
     <Compile Include="Sys\SysRoleAuthorizeLogic.cs" />
     <Compile Include="Sys\SysRoleLogic.cs" />
+    <Compile Include="Sys\SysShopLogic.cs" />
     <Compile Include="Sys\SysUserAnchorLogic.cs" />
     <Compile Include="Sys\SysUserRoleRelationLogic.cs" />
     <Compile Include="Sys\SysPermissionLogic.cs" />

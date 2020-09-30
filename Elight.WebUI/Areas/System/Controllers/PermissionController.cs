@@ -11,6 +11,8 @@ using Elight.Entity.Sys;
 using Elight.Utility.ResponseModels;
 using Elight.Utility.Format;
 using Elight.Utility.Extension;
+using System.ServiceModel;
+using Elight.Utility.Operator;
 
 namespace Elight.WebUI.Areas.System.Controllers
 {
@@ -101,7 +103,7 @@ namespace Elight.WebUI.Areas.System.Controllers
         [HttpPost]
         public ActionResult GetParent()
         {
-            var data = permissionLogic.GetList();
+            var data = permissionLogic.GetShopPowersList(OperatorProvider.Instance.Current.ShopID);
             var treeList = new List<TreeSelect>() { new TreeSelect { id = "1", text = "最高级菜单", parentId = "0" } };
             foreach (SysPermission item in data)
             {
