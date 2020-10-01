@@ -267,7 +267,6 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Areas\System\Controllers\AnchorController.cs" />
     <Compile Include="Areas\System\Controllers\ItemController.cs" />
     <Compile Include="Areas\System\Controllers\ItemsDetailController.cs" />
     <Compile Include="Areas\System\Controllers\LogController.cs" />
@@ -2078,7 +2077,6 @@
     <Fakes Include="Fakes\System.Threading.Tasks.fakes" />
     <Content Include="Areas\System\Views\_ViewStart.cshtml" />
     <Content Include="Areas\System\Views\Shared\_Layout.cshtml" />
-    <Content Include="Areas\System\Views\Anchor\Index.cshtml" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
@@ -2087,7 +2085,6 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
-    <Content Include="Areas\System\Views\Anchor\IndexS.cshtml" />
     <Content Include="Areas\System\Views\UserAnchor\Distribution.cshtml" />
     <Content Include="Areas\System\Views\UserAnchor\AddUserAnchor.cshtml" />
     <Content Include="Areas\System\Views\UserAnchor\AnchorReport.cshtml" />

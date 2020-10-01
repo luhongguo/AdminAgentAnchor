@@ -18,6 +18,7 @@ using Elight.Entity.Model;
 
 namespace Elight.WebUI.Areas.System.Controllers
 {
+    [LoginChecked]
     public class UserAnchorController : BaseController
     {
         private SysUserAnchorLogic sysUserAnchorLogic;

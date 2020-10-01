@@ -27,6 +27,7 @@ namespace Elight.Logic.Sys
                 return db.Queryable<SysUser>().Where((A) => A.Account == account && A.ShopID == 0).Select((A) => new SysUser
                 {
                     Id = A.Id,
+                    ShopID = A.ShopID,
                     Account = A.Account,
                     RealName = A.RealName,
                     CompanyCode = A.CompanyCode,
