@@ -2097,6 +2097,7 @@
     <Content Include="Areas\System\Views\RoleAuthorize\ShopAuthorizeIndex.cshtml" />
     <Content Include="Areas\System\Views\Shop\Distribution.cshtml" />
     <Content Include="Areas\System\Views\Shop\AddUserAnchor.cshtml" />
+    <Content Include="Areas\System\Views\Rebate\Form.cshtml" />
     <None Include="Properties\PublishProfiles\发布.pubxml" />
     <Content Include="Scripts\buttons.js" />
     <Content Include="Scripts\index.js.flow" />

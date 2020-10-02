@@ -63,6 +63,11 @@ namespace Elight.WebUI.Areas.System.Controllers
         {
             if (model.Id.IsNullOrEmpty())
             {
+                var userEntity = userLogic.CheckUserName(model.Account);
+                if (userEntity != null)
+                {
+                    return Error("已存在当前用户名，请重新输入");
+                }
                 DateTime defaultDt = DateTime.Today;
                 DateTime.TryParse(model.StrBirthday + " 00:00:00", out defaultDt);
                 model.Birthday = defaultDt;
@@ -110,7 +115,7 @@ namespace Elight.WebUI.Areas.System.Controllers
         [HttpPost]
         public ActionResult CheckAccount(string userName)
         {
-            var userEntity = userLogic.GetByUserName(userName);
+            var userEntity = userLogic.CheckUserName(userName);
             if (userEntity != null)
             {
                 return Error("已存在当前用户名，请重新输入");

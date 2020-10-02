@@ -7,18 +7,25 @@ using Newtonsoft.Json;
 using SqlSugar;
 namespace Elight.Entity.Sys
 {
+    /// <summary>
+    /// 返点实例
+    /// </summary>
     [SugarTable("QPAgentAnchorDB.dbo.Sys_Rebate")]
     public class SysRebateEntity
     {
         /// <summary>
         /// 主键ID
         /// </summary>
-        [SugarColumn(ColumnName = "id", IsPrimaryKey = true)]
+        [SugarColumn(ColumnName = "id", IsPrimaryKey = true, IsIdentity = true)]
         public int id { get; set; }
         /// <summary>
         /// 主播ID
         /// </summary>
-        public int anchorID { get; set; }
+        public int ShopID { get; set; }
+        /// <summary>
+        /// 用户ID
+        /// </summary>
+        public string UserID { get; set; }
         /// <summary>
         /// 礼物返点
         /// </summary>
@@ -40,10 +47,11 @@ namespace Elight.Entity.Sys
         /// 修改时间
         /// </summary>
         [JsonConverter(typeof(DateTimeToJson))]
-        public DateTime ModifiedTime { get; set; }
+        public DateTime? ModifiedTime { get; set; }
         /// <summary>
-        /// 父ID
+        /// 用户账号
         /// </summary>
-        public string ParentID { get; set; }
+        [SugarColumn(IsIgnore = true)]
+        public string UserAccount { get; set; }
     }
 }

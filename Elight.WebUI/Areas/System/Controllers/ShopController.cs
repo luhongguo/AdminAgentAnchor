@@ -59,7 +59,7 @@ namespace Elight.WebUI.Areas.System.Controllers
         [HttpPost, AuthorizeChecked, ValidateAntiForgeryToken]
         public ActionResult Form(SysShopEntity model)
         {
-            if (model.ID == null)
+            if (model.ID == 0)
             {
                 int row = sysShopLogic.Insert(model);
                 return row > 0 ? Success() : Error();

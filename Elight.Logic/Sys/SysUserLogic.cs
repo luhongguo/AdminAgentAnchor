@@ -16,7 +16,7 @@ namespace Elight.Logic.Sys
     public class SysUserLogic : BaseLogic
     {
         /// <summary>
-        /// 根据账号得到用户信息
+        /// 根据账号得到ShopID=0 的用户信息 
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
@@ -50,7 +50,41 @@ namespace Elight.Logic.Sys
                 }).First();
             }
         }
-
+        /// <summary>
+        /// 验证用户名是否存在
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public SysUser CheckUserName(string account)
+        {
+            using (var db = GetInstance())
+            {
+                return db.Queryable<SysUser>().Where((A) => A.Account == account).Select(A => new SysUser
+                {
+                    Id = A.Id,
+                    ShopID = A.ShopID,
+                    Account = A.Account,
+                    RealName = A.RealName,
+                    CompanyCode = A.CompanyCode,
+                    Avatar = A.Avatar,
+                    Gender = A.Gender,
+                    Birthday = A.Birthday,
+                    MobilePhone = A.MobilePhone,
+                    Email = A.Email,
+                    Signature = A.Signature,
+                    Address = A.Address,
+                    CompanyId = A.CompanyId,
+                    IsEnabled = A.IsEnabled,
+                    SortCode = A.SortCode,
+                    DepartmentId = A.DepartmentId,
+                    DeleteMark = A.DeleteMark,
+                    CreateUser = A.CreateUser,
+                    CreateTime = A.CreateTime,
+                    ModifyUser = A.ModifyUser,
+                    ModifyTime = A.ModifyTime,
+                }).First();
+            }
+        }
         /// <summary>
         /// 修改用户基础信息
         /// </summary>
@@ -136,7 +170,7 @@ namespace Elight.Logic.Sys
                     db.Ado.CommitTran();
                     return row;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     db.Ado.RollbackTran();
                     new LogLogic().Write(Level.Error, "新增用户", ex.Message, ex.StackTrace);
@@ -188,9 +222,9 @@ namespace Elight.Logic.Sys
         {
             using (var db = GetInstance())
             {
-                return db.Queryable<SysUser,SysShopEntity>((A,B)=>new object[] {JoinType.Left,A.ShopID==B.ID })
+                return db.Queryable<SysUser, SysShopEntity>((A, B) => new object[] { JoinType.Left, A.ShopID == B.ID })
                          .WhereIF(!keyWord.IsNullOrEmpty(), it => (it.Account.Contains(keyWord) || it.RealName.Contains(keyWord)))
-                         .Where((A) => A.DeleteMark == "0").OrderBy((A) => A.SortCode).Select((A,B) => new SysUser
+                         .Where((A) => A.DeleteMark == "0").OrderBy((A) => A.SortCode).Select((A, B) => new SysUser
                          {
                              Id = A.Id,
                              Account = A.Account,
@@ -198,7 +232,7 @@ namespace Elight.Logic.Sys
                              Avatar = A.Avatar,
                              CompanyCode = A.CompanyCode,
                              IsEnabled = A.IsEnabled,
-                             ShopName=B.Name
+                             ShopName = B.Name
                          }).ToPageList(pageIndex, pageSize, ref totalCount);
             }
         }

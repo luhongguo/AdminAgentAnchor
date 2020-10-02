@@ -8,11 +8,13 @@ using System.Threading.Tasks;
 
 namespace Elight.Entity.Sys
 {
-
+    /// <summary>
+    /// 日志实例
+    /// </summary>
     [SugarTable("Sys_Log")]
     public partial class SysLog
     {
-        [SugarColumn(ColumnName = "Id", IsPrimaryKey = true)]
+        [SugarColumn(ColumnName = "Id", IsPrimaryKey = true, IsIdentity = true)]
         public int Id { get; set; }
         [JsonConverter(typeof(DateTimeToJson))]
         [SugarColumn(ColumnName = "CreateTime")]
