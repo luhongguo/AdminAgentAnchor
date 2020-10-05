@@ -1,0 +1,178 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>经纪人、主播返点详细信息</title>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Content/framework/css/console.css" rel="stylesheet" />
+    <script src="~/Content/jquery/jquery.min.js"></script>
+    <script src="~/Content/layui/layui.js"></script>
+    <script src="~/Content/dataTime/dataTime.js"></script>
+</head>
+<body>
+    <div class="panel animated fadeIn">
+        <div class="panel-body">
+            <blockquote class="layui-elem-quote">
+                <div class="form-inline layui-form user-search">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">开始时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="startTimeReload" name="startTime" placeholder="" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">结束时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="endTimeReload" name="endTime" placeholder="" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <div class="layui-input-block">
+                            <input type="text" name="AgentName" placeholder="请输入上级账号" id="AgentName" autocomplete="off" class="layui-input" maxlength="25">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <div class="layui-input-block">
+                            <input type="text" name="AnchorName" placeholder="请输入主播账号或昵称" id="AnchorName" autocomplete="off" class="layui-input" maxlength="25">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button class="layui-btn layuiadmin-btn-admin" lay-submit lay-filter="search" data-type="reload">
+                            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                        </button>
+                    </div>
+                </div>
+            </blockquote>
+            <div id="toolbar" class="elight-table-toolbar">
+                <div class="layui-btn-group">
+
+                </div>
+                @*<button id="btnSearch" class="toolbar-search-button layui-btn layui-btn-normal layui-btn-small">
+                        <i class="layui-icon">&#xe615;</i>
+                    </button>
+                    <div class="toolbar-search-input">
+                        <input type="text" id="keyWord" placeholder="主播账号或昵称" autocomplete="off" class="layui-input" style="height:39px">
+                    </div>*@
+            </div>
+            <table id="table" lay-filter="table"></table>
+        </div>
+    </div>
+</body>
+</html>
+
+<script type="text/javascript">
+    layui.use(['laydate', 'form', 'table'], function () {
+        var laydate = layui.laydate;
+        var form = layui.form;
+        var table = layui.table;
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#startTimeReload' //指定元素
+            , type: 'date'
+            , value: getNowFormatDate("data", -1) 
+        });
+        laydate.render({
+            elem: '#endTimeReload' //指定元素
+            , type: 'date'
+            , value: getNowFormatDate("data", 0) 
+        });
+        renderTable(getWhere());
+        function renderTable(where) {
+            table.render({
+                elem: '#table'
+                , method: "post"
+                , url: '/System/TipIncomeDetail/GetFlowDetailsPage' //数据接口
+                , page: true //开启分页
+                , totalRow: true //开启合计
+                , where: where
+                , cols: [[ //表头
+
+                    { field: 'AnchorName', title: '主播名称', totalRowText: '合计：' }
+                    , {
+                        field: 'UserName', title: '上级账号', templet: function (d) {
+                            if (d.userName == null) {
+                                return "无上级";
+                            }
+                            return d.UserName;
+                        }
+                    }
+                    , { field: 'UserIncome', title: '上级收益', totalRow: true }
+                    , { field: 'AnchorIncome', title: '主播收益', totalRow: true }
+                    , { field: 'PlatformIncome', title: '平台收益', totalRow: true }
+                    , {
+                        field: 'UserRebate', title: '代理返点', templet: function (d) {
+                            return d.UserRebate + "%";
+                        }
+                    }
+                    , {
+                        field: 'PlatformRebate', title: '平台返点', templet: function (d) {
+                            return d.PlatformRebate + "%";
+                        }
+                    }
+                    , { field: 'orderno', title: '订单号' }
+                    , { field: 'giftname', title: '礼物名称' }
+                    , { field: 'price', title: '单价' }
+                    , { field: 'quantity', title: '数量' }
+                    , { field: 'totalamount', title: '总金额', totalRow: true }
+                    , { field: 'sendtime', title: '打赏时间', width: 160 }
+                ]]
+                , request: {
+                    pageName: 'parm.page' //页码的参数名称，默认：page
+                    , limitName: 'parm.limit' //每页数据量的参数名，默认：limit
+                }
+                , limit: 10
+                , id: "report"
+            });
+        }
+        //监听搜索
+        form.on('submit(search)', function (data) {
+            reloadTable(data.field)
+        });
+        function getWhere() {
+            var AgentName = $("#AgentName").val();
+            var AnchorName = $("#AnchorName").val()
+            var startTime = $("#startTimeReload").val();
+            var endTime = $("#endTimeReload").val();
+            return { "parm.where": JSON.stringify({ AgentName: AgentName, AnchorName: AnchorName, startTime: startTime, endTime: endTime }) };
+            //var where = {
+            //    page: 1, where: JSON.stringify({ "parm.where": { userName: userName, startTime: startTime, endTime: endTime } })
+            //}
+        }
+        function reloadTable(field) {
+            if (field.userName == "") {
+                return layer.msg("没有主播，请联系管理员添加！");
+            }
+            if (field.endTime != "" && field.startTime == "") {
+                return layer.msg("开始时间不能为空");
+            }
+            if (field.endTime == "" && field.startTime != "") {
+                return layer.msg("结束时间不能为空");
+            }
+            if (field.endTime < field.startTime) {
+                return layer.msg("开始时间不能大于结束时间");
+            }
+            var starttime = new Date(field.startTime);
+            var endtime = new Date(field.endTime);
+            var nowDate = new Date();
+            if (starttime > nowDate) {
+                layer.msg("开始时间不能大于当前时间！");
+                return;
+            }
+            //执行重载
+            table.reload('report', {
+                page: {
+                    curr: 1
+                },
+                where: {
+                    "parm.where": JSON.stringify(field)
+                }
+            });
+        }
+
+    });
+</script>

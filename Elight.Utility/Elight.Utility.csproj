@@ -236,6 +236,7 @@
     <Compile Include="Security\AESHelper.cs" />
     <Compile Include="Security\Encrypt.cs" />
     <Compile Include="Security\VerifyCode.cs" />
+    <Compile Include="Utils.cs" />
     <Compile Include="Web\Keys.cs" />
     <Compile Include="Web\WebHelper.cs" />
   </ItemGroup>

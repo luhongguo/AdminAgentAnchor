@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Elight.Entity.Sys
 {
 
-    [SugarTable("Sys_User")]
+    [SugarTable("QPAgentAnchorDB.dbo.Sys_User")]
     public partial class SysUser : ModelContext
     {
         [SugarColumn(ColumnName = "Id", IsPrimaryKey = true)]

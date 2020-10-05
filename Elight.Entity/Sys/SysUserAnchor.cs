@@ -16,5 +16,6 @@ namespace Elight.Entity.Sys
         public string id { get; set; }
         public string UserID { get; set; }
         public int AnchorID { get; set; }
+        public int AnchorName { get; set; }
     }
 }

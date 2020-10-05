@@ -108,8 +108,8 @@
     <Reference Include="Renci.SshNet, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
       <HintPath>..\packages\SSH.NET.2016.1.0\lib\net40\Renci.SshNet.dll</HintPath>
     </Reference>
-    <Reference Include="SqlSugar, Version=5.0.0.15, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\sqlSugar.5.0.0.15\lib\SqlSugar.dll</HintPath>
+    <Reference Include="SqlSugar, Version=5.0.0.17, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\sqlSugar.5.0.0.17\lib\SqlSugar.dll</HintPath>
     </Reference>
     <Reference Include="SyntacticSugar, Version=2.4.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SyntacticSugar.2.4.1\lib\net40\SyntacticSugar.dll</HintPath>
@@ -153,6 +153,7 @@
   <ItemGroup>
     <Compile Include="BaseLogic.cs" />
     <Compile Include="Sys\SysAnchorLogic.cs" />
+    <Compile Include="Sys\SysAnchorRebateLogic.cs" />
     <Compile Include="Sys\SysItemLogic.cs" />
     <Compile Include="Sys\SysItemsDetailLogic.cs" />
     <Compile Include="Sys\SysLogLogic.cs" />
@@ -161,6 +162,7 @@
     <Compile Include="Sys\SysRoleAuthorizeLogic.cs" />
     <Compile Include="Sys\SysRoleLogic.cs" />
     <Compile Include="Sys\SysShopLogic.cs" />
+    <Compile Include="Sys\SysTipIncomeDetailLogic.cs" />
     <Compile Include="Sys\SysUserAnchorLogic.cs" />
     <Compile Include="Sys\SysUserRoleRelationLogic.cs" />
     <Compile Include="Sys\SysPermissionLogic.cs" />

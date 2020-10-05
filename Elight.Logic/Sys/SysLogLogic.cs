@@ -43,7 +43,7 @@ namespace Elight.Logic.Sys
         /// <param name="message">信息</param>
         /// <param name="account">操作人</param>
         /// <param name="realName">真实姓名</param>
-        public void Write(Level level, string operation, string message ,string stackTrace, string account="", string realName="")
+        public void Write(Level level, string operation, string message, string stackTrace, string account = "", string realName = "")
         {
             using (var db = GetInstance())
             {
@@ -59,12 +59,26 @@ namespace Elight.Logic.Sys
                     log.IP = Net.Ip;
                     log.IPAddress = Net.GetAddress(Net.Ip);
                     log.Browser = Net.Browser;
-                    log.StackTrace = stackTrace;
+                    log.StackTrace = stackTrace.Length > 500 ? stackTrace.Substring(0, 500) : stackTrace;
                     db.Insertable<SysLog>(log).ExecuteCommand();
                 }
                 catch (Exception ex)
                 {
-                  
+
+                }
+            }
+        }
+        public void Write(SysLog logModel)
+        {
+            using (var db = GetInstance())
+            {
+                try
+                {
+                    db.Insertable<SysLog>(logModel).ExecuteCommand();
+                }
+                catch (Exception ex)
+                {
+
                 }
             }
         }

@@ -365,13 +365,17 @@ $.formSubmit = function (options) {
         async: options.async,
         dataType: "json",
         success: function (data) {
-            if (options.success && $.isFunction(options.success)) {
-                options.success(data);
-            }
-            if (options.close) {
-                $.layerClose();
-            }
-            if (options.shoQingDaig) {
+            if (data.state == 1) {//1成功
+                if (options.success && $.isFunction(options.success)) {
+                    options.success(data);
+                }
+                if (options.close) {
+                    $.layerClose();
+                }
+                if (options.shoQingDaig) {
+                    $.layerMsg(data.message, data.state);
+                }
+            } else {
                 $.layerMsg(data.message, data.state);
             }
         },

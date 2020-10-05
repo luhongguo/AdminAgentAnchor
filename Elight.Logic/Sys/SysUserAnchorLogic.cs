@@ -347,7 +347,7 @@ where sendtime>='{dic["startTime"].ToString()}' and sendtime<'{dic["endTime"].To
                 using (var db = GetSqlSugarDB(DbConnType.QPAnchorRecordDB))
                 {
                     var query = db.SqlQueryable<TipTemplateModel>($@"select orderno,giftname,price,quantity,ratio, totalamount,username,sendtime  from tip_" + dic["userName"].ToString()
-                               + $@" where sendtime>='{dic["startTime"].ToString()}' and sendtime<'{dic["endTime"].ToString()}'");
+                               + $@" where sendtime>='{dic["startTime"].ToString()}' and sendtime<'{dic["endTime"].ToString()}' and  issettle=1");
                     sumTotalAmount = query.Clone().Sum(it => it.totalamount);
                     res = query.ToPageList(parm.page, parm.limit, ref totalCount);
                 }

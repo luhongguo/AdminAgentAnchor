@@ -71,7 +71,7 @@ namespace Elight.WebUI.Areas.System.Controllers
                 var rebateModel = sysRebateLogic.GetRebateByAccount(userModel.Id);
                 if (rebateModel != null)
                 {
-                    return Error("用户已有返点信息，不可重复添加");
+                    return Error("用户已有平台返点信息，不可重复添加");
                 }
                 model.ShopID = userModel.ShopID;
                 model.UserID = userModel.Id;

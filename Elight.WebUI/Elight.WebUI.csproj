@@ -267,6 +267,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\System\Controllers\AnchorRebateController.cs" />
     <Compile Include="Areas\System\Controllers\ItemController.cs" />
     <Compile Include="Areas\System\Controllers\ItemsDetailController.cs" />
     <Compile Include="Areas\System\Controllers\LogController.cs" />
@@ -276,6 +277,7 @@
     <Compile Include="Areas\System\Controllers\RoleAuthorizeController.cs" />
     <Compile Include="Areas\System\Controllers\RoleController.cs" />
     <Compile Include="Areas\System\Controllers\ShopController.cs" />
+    <Compile Include="Areas\System\Controllers\TipIncomeDetailController.cs" />
     <Compile Include="Areas\System\Controllers\UserAnchorController.cs" />
     <Compile Include="Areas\System\Controllers\UserController.cs" />
     <Compile Include="Areas\System\Controllers\UserLogOnController.cs" />
@@ -2098,6 +2100,9 @@
     <Content Include="Areas\System\Views\Shop\Distribution.cshtml" />
     <Content Include="Areas\System\Views\Shop\AddUserAnchor.cshtml" />
     <Content Include="Areas\System\Views\Rebate\Form.cshtml" />
+    <Content Include="Areas\System\Views\TipIncomeDetail\Index.cshtml" />
+    <Content Include="Areas\System\Views\AnchorRebate\Index.cshtml" />
+    <Content Include="Areas\System\Views\AnchorRebate\Form.cshtml" />
     <None Include="Properties\PublishProfiles\发布.pubxml" />
     <Content Include="Scripts\buttons.js" />
     <Content Include="Scripts\index.js.flow" />

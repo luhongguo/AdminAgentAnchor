@@ -1,0 +1,87 @@
+﻿@{
+    ViewBag.Title = "返点编辑";
+    Layout = "~/Views/Shared/_Form.cshtml";
+}
+<form id="form" class="layui-form" style="margin-top: 25px">
+    @Html.AntiForgeryToken()
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <input type="hidden" name="id" />
+            <label class="layui-form-label label-required">主播账号</label>
+            <div class="layui-input-inline">
+                <input type="text" name="AnchorName" lay-verify="required" placeholder="请输入主播账号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <input type="hidden" name="id" />
+            <label class="layui-form-label">主播昵称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="AnchorNickName" placeholder="请输入主播昵称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label label-required">礼物返点</label>
+            <div class="layui-input-inline">
+                <input type="text" name="TipRebate" lay-verify="required" placeholder="请输入礼物返点" autocomplete="off" class="layui-input">
+            </div>
+            <label class="layui-form-label" style="width:5px">%</label>
+        </div>
+
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label label-required">工时返点</label>
+            <div class="layui-input-inline">
+                <input type="text" name="HourRebate" lay-verify="required" placeholder="请输入工时返点" autocomplete="off" class="layui-input">
+            </div>
+            <label class="layui-form-label" style="width:5px">%</label>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label ">上级账号</label>
+            <div class="layui-input-inline">
+                <input type="text" name="UserAccount"  placeholder="请输入上级账号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item" style="display: none">
+        <div class="layui-input-inline">
+            <button id="btnSubmit" class="layui-btn" lay-submit lay-filter="add">提交</button>
+        </div>
+    </div>
+</form>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        var primaryKey = $.getQueryString("primaryKey");
+        if (primaryKey) {
+            $.ajax({
+                url: "/System/AnchorRebate/GetForm",
+                data: { primaryKey: primaryKey },
+                type: "post",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    $("#form").formSerialize(data);
+                    $("input[name='AnchorNickName']").prop("disabled", true).addClass('layui-disabled');
+                    $("input[name='AnchorName']").prop("disabled", true).addClass('layui-disabled');
+                    $("input[name='UserAccount']").prop("disabled", true).addClass('layui-disabled');
+                }
+            });
+        }
+        form.render();
+        form.on('submit(add)', function (data) {
+            $.formSubmit({
+                url: "/System/AnchorRebate/Form",
+                data: data.field,
+            });
+            return false;
+        });
+    });
+
+</script>

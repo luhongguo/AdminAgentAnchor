@@ -8,7 +8,7 @@ using SqlSugar;
 namespace Elight.Entity.Sys
 {
     /// <summary>
-    /// 返点实例
+    /// 经纪人返点实例(返给商户的)
     /// </summary>
     [SugarTable("QPAgentAnchorDB.dbo.Sys_Rebate")]
     public class SysRebateEntity
@@ -19,7 +19,7 @@ namespace Elight.Entity.Sys
         [SugarColumn(ColumnName = "id", IsPrimaryKey = true, IsIdentity = true)]
         public int id { get; set; }
         /// <summary>
-        /// 主播ID
+        /// 商户ID
         /// </summary>
         public int ShopID { get; set; }
         /// <summary>

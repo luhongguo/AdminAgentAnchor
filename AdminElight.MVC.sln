@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27428.2037
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elight.WebUI", "Elight.WebUI\Elight.WebUI.csproj", "{BC6F6B1F-044C-4618-B23E-323D3CF3E906}"
 EndProject
@@ -10,11 +10,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elight.Logic", "Elight.Logi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elight.Entity", "Elight.Entity\Elight.Entity.csproj", "{3A2CBA03-F83E-4505-BF6D-3CE73164252A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimedTasksService", "TimedTasksService\TimedTasksService.csproj", "{0EA7833C-0263-405B-AFF3-E8F8D078AAA4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Anchor.Redis", "Anchor.Redis\Anchor.Redis.csproj", "{A65DAAAB-DD94-442F-8F33-FBAF6A894870}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{9898D754-EB21-4384-B810-99AE328D13AE}"
+EndProject
 Global
-	GlobalSection(SubversionScc) = preSolution
-		Svn-Managed = True
-		Manager = AnkhSVN - Subversion Support for Visual Studio
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
@@ -72,11 +74,51 @@ Global
 		{3A2CBA03-F83E-4505-BF6D-3CE73164252A}.Release|x64.Build.0 = Release|x64
 		{3A2CBA03-F83E-4505-BF6D-3CE73164252A}.Release|x86.ActiveCfg = Release|x86
 		{3A2CBA03-F83E-4505-BF6D-3CE73164252A}.Release|x86.Build.0 = Release|x86
+		{0EA7833C-0263-405B-AFF3-E8F8D078AAA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EA7833C-0263-405B-AFF3-E8F8D078AAA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EA7833C-0263-405B-AFF3-E8F8D078AAA4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0EA7833C-0263-405B-AFF3-E8F8D078AAA4}.Debug|x64.Build.0 = Debug|Any CPU
+		{0EA7833C-0263-405B-AFF3-E8F8D078AAA4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0EA7833C-0263-405B-AFF3-E8F8D078AAA4}.Debug|x86.Build.0 = Debug|Any CPU
+		{0EA7833C-0263-405B-AFF3-E8F8D078AAA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EA7833C-0263-405B-AFF3-E8F8D078AAA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EA7833C-0263-405B-AFF3-E8F8D078AAA4}.Release|x64.ActiveCfg = Release|Any CPU
+		{0EA7833C-0263-405B-AFF3-E8F8D078AAA4}.Release|x64.Build.0 = Release|Any CPU
+		{0EA7833C-0263-405B-AFF3-E8F8D078AAA4}.Release|x86.ActiveCfg = Release|Any CPU
+		{0EA7833C-0263-405B-AFF3-E8F8D078AAA4}.Release|x86.Build.0 = Release|Any CPU
+		{A65DAAAB-DD94-442F-8F33-FBAF6A894870}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A65DAAAB-DD94-442F-8F33-FBAF6A894870}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A65DAAAB-DD94-442F-8F33-FBAF6A894870}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A65DAAAB-DD94-442F-8F33-FBAF6A894870}.Debug|x64.Build.0 = Debug|Any CPU
+		{A65DAAAB-DD94-442F-8F33-FBAF6A894870}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A65DAAAB-DD94-442F-8F33-FBAF6A894870}.Debug|x86.Build.0 = Debug|Any CPU
+		{A65DAAAB-DD94-442F-8F33-FBAF6A894870}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A65DAAAB-DD94-442F-8F33-FBAF6A894870}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A65DAAAB-DD94-442F-8F33-FBAF6A894870}.Release|x64.ActiveCfg = Release|Any CPU
+		{A65DAAAB-DD94-442F-8F33-FBAF6A894870}.Release|x64.Build.0 = Release|Any CPU
+		{A65DAAAB-DD94-442F-8F33-FBAF6A894870}.Release|x86.ActiveCfg = Release|Any CPU
+		{A65DAAAB-DD94-442F-8F33-FBAF6A894870}.Release|x86.Build.0 = Release|Any CPU
+		{9898D754-EB21-4384-B810-99AE328D13AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9898D754-EB21-4384-B810-99AE328D13AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9898D754-EB21-4384-B810-99AE328D13AE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9898D754-EB21-4384-B810-99AE328D13AE}.Debug|x64.Build.0 = Debug|Any CPU
+		{9898D754-EB21-4384-B810-99AE328D13AE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9898D754-EB21-4384-B810-99AE328D13AE}.Debug|x86.Build.0 = Debug|Any CPU
+		{9898D754-EB21-4384-B810-99AE328D13AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9898D754-EB21-4384-B810-99AE328D13AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9898D754-EB21-4384-B810-99AE328D13AE}.Release|x64.ActiveCfg = Release|Any CPU
+		{9898D754-EB21-4384-B810-99AE328D13AE}.Release|x64.Build.0 = Release|Any CPU
+		{9898D754-EB21-4384-B810-99AE328D13AE}.Release|x86.ActiveCfg = Release|Any CPU
+		{9898D754-EB21-4384-B810-99AE328D13AE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D8B51428-7D3A-4715-B807-517BE2224CE7}
+	EndGlobalSection
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
 	EndGlobalSection
 EndGlobal

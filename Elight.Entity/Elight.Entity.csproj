@@ -152,15 +152,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enum\ModuleType.cs" />
+    <Compile Include="Model\AnchorNaneListModel.cs" />
     <Compile Include="Model\HourModel.cs" />
     <Compile Include="Model\IncomeTemplateModel.cs" />
+    <Compile Include="Model\TipIncomeDetailModel.cs" />
     <Compile Include="Model\TipTemplateModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sys\CompanyEntity.cs" />
     <Compile Include="Sys\DateTimeToJson.cs" />
+    <Compile Include="Sys\GiftEntity.cs" />
     <Compile Include="Sys\LiveCallbackHourEntity.cs" />
     <Compile Include="Sys\SubCompanyCodeEntity.cs" />
     <Compile Include="Sys\SysAnchor.cs" />
+    <Compile Include="Sys\SysAnchorRebateEntity.cs" />
     <Compile Include="Sys\SysItem.cs" />
     <Compile Include="Sys\SysItemDetail.cs" />
     <Compile Include="Sys\SysLog.cs" />
@@ -171,6 +175,8 @@
     <Compile Include="Sys\SysRoleAuthorize.cs" />
     <Compile Include="Sys\SysShopAnchorEntity.cs" />
     <Compile Include="Sys\SysShopEntity.cs" />
+    <Compile Include="Sys\SysTipEntity.cs" />
+    <Compile Include="Sys\SysTipIncomeDetailEntity.cs" />
     <Compile Include="Sys\SysUser.cs" />
     <Compile Include="Sys\SysUserAnchor.cs" />
     <Compile Include="Sys\SysUserLogOn.cs" />
