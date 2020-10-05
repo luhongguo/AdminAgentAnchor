@@ -19,7 +19,7 @@ namespace TimedTasksService
     public partial class TipService
     {
         /// <summary>
-        /// 按天统计代理的礼物收益
+        /// 统计主播的 礼物收益
         /// </summary>
         public static void StatisticsAgentTipIncome(DateTime time)
         {
@@ -37,14 +37,17 @@ namespace TimedTasksService
                     }
                     if (flag)
                     {
+                        List<TipEntity> updateTipList = new List<TipEntity>();//采集礼物的id集合
                         List<SysTipIncomeDetailEntity> list = db.Queryable<TipEntity, SysAnchorRebateEntity, SysRebateEntity>((at, st, ct) =>
                          new object[] {
                             JoinType.Left, at.AnchorID==st.AnchorID,
                             JoinType.Left,st.parentID==ct.UserID
                          })
                                .Where((at, st, ct) => at.sendtime >= Convert.ToDateTime(dt.ToString("yyyy-MM-dd")) && at.sendtime < Convert.ToDateTime(time.ToString("yyyy-MM-dd")))//前1天数据
+                               .Where((at, st, ct) => at.status == 1)
                                .Select((at, st, ct) => new SysTipIncomeDetailEntity
                                {
+                                   id = at.id,
                                    ShopID = 0,
                                    UserID = ct.UserID,
                                    AnchorID = at.AnchorID,
@@ -52,16 +55,19 @@ namespace TimedTasksService
                                    StartDate = StartDate,
                                    totalamount = at.totalamount,
                                    UserRebate = st.TipRebate,
-                                   PlatformRebate = ct.TipRebate
+                                   PlatformRebate = ct.TipRebate,
                                })
                                .Mapper((it) =>
                                {
+                                   updateTipList.Add(new TipEntity { id = it.id, status = 0 });
                                    it.PlatformIncome = it.totalamount * it.PlatformRebate / 100;//平台收益
                                    it.UserIncome = (it.totalamount - it.PlatformIncome) * it.UserRebate / 100;//经纪人收益=总金额减去平台收益 * 主播返点
                                    it.AnchorIncome = (it.totalamount - it.PlatformIncome) * (100 - it.UserRebate) / 100;//主播收益=总金额减去平台收益 * （100-主播返点）
                                })
                                .ToList();
+                        db.Updateable(updateTipList).ExecuteCommand();//id是礼物表id 批量更新状态
                         db.Insertable(list).ExecuteCommand();
+
                     }
                 }
                 Console.WriteLine("按天统计代理的礼物收益：" + time);
@@ -82,7 +88,9 @@ namespace TimedTasksService
         /// <summary>
         /// 打赏礼物采集
         /// </summary>
-        public static void StatisticsCollectTipGifts(DateTime time)
+        /// <param name="time">时间</param>
+        /// <param name="pageSize">采集条数</param>
+        public static void StatisticsCollectTipGifts(DateTime time,int pageSize)
         {
             try
             {
@@ -98,7 +106,7 @@ namespace TimedTasksService
                 DateTime startTime = time.AddHours(-12);//第一次执行获取前面12个小时的数据
                 if (redis.KeyExists(key))
                 {
-                    startTime = redis.StringGet<DateTime>(key).AddSeconds(-10);//读取上次采集数据的最大时间 往前加10秒重新采集（怕漏单）
+                    startTime = redis.StringGet<DateTime>(key).AddSeconds(-2);//读取上次采集数据的最大时间 往前加2秒重新采集（怕漏单）
                 }
                 DateTime endTime = DateTime.Now;//当前时间即可
                 //List<Model.dt_anchor> dt_Anchors = new BLL.dt_anchor().GetModelList("");
@@ -116,7 +124,7 @@ namespace TimedTasksService
                         redis.StringSet("anchor_gift_", gifts, TimeSpan.FromMinutes(5));
                     }
                 }
-                PagingCollect(gifts, startTime, endTime, out totalCount, out endTime);
+                PagingCollect(gifts, pageSize, startTime, endTime, out totalCount, out endTime);
 
                 //将最后获取到的最大时间写入
                 redis.StringSet<DateTime>(key, endTime);
@@ -132,7 +140,7 @@ namespace TimedTasksService
                 });
             }
         }
-        public static void PagingCollect(List<GiftEntity> gifts, DateTime startTime, DateTime endTime, out int totalCount, out DateTime maxDateTime)
+        public static void PagingCollect(List<GiftEntity> gifts,int pageSize, DateTime startTime, DateTime endTime, out int totalCount, out DateTime maxDateTime)
         {
             try
             {
@@ -151,9 +159,9 @@ namespace TimedTasksService
                 //    }
                 //    db.Insertable(addList).ExecuteCommand();
                 //}
-                //时间段内的100条数据，
+                //时间段内的n条数据，
                 string result = Utils.HttpGet(api_url + string.Format("?pageIndex={0}&pageSize={1}&startTime={2}&endTime={3}",
-                     1, 100, startTime, endTime), "Bearer QW5jaG9yX01vtaunclo66M2ak1odXFSSW54YUQ=");
+                     1, pageSize, startTime, endTime), "Bearer QW5jaG9yX01vtaunclo66M2ak1odXFSSW54YUQ=");
                 //将json转换为JObject  
                 JObject jObj = JObject.Parse(result);
                 var s = jObj["et"]["data"].Children().ToList();

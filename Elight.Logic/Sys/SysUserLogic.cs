@@ -230,7 +230,6 @@ namespace Elight.Logic.Sys
                              Account = A.Account,
                              RealName = A.RealName,
                              Avatar = A.Avatar,
-                             CompanyCode = A.CompanyCode,
                              IsEnabled = A.IsEnabled,
                              ShopName = B.Name
                          }).ToPageList(pageIndex, pageSize, ref totalCount);

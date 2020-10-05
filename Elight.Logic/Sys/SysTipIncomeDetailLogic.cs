@@ -59,6 +59,7 @@ namespace Elight.Logic.Sys
                          {
                              UserName = bt.Account,
                              AnchorName = ct.username,
+                             AnchorNickName=ct.nickname,
                              UserIncome = at.UserIncome,
                              AnchorIncome = at.AnchorIncome,
                              PlatformIncome = at.PlatformIncome,

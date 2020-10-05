@@ -95,6 +95,7 @@ $.layerConfirm = function (options) {
  * @param {String} type 
  */
 $.layerMsg = function (content, type, callback) {
+    console.log(type)
     if (type != undefined) {
         var icon = "";
         if (type == 'warning' || type == 0) {
@@ -365,6 +366,7 @@ $.formSubmit = function (options) {
         async: options.async,
         dataType: "json",
         success: function (data) {
+            console.log(data);
             if (data.state == 1) {//1成功
                 if (options.success && $.isFunction(options.success)) {
                     options.success(data);
@@ -380,7 +382,11 @@ $.formSubmit = function (options) {
             }
         },
         error: function (xhr, status, error) {
-            $.layerMsg(error, "error");
+            if (xhr.status == 200 && xhr.statusText == "OK" && xhr.responseText.indexOf("对不起，您没有权限访问当前页面。") > 0) {//ajax请求无权限判断
+                alert("对不起，您没有权限操作")
+            } else {
+                $.layerMsg(error, "error");
+            }
         },
         beforeSend: function () {
 

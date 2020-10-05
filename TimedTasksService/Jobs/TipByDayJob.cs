@@ -34,7 +34,7 @@ namespace TimedTasksService.Jobs
         /// <returns></returns>
         public Task Execute(IJobExecutionContext context)
         {
-            TipService.StatisticsCollectTipGifts(DateTime.Now);
+            TipService.StatisticsCollectTipGifts(DateTime.Now,200);
             return Task.FromResult(0);
         }
     }

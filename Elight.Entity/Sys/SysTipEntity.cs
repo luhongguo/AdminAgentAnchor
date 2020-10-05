@@ -43,7 +43,7 @@ namespace Elight.Entity.Sys
         /// <summary>
         /// 总金额
         /// </summary>
-        public decimal? totalamount { get; set; }
+        public decimal totalamount { get; set; }
 
         /// <summary>
         /// 打赏时间
@@ -52,7 +52,7 @@ namespace Elight.Entity.Sys
         public DateTime? sendtime { get; set; }
 
         /// <summary>
-        /// 状态 0无效 1有效
+        /// 状态 0无效 1有效   (返点算完后 状态改成无效)
         /// </summary>
         public int? status { get; set; }
 
@@ -134,5 +134,15 @@ namespace Elight.Entity.Sys
         /// 货币类型
         /// </summary>
         public string curLogogram { get; set; }
+        /// <summary>
+        /// 主播名称
+        /// </summary>
+        [SugarColumn(IsIgnore = true)]
+        public string AnchorName { get; set; }
+        /// <summary>
+        /// 主播昵称
+        /// </summary>
+        [SugarColumn(IsIgnore = true)]
+        public string AnchorNickName { get; set; }
     }
 }

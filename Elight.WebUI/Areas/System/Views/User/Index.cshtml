@@ -46,7 +46,6 @@
                         <th>商户名称</th>
                         <th>账号</th>
                         <th>姓名</th>
-                        <th>公司代码</th>
                         <th>状态</th>
                     </tr>
                 </thead>
@@ -74,9 +73,6 @@
         </td>
         <td>{{item.Account}}</td>
         <td>{{item.RealName}}</td>
-        <td>
-            {{item.CompanyCode}}
-        </td>
         <td>
             {{# if(item.IsEnabled==true){ }}  <span class="label label-success label-sm">启用</span>
             {{# }else{ }}  <span class="label label-dark label-sm">禁用</span>

@@ -21,7 +21,10 @@ namespace Elight.Entity.Model
         /// 主播名称
         /// </summary>
         public string AnchorName { get; set; }
-       
+        /// <summary>
+        /// 主播昵称
+        /// </summary>
+        public string AnchorNickName { get; set; }
         /// <summary>
         /// 代理收益
         /// </summary>
@@ -72,9 +75,9 @@ namespace Elight.Entity.Model
         /// </summary>
         [JsonConverter(typeof(DateTimeToJson))]
         public DateTime? sendtime { get; set; }
-        /// <summary>
-        /// 打赏人
-        /// </summary>
-        public string Rewarder { get; set; }
+        ///// <summary>
+        ///// 打赏人
+        ///// </summary>
+        //public string Rewarder { get; set; }
     }
 }

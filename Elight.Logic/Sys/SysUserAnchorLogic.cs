@@ -266,19 +266,19 @@ namespace Elight.Logic.Sys
                         .Mapper((it, cache) =>
                               {
                                   if (tableList.Any(st => st.Name.Equals($@"income_{it.AnchorName}")))//判断表是否存在
-                                      {
-                                          //isnull(sum(tip_income),0) tip_income,   
-                                          var table = db.SqlQueryable<IncomeTemplateModel>($@"select  isnull(sum(hour_income),0) hour_income,isnull(sum(agent_income),0) agent_income,isnull(sum(test_income),0) test_income  
+                                  {
+                                      //isnull(sum(tip_income),0) tip_income,   
+                                      var table = db.SqlQueryable<IncomeTemplateModel>($@"select  isnull(sum(hour_income),0) hour_income,isnull(sum(agent_income),0) agent_income,isnull(sum(test_income),0) test_income  
 from QPAnchorRecordDB.dbo.income_{it.AnchorName} where opdate>='{dic["startTime"].ToString()}' and opdate<'{dic["endTime"].ToString()}'")
-                                                    .First();
+                                                .First();
                                       it.hour_income = table.hour_income;
                                       it.agent_income = table.agent_income;
                                       it.test_income = table.test_income;
                                   }
                                   if (tableList.Any(st => st.Name.Equals($@"tip_{it.AnchorName}")))//判断表是否存在
-                                      {
-                                          //礼物金额
-                                          var totalamount = db.SqlQueryable<TipTemplateModel>($@"select sum(totalamount) as totalamount from QPAnchorRecordDB.dbo.tip_{it.AnchorName}
+                                  {
+                                      //礼物金额
+                                      var totalamount = db.SqlQueryable<TipTemplateModel>($@"select sum(totalamount) as totalamount from QPAnchorRecordDB.dbo.tip_{it.AnchorName}
 where sendtime>='{dic["startTime"].ToString()}' and sendtime<'{dic["endTime"].ToString()}'").First().totalamount;
                                       it.tip_income = totalamount;
                                   }
@@ -289,19 +289,19 @@ where sendtime>='{dic["startTime"].ToString()}' and sendtime<'{dic["endTime"].To
                     totalCount = query.Mapper((it, cache) =>//求和
                     {
                         if (tableList.Any(st => st.Name.Equals($@"income_{it.AnchorName}")))//判断表是否存在
-                            {
-                                //isnull(sum(tip_income),0) tip_income,   
-                                var table = db.SqlQueryable<IncomeTemplateModel>($@"select  isnull(sum(hour_income),0) hour_income,isnull(sum(agent_income),0) agent_income,isnull(sum(test_income),0) test_income  
+                        {
+                            //isnull(sum(tip_income),0) tip_income,   
+                            var table = db.SqlQueryable<IncomeTemplateModel>($@"select  isnull(sum(hour_income),0) hour_income,isnull(sum(agent_income),0) agent_income,isnull(sum(test_income),0) test_income  
 from QPAnchorRecordDB.dbo.income_{it.AnchorName} where opdate>='{dic["startTime"].ToString()}' and opdate<'{dic["endTime"].ToString()}'")
-                                          .First();
+                                      .First();
                             hour_income += table.hour_income;
                             agent_income += table.agent_income;
                             test_income += table.test_income;
                         }
                         if (tableList.Any(st => st.Name.Equals($@"tip_{it.AnchorName}")))//判断表是否存在
-                            {
-                                //礼物金额
-                                var totalamount = db.SqlQueryable<TipTemplateModel>($@"select sum(totalamount) as totalamount from QPAnchorRecordDB.dbo.tip_{it.AnchorName}
+                        {
+                            //礼物金额
+                            var totalamount = db.SqlQueryable<TipTemplateModel>($@"select sum(totalamount) as totalamount from QPAnchorRecordDB.dbo.tip_{it.AnchorName}
 where sendtime>='{dic["startTime"].ToString()}' and sendtime<'{dic["endTime"].ToString()}'").First().totalamount;
                             tip_income += totalamount;
                         }
@@ -329,9 +329,9 @@ where sendtime>='{dic["startTime"].ToString()}' and sendtime<'{dic["endTime"].To
         /// </summary>
         /// <param name="parm"></param>
         /// <returns></returns>
-        public List<TipTemplateModel> GetFlowDetailsPage(PageParm parm, ref int totalCount, ref decimal sumTotalAmount)
+        public List<TipEntity> GetFlowDetailsPage(PageParm parm, ref int totalCount, ref decimal sumTotalAmount)
         {
-            var res = new List<TipTemplateModel>();
+            var res = new List<TipEntity>();
             try
             {
                 if (parm == null)
@@ -342,14 +342,29 @@ where sendtime>='{dic["startTime"].ToString()}' and sendtime<'{dic["endTime"].To
                 if (!string.IsNullOrEmpty(parm.where))
                 {
                     dic = JsonConvert.DeserializeObject<Dictionary<string, object>>(parm.where);
-
                 }
                 using (var db = GetSqlSugarDB(DbConnType.QPAnchorRecordDB))
                 {
-                    var query = db.SqlQueryable<TipTemplateModel>($@"select orderno,giftname,price,quantity,ratio, totalamount,username,sendtime  from tip_" + dic["userName"].ToString()
-                               + $@" where sendtime>='{dic["startTime"].ToString()}' and sendtime<'{dic["endTime"].ToString()}' and  issettle=1");
+                    var query = db.Queryable<TipEntity, SysAnchor>((it, st) => new object[] { JoinType.Left, it.AnchorID == st.id })
+                          .Where(it => it.sendtime >= Convert.ToDateTime(dic["startTime"]) && it.sendtime < Convert.ToDateTime(dic["endTime"]))
+                          .WhereIF(dic.ContainsKey("userName") && !string.IsNullOrEmpty(dic["userName"].ToString()), (it, st) => st.username.Contains(dic["userName"].ToString()) || st.nickname.Contains(dic["userName"].ToString()))
+                          .WithCache(60);
                     sumTotalAmount = query.Clone().Sum(it => it.totalamount);
-                    res = query.ToPageList(parm.page, parm.limit, ref totalCount);
+                    res = query
+                          .Select((it, st) => new TipEntity
+                          {
+                              orderno = it.orderno,
+                              giftname = it.giftname,
+                              price = it.price,
+                              quantity = it.quantity,
+                              ratio = it.ratio,
+                              totalamount = it.totalamount,
+                              username = it.username,
+                              sendtime = it.sendtime,
+                              AnchorName = st.username,
+                              AnchorNickName = st.nickname
+                          })
+                         .ToPageList(parm.page, parm.limit, ref totalCount);
                 }
             }
             catch (Exception ex)

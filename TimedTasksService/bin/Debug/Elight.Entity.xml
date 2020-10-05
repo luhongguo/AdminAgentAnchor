@@ -759,6 +759,11 @@
             货币类型
             </summary>
         </member>
+        <member name="P:Elight.Entity.Sys.TipEntity.AnchorName">
+            <summary>
+            主播名称
+            </summary>
+        </member>
         <member name="T:Elight.Entity.Sys.SysTipIncomeDetailEntity">
             <summary>
             代理、主播礼物收益明细

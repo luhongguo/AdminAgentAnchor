@@ -64,7 +64,7 @@
                     { type: 'checkbox' }
                     , { field: 'AnchorName', title: '主播账号' }
                     , { field: 'AnchorNickName', title: '主播昵称' }
-                    , { field: 'UserAccount', title: '上级账号' }
+                    , { field: 'UserAccount', title: '上级账号'}
                     , { field: 'TipRebate', title: '礼物返点' }
                     , { field: 'HourRebate', title: '工时返点' }
                     , { field: 'ModifiedBy', title: '修改人' }
@@ -172,7 +172,6 @@
                         url: '/System/AnchorRebate/Delete',
                         data: { primaryKey: result.join() },
                         success: function (data) {
-                            console.log(data);
                             reloadTable({ Name: $("#Name").val() });
                         }
                     });

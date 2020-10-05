@@ -25,7 +25,7 @@ namespace TimedTasksService
             //DateTimeOffset runTime = DateBuilder.EvenMinuteDate(DateTimeOffset.UtcNow);
             ITrigger trigger = TriggerBuilder.Create()
                 .WithIdentity("trigger1", "group1")
-                .WithCronSchedule("0/30 * * * * ?")     //每天凌晨0点5分执行      0 5 0 * * ?                                       
+                .WithCronSchedule("0/30 * * * * ?")     //每天凌晨0点10分执行      0 10 0 * * ?                                       
                 .Build();
             sched.ScheduleJob(job, trigger);
 
