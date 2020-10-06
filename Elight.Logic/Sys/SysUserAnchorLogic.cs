@@ -270,7 +270,7 @@ namespace Elight.Logic.Sys
                               hour_income = SqlFunc.AggregateSum(it.hour_income),
                               test_income = SqlFunc.AggregateSum(it.test_income),
                           })
-                          .OrderBy((it) => it.tip_income, OrderByType.Desc)
+                          .OrderBy(" sum(it.tip_income) desc")
                           .ToPageList(parm.page, parm.limit, ref totalCount);
 
                     #region 老版本写法
