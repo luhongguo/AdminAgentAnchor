@@ -18,7 +18,7 @@ namespace TimedTasksService.Jobs
         /// <returns></returns>
         public Task Execute(IJobExecutionContext context)
         {
-            TipService.StatisticsAgentTipIncome(DateTime.Now);
+            TipService.StatisticsAgentTipIncome(DateTime.Now.AddHours(-12), DateTime.Now);
             return Task.FromResult(0);
         }
     }
@@ -34,7 +34,7 @@ namespace TimedTasksService.Jobs
         /// <returns></returns>
         public Task Execute(IJobExecutionContext context)
         {
-            TipService.StatisticsCollectTipGifts(DateTime.Now,200);
+            TipService.StatisticsCollectTipGifts(DateTime.Now, 200);
             return Task.FromResult(0);
         }
     }

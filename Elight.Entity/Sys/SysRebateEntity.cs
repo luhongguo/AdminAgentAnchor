@@ -27,11 +27,11 @@ namespace Elight.Entity.Sys
         /// </summary>
         public string UserID { get; set; }
         /// <summary>
-        /// 礼物返点
+        /// 经纪人礼物返点
         /// </summary>
         public decimal TipRebate { get; set; }
         /// <summary>
-        /// 工时返点
+        /// 经纪人工时返点
         /// </summary>
         public decimal HourRebate { get; set; }
         /// <summary>

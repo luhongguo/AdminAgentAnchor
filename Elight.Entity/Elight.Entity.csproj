@@ -165,6 +165,7 @@
     <Compile Include="Sys\SubCompanyCodeEntity.cs" />
     <Compile Include="Sys\SysAnchor.cs" />
     <Compile Include="Sys\SysAnchorRebateEntity.cs" />
+    <Compile Include="Sys\SysIncomeEntity.cs" />
     <Compile Include="Sys\SysItem.cs" />
     <Compile Include="Sys\SysItemDetail.cs" />
     <Compile Include="Sys\SysLog.cs" />

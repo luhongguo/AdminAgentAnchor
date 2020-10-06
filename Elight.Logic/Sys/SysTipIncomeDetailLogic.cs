@@ -35,8 +35,6 @@ namespace Elight.Logic.Sys
                     dic = JsonConvert.DeserializeObject<Dictionary<string, object>>(parm.where);
 
                 }
-                var intStartTime = int.Parse(Convert.ToDateTime(dic["startTime"]).ToString("yyyyMMdd"));
-                var intEndTime = int.Parse(Convert.ToDateTime(dic["endTime"]).ToString("yyyyMMdd"));
                 using (var db = GetSqlSugarDB(DbConnType.QPAnchorRecordDB))
                 {
                     var query = db.Queryable<SysTipIncomeDetailEntity, SysUser, SysAnchor, TipEntity>((at, bt, ct, dt) => new object[] {
@@ -44,7 +42,7 @@ namespace Elight.Logic.Sys
                                 JoinType.Left,at.AnchorID==ct.id,
                                 JoinType.Left,at.orderno==dt.orderno
                       })
-                          .Where((at, bt, ct, dt) => at.StartDate >= intStartTime && at.StartDate < intEndTime)
+                          .Where((at, bt, ct, dt) => at.StartDate >= Convert.ToDateTime(dic["startTime"]) && at.StartDate < Convert.ToDateTime(dic["endTime"]))
                           .WhereIF(dic.ContainsKey("AgentName") && !string.IsNullOrEmpty(dic["AgentName"].ToString()), (at, bt, ct, dt) => bt.Account.Contains(dic["AgentName"].ToString()))
                           .WhereIF(dic.ContainsKey("AnchorName") && !string.IsNullOrEmpty(dic["AnchorName"].ToString()), (at, bt, ct, dt) => ct.username.Contains(dic["AnchorName"].ToString()) || ct.nickname.Contains(dic["AnchorName"].ToString()));
                     sumModel = query.Clone().Select((at, bt, ct, dt) => new TipIncomeDetailModel

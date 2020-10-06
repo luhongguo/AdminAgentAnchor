@@ -241,81 +241,108 @@ namespace Elight.Logic.Sys
                 {
                     dic = JsonConvert.DeserializeObject<Dictionary<string, object>>(parm.where);
                 }
-                using (var db = GetInstance())
+                using (var db = GetSqlSugarDB(DbConnType.QPAnchorRecordDB))
                 {
-                    decimal hour_income = 0;
-                    decimal agent_income = 0;
-                    decimal tip_income = 0;
-                    decimal test_income = 0;
-                    decimal Balance = 0;
-                    var tableList = GetSqlSugarDB(DbConnType.QPAnchorRecordDB).DbMaintenance.GetTableInfoList();//获取数据库所有表名
-                    var query = db.Queryable<SysAnchor>()
-                            .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (st) => st.username.Contains(dic["Name"].ToString()) || st.nickname.Contains(dic["Name"].ToString()))
-                            .WhereIF(dic.ContainsKey("isCollet") && Convert.ToInt32(dic["isCollet"]) != -1, (it) => it.isCollet == Convert.ToInt32(dic["isCollet"]))
-                            .WhereIF(dic.ContainsKey("isColletCode") && dic["isColletCode"].ToString() != "-1", (it) => it.isColletCode == dic["isColletCode"].ToString())
-                            .Select((st) => new IncomeTemplateModel
-                            {
-                                AnchorID = st.id,
-                                AnchorName = st.username,
-                                NickName = st.nickname,
-                                Balance = st.balance,
-                                isCollet = st.isCollet,
-                            }).WithCache(120);//缓存120秒
-
-                    res = query.Clone()
-                        .Mapper((it, cache) =>
-                              {
-                                  if (tableList.Any(st => st.Name.Equals($@"income_{it.AnchorName}")))//判断表是否存在
-                                  {
-                                      //isnull(sum(tip_income),0) tip_income,   
-                                      var table = db.SqlQueryable<IncomeTemplateModel>($@"select  isnull(sum(hour_income),0) hour_income,isnull(sum(agent_income),0) agent_income,isnull(sum(test_income),0) test_income  
-from QPAnchorRecordDB.dbo.income_{it.AnchorName} where opdate>='{dic["startTime"].ToString()}' and opdate<'{dic["endTime"].ToString()}'")
-                                                .First();
-                                      it.hour_income = table.hour_income;
-                                      it.agent_income = table.agent_income;
-                                      it.test_income = table.test_income;
-                                  }
-                                  if (tableList.Any(st => st.Name.Equals($@"tip_{it.AnchorName}")))//判断表是否存在
-                                  {
-                                      //礼物金额
-                                      var totalamount = db.SqlQueryable<TipTemplateModel>($@"select sum(totalamount) as totalamount from QPAnchorRecordDB.dbo.tip_{it.AnchorName}
-where sendtime>='{dic["startTime"].ToString()}' and sendtime<'{dic["endTime"].ToString()}'").First().totalamount;
-                                      it.tip_income = totalamount;
-                                  }
-                              })
-                        .ToList().OrderByDescending(it => it.tip_income).Skip((parm.page - 1) * parm.limit).Take(parm.limit).ToList();
-                    //.ToPageList(parm.page,m, ref totalCount);
-
-                    totalCount = query.Mapper((it, cache) =>//求和
+                    var query = db.Queryable<SysIncomeEntity, SysAnchor>((it, st) => new object[] { JoinType.Left, it.AnchorID == st.id })
+                          .Where((it, st) => it.opdate >= Convert.ToDateTime(dic["startTime"]) && it.opdate < Convert.ToDateTime(dic["endTime"]))
+                          .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (it, st) => st.username.Contains(dic["Name"].ToString()) || st.nickname.Contains(dic["Name"].ToString()))
+                          .WhereIF(dic.ContainsKey("isCollet") && Convert.ToInt32(dic["isCollet"]) != -1, (it, st) => st.isCollet == Convert.ToInt32(dic["isCollet"]))
+                          .WhereIF(dic.ContainsKey("isColletCode") && dic["isColletCode"].ToString() != "-1", (it, st) => st.isColletCode == dic["isColletCode"].ToString())
+                          .WithCache(60);
+                    sumModel = query.Clone().Select((it, st) => new IncomeTemplateModel
                     {
-                        if (tableList.Any(st => st.Name.Equals($@"income_{it.AnchorName}")))//判断表是否存在
-                        {
-                            //isnull(sum(tip_income),0) tip_income,   
-                            var table = db.SqlQueryable<IncomeTemplateModel>($@"select  isnull(sum(hour_income),0) hour_income,isnull(sum(agent_income),0) agent_income,isnull(sum(test_income),0) test_income  
-from QPAnchorRecordDB.dbo.income_{it.AnchorName} where opdate>='{dic["startTime"].ToString()}' and opdate<'{dic["endTime"].ToString()}'")
-                                      .First();
-                            hour_income += table.hour_income;
-                            agent_income += table.agent_income;
-                            test_income += table.test_income;
-                        }
-                        if (tableList.Any(st => st.Name.Equals($@"tip_{it.AnchorName}")))//判断表是否存在
-                        {
-                            //礼物金额
-                            var totalamount = db.SqlQueryable<TipTemplateModel>($@"select sum(totalamount) as totalamount from QPAnchorRecordDB.dbo.tip_{it.AnchorName}
-where sendtime>='{dic["startTime"].ToString()}' and sendtime<'{dic["endTime"].ToString()}'").First().totalamount;
-                            tip_income += totalamount;
-                        }
-                        Balance += it.Balance;
-                    }).ToList().Count();
+                        tip_income = SqlFunc.AggregateSum(it.tip_income),
+                        agent_income = SqlFunc.AggregateSum(it.agent_income),
+                        hour_income = SqlFunc.AggregateSum(it.hour_income),
+                        test_income = SqlFunc.AggregateSum(it.test_income),
+                        Balance = SqlFunc.AggregateSum(st.balance)
+                    }).First();
+                    res = query.GroupBy((it, st) => new { it.AnchorID, st.username, st.nickname, st.balance, st.isCollet })
+                          .Select((it, st) => new IncomeTemplateModel
+                          {
+                              AnchorID = it.AnchorID,
+                              AnchorName = st.username,
+                              NickName = st.nickname,
+                              Balance = st.balance,
+                              isCollet = st.isCollet,
+                              tip_income = SqlFunc.AggregateSum(it.tip_income),
+                              agent_income = SqlFunc.AggregateSum(it.agent_income),
+                              hour_income = SqlFunc.AggregateSum(it.hour_income),
+                              test_income = SqlFunc.AggregateSum(it.test_income),
+                          })
+                          .OrderBy((it) => it.tip_income, OrderByType.Desc)
+                          .ToPageList(parm.page, parm.limit, ref totalCount);
 
-                    sumModel = new IncomeTemplateModel
-                    {
-                        hour_income = hour_income,
-                        agent_income = agent_income,
-                        tip_income = tip_income,
-                        test_income = test_income,
-                        Balance = Balance
-                    };
+                    #region 老版本写法
+                    //                    var tableList = GetSqlSugarDB(DbConnType.QPAnchorRecordDB).DbMaintenance.GetTableInfoList();//获取数据库所有表名
+                    //                    var query = db.Queryable<SysAnchor>()
+                    //                            .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (st) => st.username.Contains(dic["Name"].ToString()) || st.nickname.Contains(dic["Name"].ToString()))
+                    //                            .WhereIF(dic.ContainsKey("isCollet") && Convert.ToInt32(dic["isCollet"]) != -1, (it) => it.isCollet == Convert.ToInt32(dic["isCollet"]))
+                    //                            .WhereIF(dic.ContainsKey("isColletCode") && dic["isColletCode"].ToString() != "-1", (it) => it.isColletCode == dic["isColletCode"].ToString())
+                    //                            .Select((st) => new IncomeTemplateModel
+                    //                            {
+                    //                                AnchorID = st.id,
+                    //                                AnchorName = st.username,
+                    //                                NickName = st.nickname,
+                    //                                Balance = st.balance,
+                    //                                isCollet = st.isCollet,
+                    //                            }).WithCache(120);//缓存120秒
+
+                    //                    res = query.Clone()
+                    //                        .Mapper((it, cache) =>
+                    //                              {
+                    //                                  if (tableList.Any(st => st.Name.Equals($@"income_{it.AnchorName}")))//判断表是否存在
+                    //                                  {
+                    //                                      //isnull(sum(tip_income),0) tip_income,   
+                    //                                      var table = db.SqlQueryable<IncomeTemplateModel>($@"select  isnull(sum(hour_income),0) hour_income,isnull(sum(agent_income),0) agent_income,isnull(sum(test_income),0) test_income  
+                    //from QPAnchorRecordDB.dbo.income_{it.AnchorName} where opdate>='{dic["startTime"].ToString()}' and opdate<'{dic["endTime"].ToString()}'")
+                    //                                                .First();
+                    //                                      it.hour_income = table.hour_income;
+                    //                                      it.agent_income = table.agent_income;
+                    //                                      it.test_income = table.test_income;
+                    //                                  }
+                    //                                  if (tableList.Any(st => st.Name.Equals($@"tip_{it.AnchorName}")))//判断表是否存在
+                    //                                  {
+                    //                                      //礼物金额
+                    //                                      var totalamount = db.SqlQueryable<TipTemplateModel>($@"select sum(totalamount) as totalamount from QPAnchorRecordDB.dbo.tip_{it.AnchorName}
+                    //where sendtime>='{dic["startTime"].ToString()}' and sendtime<'{dic["endTime"].ToString()}'").First().totalamount;
+                    //                                      it.tip_income = totalamount;
+                    //                                  }
+                    //                              })
+                    //                        .ToList().OrderByDescending(it => it.tip_income).Skip((parm.page - 1) * parm.limit).Take(parm.limit).ToList();
+                    //                    //.ToPageList(parm.page,m, ref totalCount);
+
+                    //                    totalCount = query.Mapper((it, cache) =>//求和
+                    //                    {
+                    //                        if (tableList.Any(st => st.Name.Equals($@"income_{it.AnchorName}")))//判断表是否存在
+                    //                        {
+                    //                            //isnull(sum(tip_income),0) tip_income,   
+                    //                            var table = db.SqlQueryable<IncomeTemplateModel>($@"select  isnull(sum(hour_income),0) hour_income,isnull(sum(agent_income),0) agent_income,isnull(sum(test_income),0) test_income  
+                    //from QPAnchorRecordDB.dbo.income_{it.AnchorName} where opdate>='{dic["startTime"].ToString()}' and opdate<'{dic["endTime"].ToString()}'")
+                    //                                      .First();
+                    //                            hour_income += table.hour_income;
+                    //                            agent_income += table.agent_income;
+                    //                            test_income += table.test_income;
+                    //                        }
+                    //                        if (tableList.Any(st => st.Name.Equals($@"tip_{it.AnchorName}")))//判断表是否存在
+                    //                        {
+                    //                            //礼物金额
+                    //                            var totalamount = db.SqlQueryable<TipTemplateModel>($@"select sum(totalamount) as totalamount from QPAnchorRecordDB.dbo.tip_{it.AnchorName}
+                    //where sendtime>='{dic["startTime"].ToString()}' and sendtime<'{dic["endTime"].ToString()}'").First().totalamount;
+                    //                            tip_income += totalamount;
+                    //                        }
+                    //                        Balance += it.Balance;
+                    //                    }).ToList().Count();
+
+                    //                    sumModel = new IncomeTemplateModel
+                    //                    {
+                    //                        hour_income = hour_income,
+                    //                        agent_income = agent_income,
+                    //                        tip_income = tip_income,
+                    //                        test_income = test_income,
+                    //                        Balance = Balance
+                    //                    };
+                    #endregion
                 }
             }
             catch (Exception ex)

@@ -21,7 +21,7 @@ namespace UnitTest
         [TestMethod]
         public void TestMethod2()
         {
-            TipService.StatisticsAgentTipIncome(DateTime.Now);//前一天的收益数据
+            TipService.StatisticsAgentTipIncome(DateTime.Now.AddDays(-3),DateTime.Now);//前一天的收益数据
         }
     }
 }

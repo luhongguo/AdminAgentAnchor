@@ -17,7 +17,7 @@ namespace Elight.Entity.Sys
         /// id
         /// </summary>
         [SugarColumn(ColumnName = "id", IsPrimaryKey = true, IsIdentity = true)]
-        public int id { get; set; }
+        public long id { get; set; }
         /// <summary>
         /// 主播ID
         /// </summary>
@@ -49,7 +49,7 @@ namespace Elight.Entity.Sys
         /// 打赏时间
         /// </summary>
         [JsonConverter(typeof(DateTimeToJson))]
-        public DateTime? sendtime { get; set; }
+        public DateTime sendtime { get; set; }
 
         /// <summary>
         /// 状态 0无效 1有效   (返点算完后 状态改成无效)

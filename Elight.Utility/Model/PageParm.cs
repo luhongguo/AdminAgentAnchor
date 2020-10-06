@@ -8,21 +8,21 @@ namespace Elight.Utility.Model
 {
     public class PageParm
     {
-        //
-        // 摘要:
-        //     当前页
+        /// <summary>
+        /// 当前页
+        /// </summary>
         public int page { get; set; }
-        //
-        // 摘要:
-        //     每页总条数
+        /// <summary>
+        /// 每页总条数
+        /// </summary>
         public int limit { get; set; }
         //
         // 摘要:
         //     搜索关键字
         public string key { get; set; }
-        //
-        // 摘要:
-        //     类型条件
+        /// <summary>
+        /// 类型条件
+        /// </summary>
         public int types { get; set; }
         //
         // 摘要:

@@ -13,6 +13,7 @@ using Elight.Entity.Model;
 using Elight.Utility;
 using Newtonsoft.Json.Linq;
 using Elight.Entity;
+using Quartz.Util;
 
 namespace TimedTasksService
 {
@@ -21,68 +22,120 @@ namespace TimedTasksService
         /// <summary>
         /// 统计主播的 礼物收益
         /// </summary>
-        public static void StatisticsAgentTipIncome(DateTime time)
+        public static void StatisticsAgentTipIncome(DateTime startTime, DateTime time)
         {
-            try
+            //  主播返点 返的是经纪人的收益，经纪人返点返的是平台的收益
+            using (var db = sugarClient.GetSqlSugarDB(sugarClient.DbConnType.QPAnchorRecordDB))
             {
-                DateTime dt = time.AddDays(-1);
-                int StartDate = int.Parse(dt.ToString("yyyyMMdd"));//处理时间
-                var flag = false;//标识是否已经处理返点收益  主播返点 返的是经纪人的收益，经纪人返点返的是平台的收益
-                using (var db = sugarClient.GetSqlSugarDB(sugarClient.DbConnType.QPAnchorRecordDB))
+                try
                 {
-                    var model = db.Queryable<SysTipIncomeDetailEntity>().Where(it => it.StartDate == StartDate).First();
-                    if (model == null)
+                    //实例化Redis
+                    RedisHelper redis = new RedisHelper(6);//只记录最大的时间
+                    string key = "last_StatisticsTips_max_datetime";
+                    if (redis.KeyExists(key))
                     {
-                        flag = true;//未处理
+                        startTime = redis.StringGet<DateTime>(key).AddSeconds(-2);//读取上次采集数据的结束时间 往前加2秒重新采集（怕漏单）
                     }
-                    if (flag)
-                    {
-                        List<TipEntity> updateTipList = new List<TipEntity>();//采集礼物的id集合
-                        List<SysTipIncomeDetailEntity> list = db.Queryable<TipEntity, SysAnchorRebateEntity, SysRebateEntity>((at, st, ct) =>
-                         new object[] {
+                    db.Ado.BeginTran();//开启事务
+                    List<TipEntity> updateTipList = new List<TipEntity>();//采集礼物的id集合
+                    List<SysTipIncomeDetailEntity> list = db.Queryable<TipEntity, SysAnchorRebateEntity, SysRebateEntity>((at, st, ct) =>
+                     new object[] {
                             JoinType.Left, at.AnchorID==st.AnchorID,
                             JoinType.Left,st.parentID==ct.UserID
-                         })
-                               .Where((at, st, ct) => at.sendtime >= Convert.ToDateTime(dt.ToString("yyyy-MM-dd")) && at.sendtime < Convert.ToDateTime(time.ToString("yyyy-MM-dd")))//前1天数据
-                               .Where((at, st, ct) => at.status == 1)
-                               .Select((at, st, ct) => new SysTipIncomeDetailEntity
-                               {
-                                   id = at.id,
-                                   ShopID = 0,
-                                   UserID = ct.UserID,
-                                   AnchorID = at.AnchorID,
-                                   orderno = at.orderno,
-                                   StartDate = StartDate,
-                                   totalamount = at.totalamount,
-                                   UserRebate = st.TipRebate,
-                                   PlatformRebate = ct.TipRebate,
-                               })
-                               .Mapper((it) =>
-                               {
-                                   updateTipList.Add(new TipEntity { id = it.id, status = 0 });
-                                   it.PlatformIncome = it.totalamount * it.PlatformRebate / 100;//平台收益
-                                   it.UserIncome = (it.totalamount - it.PlatformIncome) * it.UserRebate / 100;//经纪人收益=总金额减去平台收益 * 主播返点
-                                   it.AnchorIncome = (it.totalamount - it.PlatformIncome) * (100 - it.UserRebate) / 100;//主播收益=总金额减去平台收益 * （100-主播返点）
-                               })
-                               .ToList();
-                        db.Updateable(updateTipList).ExecuteCommand();//id是礼物表id 批量更新状态
-                        db.Insertable(list).ExecuteCommand();
-
+                     })
+                          .Where((at, st, ct) => at.sendtime >= startTime && at.sendtime < time)
+                           .Where((at, st, ct) => at.status == 1)
+                           .Select((at, st, ct) => new SysTipIncomeDetailEntity
+                           {
+                               id = at.id,
+                               ShopID = 0,
+                               UserID = ct.UserID,
+                               AnchorID = at.AnchorID,
+                               orderno = at.orderno,
+                               StartDate = at.sendtime.Date,
+                               totalamount = at.totalamount,
+                               UserRebate = st.TipRebate,
+                               PlatformRebate = ct.TipRebate,
+                           })
+                           .Mapper((it) =>
+                           {
+                               it.status = 1;
+                               updateTipList.Add(new TipEntity { id = it.id, status = 0 });
+                               it.PlatformIncome = it.totalamount * it.PlatformRebate / 100;//平台收益
+                               it.UserIncome = (it.totalamount - it.PlatformIncome) * it.UserRebate / 100;//经纪人收益=总金额减去平台收益 * 主播返点
+                               it.AnchorIncome = (it.totalamount - it.PlatformIncome) * (100 - it.UserRebate) / 100;//主播收益=总金额减去平台收益 * （100-主播返点）
+                           })
+                           .ToList();
+                    if (list.Count == 0)
+                    {
+                        //将查询的结束时间写入
+                        redis.StringSet<DateTime>(key, time);
+                        return;
                     }
+                    db.Insertable(list).ExecuteCommand();
+                    db.Updateable(updateTipList).UpdateColumns(it => new { it.status }).ExecuteCommand();//id是礼物表id 批量更新状态
+                    //采集礼物最小时间的日期部分
+                    var minSendTime = list.Min(ot => ot.StartDate);
+                    var maxSendTime = list.Max(ot => ot.StartDate);
+                    //处理总收益报表 获取新的数据
+                    var NewIncomeList = list.GroupBy(s => new { s.AnchorID, s.StartDate }).Select(group => new SysIncomeEntity
+                    {
+                        AnchorID = group.Key.AnchorID,
+                        opdate = group.Key.StartDate,
+                        agent_income = group.Sum(p => p.UserIncome),
+                        tip_income = group.Sum(p => p.AnchorIncome),
+                        Platform_income = group.Sum(p => p.PlatformIncome),
+                    }).ToList();
+
+                    //获取采集时间范围内 旧的数据
+                    var incomeList = db.Queryable<SysIncomeEntity>().Where(it => it.opdate >= minSendTime && it.opdate <= maxSendTime).ToList();
+                    var updateIncomeList = new List<SysIncomeEntity>();//更新集合
+                    var addIncomeList = new List<SysIncomeEntity>();//新增集合
+                    NewIncomeList.ForEach(it =>
+                    {
+                        //判读对应日期部分是否有该主播数据 有就更新
+                        var updateModel = incomeList.Where(st => st.AnchorID == it.AnchorID && st.opdate == it.opdate).FirstOrDefault();
+                        if (updateModel != null)//存在
+                        {
+                            updateModel.agent_income += it.agent_income;
+                            updateModel.tip_income += it.tip_income;
+                            updateModel.Platform_income += it.Platform_income;
+                            updateIncomeList.Add(updateModel);
+                        }
+                        else
+                        {
+                            addIncomeList.Add(it);
+                        }
+                    });
+                    if (addIncomeList.Count > 0)
+                    {
+                        db.Insertable(addIncomeList).ExecuteCommand();
+                    }
+                    if (updateIncomeList.Count > 0)
+                    {
+                        db.Updateable(updateIncomeList).UpdateColumns(it => new { it.agent_income, it.tip_income, it.Platform_income });
+                    }
+                    ////批量更新状态 礼物收益表status改成0 无效
+                    //db.Updateable<SysTipIncomeDetailEntity>().SetColumns(it => new SysTipIncomeDetailEntity() { status = 0 })
+                    //    .Where(it => list.Select(gt => gt.orderno).Contains(it.orderno)).ExecuteCommand();
+                    db.Ado.CommitTran();
+                    //将查询的结束时间写入
+                    redis.StringSet<DateTime>(key, time);
+                    Console.WriteLine("按天统计代理的礼物收益：" + time);
                 }
-                Console.WriteLine("按天统计代理的礼物收益：" + time);
-            }
-            catch (Exception ex)
-            {
-                //统一记录日志
-                Console.WriteLine("按天统计代理的礼物收益异常：" + ex.Message + "------" + ex.StackTrace);
-                new LogLogic().Write(new SysLog
+                catch (Exception ex)
                 {
-                    Operation = "按天统计代理的礼物收益",
-                    Message = ex.Message,
-                    StackTrace = ex.StackTrace,
-                    CreateTime = DateTime.Now
-                });
+                    db.Ado.RollbackTran();
+                    //统一记录日志
+                    Console.WriteLine("按天统计代理的礼物收益异常：" + ex.Message + "------" + ex.StackTrace);
+                    new LogLogic().Write(new SysLog
+                    {
+                        Operation = "按天统计代理的礼物收益",
+                        Message = ex.Message,
+                        StackTrace = ex.StackTrace,
+                        CreateTime = DateTime.Now
+                    });
+                }
             }
         }
         /// <summary>
@@ -90,7 +143,7 @@ namespace TimedTasksService
         /// </summary>
         /// <param name="time">时间</param>
         /// <param name="pageSize">采集条数</param>
-        public static void StatisticsCollectTipGifts(DateTime time,int pageSize)
+        public static void StatisticsCollectTipGifts(DateTime time, int pageSize)
         {
             try
             {
@@ -140,7 +193,7 @@ namespace TimedTasksService
                 });
             }
         }
-        public static void PagingCollect(List<GiftEntity> gifts,int pageSize, DateTime startTime, DateTime endTime, out int totalCount, out DateTime maxDateTime)
+        public static void PagingCollect(List<GiftEntity> gifts, int pageSize, DateTime startTime, DateTime endTime, out int totalCount, out DateTime maxDateTime)
         {
             try
             {

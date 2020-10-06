@@ -149,6 +149,11 @@
             主播名称
             </summary>
         </member>
+        <member name="P:Elight.Entity.Model.TipIncomeDetailModel.AnchorNickName">
+            <summary>
+            主播昵称
+            </summary>
+        </member>
         <member name="P:Elight.Entity.Model.TipIncomeDetailModel.UserIncome">
             <summary>
             代理收益
@@ -207,11 +212,6 @@
         <member name="P:Elight.Entity.Model.TipIncomeDetailModel.sendtime">
             <summary>
             打赏时间
-            </summary>
-        </member>
-        <member name="P:Elight.Entity.Model.TipIncomeDetailModel.Rewarder">
-            <summary>
-            打赏人
             </summary>
         </member>
         <member name="T:Elight.Entity.Model.TipTemplateModel">
@@ -479,6 +479,56 @@
             是否是采集主播  1 是  0不是
             </summary>
         </member>
+        <member name="T:Elight.Entity.Sys.SysIncomeEntity">
+            <summary>
+            收益报表
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysIncomeEntity.id">
+            <summary>
+            id
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysIncomeEntity.ShopID">
+            <summary>
+            商户id
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysIncomeEntity.AnchorID">
+            <summary>
+            主播id
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysIncomeEntity.opdate">
+            <summary>
+            统计时间
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysIncomeEntity.hour_income">
+            <summary>
+            /工时收益
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysIncomeEntity.agent_income">
+            <summary>
+            代理收益
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysIncomeEntity.tip_income">
+            <summary>
+            主播礼物收益
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysIncomeEntity.test_income">
+            <summary>
+            带玩收益
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysIncomeEntity.Platform_income">
+            <summary>
+            平台收益
+            </summary>
+        </member>
         <member name="T:Elight.Entity.Sys.SysLog">
             <summary>
             日志实例
@@ -526,12 +576,12 @@
         </member>
         <member name="P:Elight.Entity.Sys.SysRebateEntity.TipRebate">
             <summary>
-            礼物返点
+            经纪人礼物返点
             </summary>
         </member>
         <member name="P:Elight.Entity.Sys.SysRebateEntity.HourRebate">
             <summary>
-            工时返点
+            经纪人工时返点
             </summary>
         </member>
         <member name="P:Elight.Entity.Sys.SysRebateEntity.ModifiedBy">
@@ -666,7 +716,7 @@
         </member>
         <member name="P:Elight.Entity.Sys.TipEntity.status">
             <summary>
-            状态 0无效 1有效
+            状态 0无效 1有效   (返点算完后 状态改成无效)
             </summary>
         </member>
         <member name="P:Elight.Entity.Sys.TipEntity.description">
@@ -764,6 +814,11 @@
             主播名称
             </summary>
         </member>
+        <member name="P:Elight.Entity.Sys.TipEntity.AnchorNickName">
+            <summary>
+            主播昵称
+            </summary>
+        </member>
         <member name="T:Elight.Entity.Sys.SysTipIncomeDetailEntity">
             <summary>
             代理、主播礼物收益明细
@@ -816,17 +871,22 @@
         </member>
         <member name="P:Elight.Entity.Sys.SysTipIncomeDetailEntity.PlatformRebate">
             <summary>
-            平台礼物返点
+            经纪人礼物返点
             </summary>
         </member>
         <member name="P:Elight.Entity.Sys.SysTipIncomeDetailEntity.StartDate">
             <summary>
-            统计时间
+            统计时间 （采集时间的日期部分）
             </summary>
         </member>
         <member name="P:Elight.Entity.Sys.SysTipIncomeDetailEntity.totalamount">
             <summary>
             总金额
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysTipIncomeDetailEntity.status">
+            <summary>
+            是否有效（0否，1是）
             </summary>
         </member>
         <member name="P:Elight.Entity.Sys.SysUser.ShopID">

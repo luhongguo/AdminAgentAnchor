@@ -9,14 +9,14 @@ namespace Elight.Entity.Sys
     /// <summary>
     /// 代理、主播礼物收益明细
     /// </summary>
-    [SugarTable("QPAgentAnchorDB.dbo.Sys_TipIncomeDetail")]
+    [SugarTable("QPAnchorRecordDB.dbo.TipIncomeDetail")]
     public class SysTipIncomeDetailEntity
     {
         /// <summary>
         /// id
         /// </summary>
         [SugarColumn(ColumnName = "ID", IsPrimaryKey = true, IsIdentity = true)]
-        public int id { get; set; }
+        public long id { get; set; }
         /// <summary>
         /// 商户ID
         /// </summary>
@@ -36,31 +36,35 @@ namespace Elight.Entity.Sys
         /// <summary>
         /// 代理收益
         /// </summary>
-        public decimal? UserIncome { get; set; }
+        public decimal UserIncome { get; set; }
         /// <summary>
         /// 主播收益
         /// </summary>
-        public decimal? AnchorIncome { get; set; }
+        public decimal AnchorIncome { get; set; }
         /// <summary>
         /// 平台收益
         /// </summary>
-        public decimal? PlatformIncome { get; set; }
+        public decimal PlatformIncome { get; set; }
         /// <summary>
         /// 主播礼物返点
         /// </summary>
         public decimal UserRebate { get; set; }
         /// <summary>
-        /// 平台礼物返点
+        /// 经纪人礼物返点
         /// </summary>
         public decimal PlatformRebate { get; set; }
         /// <summary>
-        /// 统计时间
+        /// 统计时间 （采集时间的日期部分）
         /// </summary>
-        public int StartDate { get; set; }
+        public DateTime StartDate { get; set; }
         /// <summary>
         /// 总金额
         /// </summary>
         [SugarColumn(IsIgnore = true)]
-        public decimal? totalamount { get; set; }
+        public decimal totalamount { get; set; }
+        /// <summary>
+        /// 是否有效（0否，1是）
+        /// </summary>
+        public byte status { get; set; }
     }
 }
