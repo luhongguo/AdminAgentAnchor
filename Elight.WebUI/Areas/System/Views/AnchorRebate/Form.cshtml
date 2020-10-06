@@ -15,15 +15,6 @@
     </div>
     <div class="layui-form-item">
         <div class="layui-inline">
-            <input type="hidden" name="id" />
-            <label class="layui-form-label">主播昵称</label>
-            <div class="layui-input-inline">
-                <input type="text" name="AnchorNickName" placeholder="请输入主播昵称" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <div class="layui-inline">
             <label class="layui-form-label label-required">礼物返点</label>
             <div class="layui-input-inline">
                 <input type="text" name="TipRebate" lay-verify="required" placeholder="请输入礼物返点" autocomplete="off" class="layui-input">
@@ -43,9 +34,9 @@
     </div>
     <div class="layui-form-item">
         <div class="layui-inline">
-            <label class="layui-form-label ">上级账号</label>
+            <label class="layui-form-label label-required">上级账号</label>
             <div class="layui-input-inline">
-                <input type="text" name="UserAccount"  placeholder="请输入上级账号" autocomplete="off" class="layui-input">
+                <input type="text" name="UserAccount" lay-verify="required"  placeholder="请输入上级账号" autocomplete="off" class="layui-input">
             </div>
         </div>
     </div>
@@ -68,7 +59,6 @@
                 async: false,
                 success: function (data) {
                     $("#form").formSerialize(data);
-                    $("input[name='AnchorNickName']").prop("disabled", true).addClass('layui-disabled');
                     $("input[name='AnchorName']").prop("disabled", true).addClass('layui-disabled');
                     $("input[name='UserAccount']").prop("disabled", true).addClass('layui-disabled');
                 }

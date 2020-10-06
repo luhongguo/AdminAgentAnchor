@@ -391,6 +391,7 @@ namespace Elight.Logic.Sys
                               AnchorName = st.username,
                               AnchorNickName = st.nickname
                           })
+                         .OrderBy(" it.sendtime desc")
                          .ToPageList(parm.page, parm.limit, ref totalCount);
                 }
             }

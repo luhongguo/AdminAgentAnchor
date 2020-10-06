@@ -366,7 +366,6 @@ $.formSubmit = function (options) {
         async: options.async,
         dataType: "json",
         success: function (data) {
-            console.log(data);
             if (data.state == 1) {//1成功
                 if (options.success && $.isFunction(options.success)) {
                     options.success(data);

@@ -74,14 +74,10 @@ namespace Elight.WebUI.Areas.System.Controllers
                 {
                     return Error("主播已有返点信息，不可重复添加");
                 }
-                var agentModel = new SysUser();
-                if (!string.IsNullOrEmpty(model.UserAccount))
+                var agentModel = new SysUserLogic().CheckUserName(model.UserAccount);
+                if (agentModel == null)
                 {
-                    agentModel = new SysUserLogic().CheckUserName(model.UserAccount);
-                    if (agentModel == null)
-                    {
-                        return Error("上级账号不存在!");
-                    }
+                    return Error("上级账号不存在!");
                 }
                 model.ShopID = 0;
                 model.AnchorID = userModel.id;
