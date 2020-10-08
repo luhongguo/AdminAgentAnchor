@@ -245,12 +245,12 @@ namespace TimedTasksService
                                 where p.code == item.code
                                 select new
                                 {
-                                    p.name,
+                                    p.codeName,
                                     p.price
                                 };
 
                         if (g != null && g.Count() > 0)
-                            giftName = g.FirstOrDefault().name;
+                            giftName = g.FirstOrDefault().codeName;
                         else
                             giftName = item.code;
                         TipEntity model = new TipEntity();

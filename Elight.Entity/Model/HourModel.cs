@@ -68,7 +68,7 @@ namespace Elight.Entity.Model
         /// <summary>
         /// 持续时长
         /// </summary>
-        public int duration { get; set; }
+        public decimal duration { get; set; }
         /// <summary>
         /// 来源 来源  0：腾讯，1：阿里
         /// </summary>

@@ -24,6 +24,31 @@
             请求。
             </summary>
         </member>
+        <member name="T:Elight.Entity.Enum.AnchorStatus">
+            <summary>
+            直播状态枚取
+            </summary>
+        </member>
+        <member name="F:Elight.Entity.Enum.AnchorStatus.正常">
+            <summary>
+            正常=0
+            </summary>
+        </member>
+        <member name="F:Elight.Entity.Enum.AnchorStatus.直播">
+            <summary>
+            直播=1
+            </summary>
+        </member>
+        <member name="F:Elight.Entity.Enum.AnchorStatus.离线">
+            <summary>
+            离线=2
+            </summary>
+        </member>
+        <member name="F:Elight.Entity.Enum.AnchorStatus.禁用">
+            <summary>
+            禁用=3
+            </summary>
+        </member>
         <member name="P:Elight.Entity.Model.AnchorNaneListModel.id">
             <summary>
             id
@@ -127,6 +152,11 @@
         <member name="P:Elight.Entity.Model.IncomeTemplateModel.test_income">
             <summary>
             带玩收益
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Model.IncomeTemplateModel.Platform_income">
+            <summary>
+            平台收益
             </summary>
         </member>
         <member name="P:Elight.Entity.Model.IncomeTemplateModel.isCollet">
@@ -309,7 +339,7 @@
             礼物代码
             </summary>
         </member>
-        <member name="P:Elight.Entity.Sys.GiftEntity.name">
+        <member name="P:Elight.Entity.Sys.GiftEntity.codeName">
             <summary>
             礼物名称
             </summary>
@@ -332,26 +362,6 @@
         <member name="P:Elight.Entity.Sys.GiftEntity.status">
             <summary>
             是否使用 unlock ：使用 lock：不使用
-            </summary>
-        </member>
-        <member name="P:Elight.Entity.Sys.GiftEntity.createby">
-            <summary>
-            创建人
-            </summary>
-        </member>
-        <member name="P:Elight.Entity.Sys.GiftEntity.createtime">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="P:Elight.Entity.Sys.GiftEntity.lastmodifyby">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="P:Elight.Entity.Sys.GiftEntity.lastmodifytime">
-            <summary>
-            最后操作时间
             </summary>
         </member>
         <member name="P:Elight.Entity.Sys.LiveCallbackHourEntity.id">
@@ -459,24 +469,234 @@
             是否禁用 0否 1是
             </summary>
         </member>
-        <member name="P:Elight.Entity.Sys.SysAnchor.username">
+        <member name="T:Elight.Entity.Sys.SysAnchor">
             <summary>
-            主播账号
+            主播基本信息
             </summary>
         </member>
-        <member name="P:Elight.Entity.Sys.SysAnchor.nickname">
+        <member name="P:Elight.Entity.Sys.SysAnchor.id">
             <summary>
-            主播昵称
+            id
             </summary>
         </member>
-        <member name="P:Elight.Entity.Sys.SysAnchor.lmstatus">
+        <member name="P:Elight.Entity.Sys.SysAnchor.anchorName">
             <summary>
-            连麦状态 live 直播 offline 离线  normal正常 kickline踢线  disabled禁用
+            主播名称
             </summary>
         </member>
-        <member name="P:Elight.Entity.Sys.SysAnchor.isCollet">
+        <member name="P:Elight.Entity.Sys.SysAnchor.nickName">
             <summary>
-            是否是采集主播  1 是  0不是
+            昵称
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchor.headUrl">
+            <summary>
+            头像地址
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchor.avatarUrl">
+            <summary>
+            封面图片
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchor.bgUrl">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchor.sex">
+            <summary>
+            性别0女
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchor.createTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchor.password">
+            <summary>
+            密码
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchor.sign">
+            <summary>
+            签名
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchor.city">
+            <summary>
+            城市
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchor.birthday">
+            <summary>
+            生日
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchor.height">
+            <summary>
+            高度
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchor.weight">
+            <summary>
+            宽度
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchor.sanWei">
+            <summary>
+            三围
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchor.country">
+            <summary>
+            国家
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchor.sort">
+            <summary>
+            排序
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchor.isColletCode">
+            <summary>
+            采集代码
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchor.balance">
+            <summary>
+            余额
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchor.follow">
+            <summary>
+            关注人数
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchor.status">
+            <summary>
+            直播状态
+            </summary>
+        </member>
+        <member name="T:Elight.Entity.Sys.SysAnchorInfoEntity">
+            <summary>
+            主播补充信息
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorInfoEntity.aid">
+            <summary>
+            主播id
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorInfoEntity.liveroad">
+            <summary>
+            直播线路id
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorInfoEntity.status">
+            <summary>
+            直播状态
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorInfoEntity.follow">
+            <summary>
+            关注人数
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorInfoEntity.gold">
+            <summary>
+            余额
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorInfoEntity.online">
+            <summary>
+            在线人数
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorInfoEntity.contactswtich">
+            <summary>
+            开关  0 关  1开  默认关闭
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorInfoEntity.showprice">
+            <summary>
+            显示价格
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorInfoEntity.wxchat">
+            <summary>
+            WX
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorInfoEntity.qqchat">
+            <summary>
+            QQ
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorInfoEntity.tdchat">
+            <summary>
+            土豆
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorInfoEntity.tgchat">
+            <summary>
+            TG
+            </summary>
+        </member>
+        <member name="T:Elight.Entity.Sys.SysAnchorLiveRecordEntity">
+            <summary>
+            直播记录表
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorLiveRecordEntity.seqid">
+            <summary>
+            主键ID
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorLiveRecordEntity.aid">
+            <summary>
+            主播id
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorLiveRecordEntity.ontime">
+            <summary>
+            上播时间
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorLiveRecordEntity.uptime">
+            <summary>
+            下播时间
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorLiveRecordEntity.ip">
+            <summary>
+            ip
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorLiveRecordEntity.flvurl">
+            <summary>
+            流地址
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorLiveRecordEntity.livetime">
+            <summary>
+            直播时长
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorLiveRecordEntity.giftnum">
+            <summary>
+            礼物数量
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorLiveRecordEntity.amount">
+            <summary>
+            总金额
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorLiveRecordEntity.roomvalue">
+            <summary>
+            房间信息
             </summary>
         </member>
         <member name="T:Elight.Entity.Sys.SysIncomeEntity">

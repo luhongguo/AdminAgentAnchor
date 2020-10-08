@@ -40,26 +40,26 @@ namespace Elight.Logic.Sys
                 //statu 	正常unlock 禁用 lock 审核中 audit
                 using (var db = GetInstance())
                 {
-                    result = db.Queryable<SysAnchor>()
-                                 .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (it) => it.username.Contains(dic["Name"].ToString()) || it.nickname.Contains(dic["Name"].ToString()))
-                                 .WhereIF(dic.ContainsKey("startTime") && !string.IsNullOrEmpty(dic["startTime"].ToString()) && !string.IsNullOrEmpty(dic["endTime"].ToString()), (it) => it.regtime >= Convert.ToDateTime(dic["startTime"]) && it.regtime <= Convert.ToDateTime(dic["endTime"]))
-                                 .WhereIF(dic.ContainsKey("isCollet") && Convert.ToInt32(dic["isCollet"]) != -1, (it) => it.isCollet == Convert.ToInt32(dic["isCollet"]))
-                                 .Select((it) => new SysAnchor
-                                 {
-                                     id = it.id,
-                                     username = it.username,
-                                     nickname = it.nickname,
-                                     photo = it.photo,
-                                     balance = it.balance,
-                                     atteCount = it.atteCount,
-                                     ishot = it.ishot,
-                                     isrecommend = it.isrecommend,
-                                     regtime = it.regtime,
-                                     viplevel = it.viplevel,
-                                     birthday = it.birthday,
-                                     lmstatus = it.lmstatus,
-                                     isCollet = it.isCollet
-                                 }).ToPageList(parm.page, parm.limit, ref totalCount);
+                    //result = db.Queryable<SysAnchor>()
+                    //             .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (it) => it.username.Contains(dic["Name"].ToString()) || it.nickname.Contains(dic["Name"].ToString()))
+                    //             .WhereIF(dic.ContainsKey("startTime") && !string.IsNullOrEmpty(dic["startTime"].ToString()) && !string.IsNullOrEmpty(dic["endTime"].ToString()), (it) => it.regtime >= Convert.ToDateTime(dic["startTime"]) && it.regtime <= Convert.ToDateTime(dic["endTime"]))
+                    //             .WhereIF(dic.ContainsKey("isCollet") && Convert.ToInt32(dic["isCollet"]) != -1, (it) => it.isCollet == Convert.ToInt32(dic["isCollet"]))
+                    //             .Select((it) => new SysAnchor
+                    //             {
+                    //                 id = it.id,
+                    //                 username = it.username,
+                    //                 nickname = it.nickname,
+                    //                 photo = it.photo,
+                    //                 balance = it.balance,
+                    //                 atteCount = it.atteCount,
+                    //                 ishot = it.ishot,
+                    //                 isrecommend = it.isrecommend,
+                    //                 regtime = it.regtime,
+                    //                 viplevel = it.viplevel,
+                    //                 birthday = it.birthday,
+                    //                 lmstatus = it.lmstatus,
+                    //                 isCollet = it.isCollet
+                    //             }).ToPageList(parm.page, parm.limit, ref totalCount);
                 }
             }
             catch (Exception ex)

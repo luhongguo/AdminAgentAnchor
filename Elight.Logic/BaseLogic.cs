@@ -19,6 +19,7 @@ namespace Elight.Logic.Base
         public static readonly string QPAgentAnchorDB = ConfigurationManager.AppSettings["QPAgentAnchorDB"];
         public static readonly string QPVideoAnchorDB = ConfigurationManager.AppSettings["QPVideoAnchorDB"];
         public static readonly string _DBType = ConfigurationManager.AppSettings["DBType"];
+        public static readonly string Image_CDN = ConfigurationManager.AppSettings["Image_CDN"];
         public enum DbConnType
         {
             /// <summary>
@@ -86,19 +87,19 @@ namespace Elight.Logic.Base
                     strConnectionString = ConfigurationManager.AppSettings["QPAgentAnchorDB"];
                     break;
                 case DbConnType.QPVideoAnchorDB:
-                    strConnectionString= ConfigurationManager.AppSettings["QPVideoAnchorDB"];
+                    strConnectionString = ConfigurationManager.AppSettings["QPVideoAnchorDB"];
                     break;
                 case DbConnType.QPAnchorRecordDB:
-                    strConnectionString= ConfigurationManager.AppSettings["QPAnchorRecordDB"];
+                    strConnectionString = ConfigurationManager.AppSettings["QPAnchorRecordDB"];
                     break;
                 case DbConnType.MovieDB:
-                    strConnectionString= ConfigurationManager.AppSettings["MovieRecordDb"];
+                    strConnectionString = ConfigurationManager.AppSettings["MovieRecordDb"];
                     break;
                 case DbConnType.AnchorPersonaliseDb:
-                    strConnectionString= ConfigurationManager.AppSettings["AnchorPersonaliseDb"];
+                    strConnectionString = ConfigurationManager.AppSettings["AnchorPersonaliseDb"];
                     break;
                 default:
-                    strConnectionString= ConfigurationManager.AppSettings["QPVideoAnchorDB"];
+                    strConnectionString = ConfigurationManager.AppSettings["QPVideoAnchorDB"];
                     break;
             }
             ICacheService cacheService = null;

@@ -9,7 +9,7 @@ namespace Elight.Entity.Sys
     /// <summary>
     /// 代理、主播礼物收益明细
     /// </summary>
-    [SugarTable("QPAnchorRecordDB.dbo.TipIncomeDetail")]
+    [SugarTable("AnchorRecordDB.dbo.TipIncomeDetail")]
     public class SysTipIncomeDetailEntity
     {
         /// <summary>

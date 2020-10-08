@@ -13,7 +13,7 @@ namespace UnitTest
         [TestMethod]
         public void TestMethod1()
         {
-           TipService.StatisticsCollectTipGifts(DateTime.Now,200);//第一次需要改redis中的时间 采集200条数据
+           TipService.StatisticsCollectTipGifts(DateTime.Now.AddDays(-7),200);//第一次需要改redis中的时间 采集200条数据
         }
         /// <summary>
         /// 按天统计代理的礼物收益

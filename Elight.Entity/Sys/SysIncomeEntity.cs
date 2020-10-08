@@ -9,7 +9,7 @@ namespace Elight.Entity.Sys
     /// <summary>
     /// 收益报表
     /// </summary>
-    [SugarTable("QPAnchorRecordDB.dbo.Income")]
+    [SugarTable("AnchorRecordDB.dbo.Income")]
     public class SysIncomeEntity
     {
         /// <summary>

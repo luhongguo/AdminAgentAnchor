@@ -158,24 +158,22 @@ namespace Elight.Logic.Sys
                 //statu 	正常unlock 禁用 lock 审核中 audit
                 using (var db = GetInstance())
                 {
-                    result = db.Queryable<SysShopAnchorEntity, SysAnchor>((st, it) => new object[] { JoinType.Left, st.AnchorID == it.id })
-                                 .WhereIF(dic.ContainsKey("anchorUserName") && !string.IsNullOrEmpty(dic["anchorUserName"].ToString()), (st, it) => it.username.Contains(dic["anchorUserName"].ToString()) || it.nickname.Contains(dic["anchorUserName"].ToString()))
+                    result = db.Queryable<SysShopAnchorEntity, SysAnchor, SysAnchorInfoEntity>((st, it, at) => new object[] { JoinType.Left, st.AnchorID == it.id, JoinType.Left, it.id == at.aid })
+                                 .WhereIF(dic.ContainsKey("anchorUserName") && !string.IsNullOrEmpty(dic["anchorUserName"].ToString()), (st, it) => it.anchorName.Contains(dic["anchorUserName"].ToString()) || it.nickName.Contains(dic["anchorUserName"].ToString()))
                                  .WhereIF(dic.ContainsKey("userID") && !string.IsNullOrEmpty(dic["userID"].ToString()), (st, it) => st.ShopID == Convert.ToInt32(dic["userID"]))
-                                 .WhereIF(dic.ContainsKey("isCollet") && Convert.ToInt32(dic["isCollet"]) != -1, (st, it) => it.isCollet == Convert.ToInt32(dic["isCollet"]))
+                                 //.WhereIF(dic.ContainsKey("isCollet") && Convert.ToInt32(dic["isCollet"]) != -1, (st, it) => it.isCollet == Convert.ToInt32(dic["isCollet"]))
                                  .WhereIF(dic.ContainsKey("isColletCode") && dic["isColletCode"].ToString() != "-1", (st, it) => it.isColletCode == dic["isColletCode"].ToString())
-                                 .Select((st, it) => new SysAnchor
+                                 .Select((st, it, at) => new SysAnchor
                                  {
                                      id = it.id,
-                                     username = it.username,
-                                     nickname = it.nickname,
-                                     photo = it.photo,
-                                     balance = it.balance,
-                                     atteCount = it.atteCount,
-                                     ishot = it.ishot,
-                                     isrecommend = it.isrecommend,
-                                     regtime = it.regtime,
-                                     viplevel = it.viplevel,
+                                     anchorName = it.anchorName,
+                                     nickName = it.nickName,
+                                     headUrl = Image_CDN + it.headUrl,
+                                     balance = at.gold,
+                                     follow = at.follow,
                                      birthday = it.birthday,
+                                     status = at.status,
+                                     createTime = it.createTime
                                  }).ToPageList(pageIndex, pageSize, ref totalCount);
                 }
             }
@@ -207,24 +205,21 @@ namespace Elight.Logic.Sys
                 //statu 	正常unlock 禁用 lock 审核中 audit
                 using (var db = GetSqlSugarDB(DbConnType.QPVideoAnchorDB))
                 {
-                    result = db.Queryable<SysAnchor>()
-                                 .WhereIF(dic.ContainsKey("anchorUserName") && !string.IsNullOrEmpty(dic["anchorUserName"].ToString()), it => it.username.Contains(dic["anchorUserName"].ToString()) || it.nickname.Contains(dic["anchorUserName"].ToString()))
-                                 .WhereIF(dic.ContainsKey("isCollet") && Convert.ToInt32(dic["isCollet"]) != -1, (it) => it.isCollet == Convert.ToInt32(dic["isCollet"]))
+                    result = db.Queryable<SysAnchor, SysAnchorInfoEntity>((it, at) => new object[] { it.id == at.aid })
+                                 .WhereIF(dic.ContainsKey("anchorUserName") && !string.IsNullOrEmpty(dic["anchorUserName"].ToString()), it => it.anchorName.Contains(dic["anchorUserName"].ToString()) || it.nickName.Contains(dic["anchorUserName"].ToString()))
                                  .WhereIF(dic.ContainsKey("isColletCode") && dic["isColletCode"].ToString() != "-1", (it) => it.isColletCode == dic["isColletCode"].ToString())
                                  .Where(it => SqlFunc.Subqueryable<SysShopAnchorEntity>().Where(st => st.ShopID == Convert.ToInt32(dic["userID"])).Where(st => st.AnchorID == it.id).NotAny())
-                                 .Select(it => new SysAnchor
+                                 .Select((it,at) => new SysAnchor
                                  {
                                      id = it.id,
-                                     username = it.username,
-                                     nickname = it.nickname,
-                                     photo = it.photo,
-                                     balance = it.balance,
-                                     atteCount = it.atteCount,
-                                     ishot = it.ishot,
-                                     isrecommend = it.isrecommend,
-                                     regtime = it.regtime,
-                                     viplevel = it.viplevel,
+                                     anchorName = it.anchorName,
+                                     nickName = it.nickName,
+                                     headUrl = Image_CDN + it.headUrl,
+                                     balance = at.gold,
+                                     follow = at.follow,
                                      birthday = it.birthday,
+                                     status = at.status,
+                                     createTime = it.createTime
                                  }).ToPageList(pageIndex, pageSize, ref totalCount);
                 }
             }

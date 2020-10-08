@@ -29,7 +29,7 @@
         <div class="panel-body">
             <blockquote class="layui-elem-quote">
                 <div class="form-inline layui-form user-search">
-                    <div class="layui-inline" id="isColletDiv">
+                    @*<div class="layui-inline" id="isColletDiv">
                         <label class="layui-form-label">主播来源</label>
                         <div class="layui-input-block">
                             <select name="isCollet" id="isCollet" lay-filter="Level" lay-search>
@@ -38,7 +38,7 @@
                                 <option value="1">采集</option>
                             </select>
                         </div>
-                    </div>
+                    </div>*@
                     <div class="layui-inline" id="isColletCodeDiv">
                         <label class="layui-form-label">采集公司</label>
                         <div class="layui-input-block">
@@ -78,7 +78,7 @@
 </body>
 </html>
 <script type="text/html" id="imgPhoto">
-    <div onclick="show_img(this)"><img src="{{ d.photo }}" onerror="this.onerror = '',this.src = '/Img/jS8OTijpLqrlLgMLhsSC2Y.jpeg'" /></div>
+    <div onclick="show_img(this)"><img src="{{ d.headUrl }}" onerror="this.onerror = '',this.src = '/Img/jS8OTijpLqrlLgMLhsSC2Y.jpeg'" /></div>
 </script>
 <script type="text/javascript">
 
@@ -109,7 +109,7 @@
             elem: '#endTimeReload' //指定元素
             , type: 'datetime'
         });
-      
+
         function renderTable(where) {
             table.render({
                 elem: '#table'
@@ -119,57 +119,27 @@
                 , page: true //开启分页
                 , cols: [[ //表头
                     { field: 'id', title: '主播ID' }
-                    ,{ field: 'username', title: '主播账号' }
-                    , { field: 'nickname', title: '主播昵称' }
+                    , { field: 'anchorName', title: '主播账号' }
+                    , { field: 'nickName', title: '主播昵称' }
                     , {
-                        field: 'photo', title: '头像', templet: "#imgPhoto"
+                        field: 'headUrl', title: '头像', templet: "#imgPhoto"
                     }
                     , { field: 'balance', title: '余额' }
-                    , { field: 'atteCount', title: '关注数' }
+                    , { field: 'follow', title: '关注数' }
                     , {
-                        field: 'lmstatus', title: '直播状态', templet: function (d) {
-                            if (d.lmstatus == "live") {
-                                return '<span class="label label-success label-sm">直播</span>'
-                            } else if (d.lmstatus == "normal") {
+                        field: 'status', title: '直播状态', templet: function (d) {
+                            if (d.status == 0) {
                                 return '<span class="label label-success label-sm">正常</span>'
-                            } else if (d.lmstatus == "offline") {
+                            } else if (d.status == 1) {
+                                return '<span class="label label-success label-sm">直播</span>'
+                            } else if (d.status == 2) {
                                 return ' <span class="label label-dark label-sm">离线</span>'
-                            } else if (d.lmstatus == "kickline") {
-                                return '<span class="label label-dark label-sm">踢线</span>'
                             } else {
                                 return '<span class="label label-dark label-sm">禁用</span>'
                             }
                         }
                     }
-                    , {
-                        field: 'ishot', title: '是否热门', templet: function (d) {
-                            if (d.ishot == "1") {
-                                return '<span class="label label-success label-sm">是</span>'
-                            } else {
-                                return '<span class="label label-dark label-sm">否</span>'
-                            }
-                        }
-                    }
-                    , {
-                        field: 'isrecommend', title: '是否推荐', templet: function (d) {
-                            if (d.isrecommend == "1") {
-                                return '<span class="label label-success label-sm">是</span>'
-                            } else {
-                                return '<span class="label label-dark label-sm">否</span>'
-                            }
-                        }
-                    }
-                    , {
-                        field: 'isCollet', title: '是否采集', templet: function (d) {
-                            if (d.isCollet == "1") {
-                                return '<span class="label label-success label-sm">是</span>'
-                            } else {
-                                return '<span class="label label-dark label-sm">否</span>'
-                            }
-                        }
-                    }
-                    , { field: 'viplevel', title: 'VIP等级' }
-                    , { field: 'regtime', title: '注册时间' }
+                    , { field: 'createTime', title: '注册时间' }
                     , { field: 'birthday', title: '出生日期' }
                 ]]
                 , request: {

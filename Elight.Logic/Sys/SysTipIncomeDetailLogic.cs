@@ -44,7 +44,7 @@ namespace Elight.Logic.Sys
                       })
                           .Where((at, bt, ct, dt) => at.StartDate >= Convert.ToDateTime(dic["startTime"]) && at.StartDate < Convert.ToDateTime(dic["endTime"]))
                           .WhereIF(dic.ContainsKey("AgentName") && !string.IsNullOrEmpty(dic["AgentName"].ToString()), (at, bt, ct, dt) => bt.Account.Contains(dic["AgentName"].ToString()))
-                          .WhereIF(dic.ContainsKey("AnchorName") && !string.IsNullOrEmpty(dic["AnchorName"].ToString()), (at, bt, ct, dt) => ct.username.Contains(dic["AnchorName"].ToString()) || ct.nickname.Contains(dic["AnchorName"].ToString()));
+                          .WhereIF(dic.ContainsKey("AnchorName") && !string.IsNullOrEmpty(dic["AnchorName"].ToString()), (at, bt, ct, dt) => ct.anchorName.Contains(dic["AnchorName"].ToString()) || ct.nickName.Contains(dic["AnchorName"].ToString()));
                     sumModel = query.Clone().Select((at, bt, ct, dt) => new TipIncomeDetailModel
                     {
                         AnchorIncome = SqlFunc.AggregateSum(at.AnchorIncome),
@@ -56,8 +56,8 @@ namespace Elight.Logic.Sys
                          .Select((at, bt, ct, dt) => new TipIncomeDetailModel
                          {
                              UserName = bt.Account,
-                             AnchorName = ct.username,
-                             AnchorNickName=ct.nickname,
+                             AnchorName = ct.anchorName,
+                             AnchorNickName=ct.nickName,
                              UserIncome = at.UserIncome,
                              AnchorIncome = at.AnchorIncome,
                              PlatformIncome = at.PlatformIncome,

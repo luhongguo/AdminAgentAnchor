@@ -6,137 +6,104 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Elight.Entity.Enum;
 
 namespace Elight.Entity.Sys
 {
-    [SugarTable("QPVideoAnchorDB.dbo.dt_anchor")]
+    /// <summary>
+    /// 主播基本信息
+    /// </summary>
+    [SugarTable("AnchorDB.dbo.anchor_basic")]
     public partial class SysAnchor : ModelContext
     {
-        [SugarColumn(ColumnName = "id")]
+        /// <summary>
+        /// id
+        /// </summary>
         public int id { get; set; }
         /// <summary>
-        /// 主播账号
+        /// 主播名称
         /// </summary>
-        [SugarColumn(ColumnName = "username")]
-        public string username { get; set; }
+        public string anchorName { get; set; }
         /// <summary>
-        /// 主播昵称
+        /// 昵称
         /// </summary>
-        [SugarColumn(ColumnName = "nickname")]
-        public string nickname { get; set; }
-
-        [SugarColumn(ColumnName = "idcard")]
-        public string idcard { get; set; }
-
-        [SugarColumn(ColumnName = "photo")]
-        public string photo { get; set; }
-
-
-        [SugarColumn(ColumnName = "avatar")]
-        public string avatar { get; set; }
-
-        [SugarColumn(ColumnName = "sex")]
+        public string nickName { get; set; }
+        /// <summary>
+        /// 头像地址
+        /// </summary>
+        public string headUrl { get; set; }
+        /// <summary>
+        /// 封面图片
+        /// </summary>
+        public string avatarUrl { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string bgUrl { get; set; }
+        /// <summary>
+        /// 性别0女
+        /// </summary>
         public int sex { get; set; }
-
-        [SugarColumn(ColumnName = "status")]
-        public string status { get; set; }
-
-        [SugarColumn(ColumnName = "telphone")]
-        public string telphone { get; set; }
-
-        [JsonConverter(typeof(DateTimeToJson))]
-        [SugarColumn(ColumnName = "regtime")]
-        public DateTime? regtime { get; set; }
-
-        [SugarColumn(ColumnName = "regip")]
-        public string regip { get; set; }
-
-
-        [SugarColumn(ColumnName = "balance")]
-        public decimal balance { get; set; }
-
-
-        [SugarColumn(ColumnName = "type")]
-        public string type { get; set; }
-
-
-        [SugarColumn(ColumnName = "company")]
-        public string company { get; set; }
         /// <summary>
-        /// 连麦状态 live 直播 offline 离线  normal正常 kickline踢线  disabled禁用
+        /// 创建时间
         /// </summary>
-        [SugarColumn(ColumnName = "lmstatus")]
-        public string lmstatus { get; set; }// { get { return this.OrganizeSingle.FullName; } }
-
-        [SugarColumn(ColumnName = "superior")]
-        public string superior { get; set; }
-
-        [SugarColumn(ColumnName = "salt")]
-        public string salt { get; set; }
-        [SugarColumn(ColumnName = "password")]
+        [JsonConverter(typeof(DateTimeToJson))]
+        public DateTime createTime { get; set; }
+        /// <summary>
+        /// 密码
+        /// </summary>
         public string password { get; set; }
-        [SugarColumn(ColumnName = "location")]
-        public string location { get; set; }
-        [SugarColumn(ColumnName = "signature")]
-        public string signature { get; set; }
-        [SugarColumn(ColumnName = "userid")]
-        public string userid { get; set; }
-        [SugarColumn(ColumnName = "pushtime")]
-        public DateTime? pushtime { get; set; }
-        [SugarColumn(ColumnName = "isded")]
-        public int isded { get; set; }
-        [SugarColumn(ColumnName = "isheadoffice")]
-        public int isheadoffice { get; set; }
-        [SugarColumn(ColumnName = "isrecommend")]
-        public int isrecommend { get; set; }
-        [SugarColumn(ColumnName = "anchorlabel")]
-        public string anchorlabel { get; set; }
-        [SugarColumn(ColumnName = "viplevel")]
-        public int viplevel { get; set; }
-        [SugarColumn(ColumnName = "birthday")]
-        [JsonConverter(typeof(DateTimeToJson))]
-        public DateTime? birthday { get; set; }
-        [SugarColumn(ColumnName = "height")]
-        public int height { get; set; }
-        [SugarColumn(ColumnName = "weight")]
-        public decimal weight { get; set; }
-        [SugarColumn(ColumnName = "bust")]
-        public decimal bust { get; set; }
-        [SugarColumn(ColumnName = "waist")]
-        public decimal waist { get; set; }
-        [SugarColumn(ColumnName = "hip")]
-        public decimal hip { get; set; }
-        [SugarColumn(ColumnName = "bra")]
-        public string bra { get; set; }
-        [SugarColumn(ColumnName = "atteCount")]
-        public int atteCount { get; set; }
-        [SugarColumn(ColumnName = "platform")]
-        public string platform { get; set; }
-        [SugarColumn(ColumnName = "ptype")]
-        public string ptype { get; set; }
-        [SugarColumn(ColumnName = "isouterlink")]
-        public int isouterlink { get; set; }
-        [SugarColumn(ColumnName = "pgame")]
-        public string pgame { get; set; }
-        [SugarColumn(ColumnName = "roleData")]
-        public string roleData { get; set; }
-        [SugarColumn(ColumnName = "sort")]
-        public int sort { get; set; }
-        [SugarColumn(ColumnName = "companycode")]
-        public string companycode { get; set; }
-        [SugarColumn(ColumnName = "country")]
-        public string country { get; set; }
-        [SugarColumn(ColumnName = "ishot")]
-        public int ishot { get; set; }
-        [SugarColumn(ColumnName = "gameName")]
-        public string gameName { get; set; }
         /// <summary>
-        /// 是否是采集主播  1 是  0不是
+        /// 签名
         /// </summary>
-        [SugarColumn(ColumnName = "isCollet")]
-        public int isCollet { get; set; }
-        [SugarColumn(ColumnName = "isColletCode")]
+        public string sign { get; set; }
+        /// <summary>
+        /// 城市
+        /// </summary>
+        public string city { get; set; }
+        /// <summary>
+        /// 生日
+        /// </summary>
+        [JsonConverter(typeof(DateTimeToJson))]
+        public DateTime birthday { get; set; }
+        /// <summary>
+        /// 高度
+        /// </summary>
+        public string height { get; set; }
+        /// <summary>
+        /// 宽度
+        /// </summary>
+        public string weight { get; set; }
+        /// <summary>
+        /// 三围
+        /// </summary>
+        public string sanWei { get; set; }
+        /// <summary>
+        /// 国家
+        /// </summary>
+        public string country { get; set; }
+        /// <summary>
+        /// 排序
+        /// </summary>
+        public int sort { get; set; }
+        /// <summary>
+        /// 采集代码
+        /// </summary>
         public string isColletCode { get; set; }
-
+        /// <summary>
+        /// 余额
+        /// </summary>
+        [SugarColumn(IsIgnore = true)]
+        public decimal balance { get; set; }
+        /// <summary>
+        /// 关注人数
+        /// </summary>
+        [SugarColumn(IsIgnore = true)]
+        public int follow { get; set; }
+        /// <summary>
+        /// 直播状态
+        /// </summary>
+        [SugarColumn(IsIgnore = true)]
+        public AnchorStatus status { get; set; }
     }
 }

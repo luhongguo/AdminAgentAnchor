@@ -22,7 +22,7 @@
         <div class="panel-body">
             <blockquote class="layui-elem-quote">
                 <div class="form-inline layui-form user-search">
-                    <div class="layui-inline" id="isColletDiv">
+                    @*<div class="layui-inline" id="isColletDiv">
                         <label class="layui-form-label">主播来源</label>
                         <div class="layui-input-block">
                             <select name="isCollet" id="isCollet" lay-filter="Level" lay-search>
@@ -31,7 +31,7 @@
                                 <option value="1">采集</option>
                             </select>
                         </div>
-                    </div>
+                    </div>*@
                     <div class="layui-inline" id="isColletCodeDiv">
                         <label class="layui-form-label">采集公司</label>
                         <div class="layui-input-block">
@@ -103,15 +103,6 @@
                     , { field: 'hour_income', title: '工时收益', totalRow: true }
                     , { field: 'agent_income', title: '代理收益', totalRow: true }
                     , { field: 'test_income', title: '带玩收益', totalRow: true }
-                    , {
-                        field: 'isCollet', title: '是否采集', templet: function (d) {
-                            if (d.isCollet == "1") {
-                                return '<span class="label label-success label-sm">是</span>'
-                            } else {
-                                return '<span class="label label-dark label-sm">否</span>'
-                            }
-                        }
-                    }
                 ]]
                 , request: {
                     pageName: 'parm.page' //页码的参数名称，默认：page

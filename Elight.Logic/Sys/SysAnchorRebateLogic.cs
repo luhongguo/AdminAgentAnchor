@@ -42,7 +42,7 @@ namespace Elight.Logic.Sys
                     return db.Queryable<SysAnchorRebateEntity, SysAnchor, SysUser>((gt, it, at) => new object[] { JoinType.Left, gt.AnchorID == it.id,
                        JoinType.Left,gt.parentID==at.Id
                      })
-                               .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (gt, it) => it.username.Contains(dic["Name"].ToString()) || it.nickname.Contains(dic["Name"].ToString()))
+                               .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (gt, it) => it.anchorName.Contains(dic["Name"].ToString()) || it.nickName.Contains(dic["Name"].ToString()))
                                .Select((gt, it, at) => new SysAnchorRebateEntity
                                {
                                    id = gt.id,
@@ -51,8 +51,8 @@ namespace Elight.Logic.Sys
                                    ModifiedBy = gt.ModifiedBy,
                                    ModifiedTime = gt.ModifiedTime,
                                    CreateTime = gt.CreateTime,
-                                   AnchorName = it.username,
-                                   AnchorNickName = it.nickname,
+                                   AnchorName = it.anchorName,
+                                   AnchorNickName = it.nickName,
                                    UserAccount = at.Account
                                })
                                .ToPageList(parm.page, parm.limit, ref totalCount);
@@ -78,8 +78,8 @@ namespace Elight.Logic.Sys
                     .Select((A, B, C) => new SysAnchorRebateEntity
                     {
                         id = A.id,
-                        AnchorName = B.username,
-                        AnchorNickName = B.nickname,
+                        AnchorName = B.anchorName,
+                        AnchorNickName = B.nickName,
                         TipRebate = A.TipRebate,
                         HourRebate = A.TipRebate,
                         UserAccount = C.Account
@@ -156,7 +156,7 @@ namespace Elight.Logic.Sys
         {
             using (var db = GetSqlSugarDB(DbConnType.QPVideoAnchorDB))
             {
-                return db.Queryable<SysAnchor>().Where(it => it.username == username).First();
+                return db.Queryable<SysAnchor>().Where(it => it.anchorName == username).First();
             }
         }
         /// <summary>

@@ -24,4 +24,26 @@ namespace Elight.Entity.Enum
         /// </summary>
         public const int Ajax = 2;
     }
+    /// <summary>
+    /// 直播状态枚取
+    /// </summary>
+    public enum AnchorStatus
+    {
+        /// <summary>
+        /// 正常=0
+        /// </summary>
+        正常 = 0,
+        /// <summary>
+        /// 直播=1
+        /// </summary>
+        直播 = 1,
+        /// <summary>
+        /// 离线=2
+        /// </summary>
+        离线 = 2,
+        /// <summary>
+        /// 禁用=3
+        /// </summary>
+        禁用 = 3
+    }
 }

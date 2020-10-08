@@ -44,6 +44,10 @@ namespace Elight.Entity.Model
         /// </summary>
         public decimal test_income { get; set; }
         /// <summary>
+        /// 平台收益
+        /// </summary>
+        public decimal Platform_income { get; set; }
+        /// <summary>
         /// 是否是采集主播  1 是  0不是
         /// </summary>
         public int isCollet { get; set; }

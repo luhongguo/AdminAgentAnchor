@@ -10,7 +10,7 @@ namespace Elight.Entity.Sys
     /// <summary>
     /// 采集礼物实体
     /// </summary>
-    [SugarTable("QPAnchorRecordDB.dbo.Tip")]
+    [SugarTable("AnchorRecordDB.dbo.Tip")]
     public partial class TipEntity
     {
         /// <summary>

@@ -68,14 +68,11 @@
                         <th>
                             <input type="checkbox" lay-skin="primary">
                         </th>
-                        <th>主播名称</th>
+                        <th>主播账号</th>
                         <th>主播昵称</th>
                         <th>头像</th>
                         <th>余额</th>
                         <th>关注数</th>
-                        <th>是否热门</th>
-                        <th>是否推荐</th>
-                        <th>VIP等级</th>
                         <th>注册时间</th>
                         <th>出生日期</th>
                     </tr>
@@ -96,27 +93,16 @@
         <td>
             <input type="checkbox" lay-skin="primary" value="{{item.id}}">
         </td>
-        <td>{{item.username}}</td>
+        <td>{{item.anchorName}}</td>
         <td>
-            {{# if(item.nickname==null) { }} {{ "" }}
-            {{# }else{ }} {{item.nickname}}
-            {{# } }}{{item.nickname}}
+            {{# if(item.nickName==null) { }} {{ "" }}
+            {{# }else{ }} {{item.nickName}}
+            {{# } }}
         </td>
-        <td><img src="{{item.photo}}" /> </td>
+        <td><img src="{{item.headUrl}}" /> </td>
         <td>{{item.balance}} </td>
-        <td>{{item.atteCount}} </td>
-        <td>
-            {{# if(item.ishot==1){ }}  <span class="label label-success label-sm">是</span>
-            {{# }else{ }}  <span class="label label-dark label-sm">否</span>
-            {{# } }}
-        </td>
-        <td>
-            {{# if(item.isrecommend==1){ }}  <span class="label label-success label-sm">是</span>
-            {{# }else{ }}  <span class="label label-dark label-sm">否</span>
-            {{# } }}
-        </td>
-        <td>{{item.viplevel}} </td>
-        <td>{{item.regtime}} </td>
+        <td>{{item.follow}} </td>
+        <td>{{item.createTime}} </td>
         <td>{{item.birthday}} </td>
     </tr>
     {{#  }); }}
