@@ -251,7 +251,7 @@ namespace Elight.Logic.Sys
                         tip_income = SqlFunc.AggregateSum(it.tip_income),
                         agent_income = SqlFunc.AggregateSum(it.agent_income),
                         hour_income = SqlFunc.AggregateSum(it.hour_income),
-                        test_income = SqlFunc.AggregateSum(it.test_income),
+                        Platform_income = SqlFunc.AggregateSum(it.Platform_income),
                         Balance = SqlFunc.AggregateSum(at.gold)
                     }).First();
                     res = query.GroupBy((it, st, at) => new { it.AnchorID, st.anchorName, st.nickName, at.gold })
@@ -264,7 +264,7 @@ namespace Elight.Logic.Sys
                               tip_income = SqlFunc.AggregateSum(it.tip_income),
                               agent_income = SqlFunc.AggregateSum(it.agent_income),
                               hour_income = SqlFunc.AggregateSum(it.hour_income),
-                              test_income = SqlFunc.AggregateSum(it.test_income),
+                              Platform_income = SqlFunc.AggregateSum(it.Platform_income),
                           })
                           .OrderBy(" sum(it.tip_income) desc")
                           .ToPageList(parm.page, parm.limit, ref totalCount);
@@ -422,7 +422,7 @@ namespace Elight.Logic.Sys
                                    .Where(it => it.ontime >= Convert.ToDateTime(dic["startTime"]) && it.ontime < Convert.ToDateTime(dic["endTime"]))
                                    .WhereIF(dic.ContainsKey("isLive") && Convert.ToInt32(dic["isLive"]) == 1, it => SqlFunc.IsNullOrEmpty(it.uptime))
                                    .WhereIF(dic.ContainsKey("isLive") && Convert.ToInt32(dic["isLive"]) == 0, it => !SqlFunc.IsNullOrEmpty(it.uptime))
-                                   .WhereIF(dic.ContainsKey("userName") && dic["userName"].ToString() != "-1", (it, st) => st.anchorName.Contains(dic["userName"].ToString()) || st.nickName.Contains(dic["userName"].ToString()))
+                                   .WhereIF(dic.ContainsKey("userName") && Convert.ToInt32(dic["userName"]) != -1, (it, st) => st.id == Convert.ToInt32(dic["userName"]))
                                    .WithCache(30);//缓存30秒
                     var sumReuslt = query.Clone().Select((it, st) => new { amount = SqlFunc.AggregateSum(it.amount), duration = SqlFunc.AggregateSum(it.livetime) }).First();
                     sumAmount = sumReuslt.amount;

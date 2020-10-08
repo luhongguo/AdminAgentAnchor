@@ -59,7 +59,7 @@ namespace Elight.Logic.Sys
                     log.IP = Net.Ip;
                     log.IPAddress = Net.GetAddress(Net.Ip);
                     log.Browser = Net.Browser;
-                    log.StackTrace = stackTrace.Length > 500 ? stackTrace.Substring(0, 500) : stackTrace;
+                    log.StackTrace = stackTrace.Length > 450 ? stackTrace.Substring(0, 450) : stackTrace;
                     db.Insertable<SysLog>(log).ExecuteCommand();
                 }
                 catch (Exception ex)

@@ -190,7 +190,7 @@ namespace Elight.WebUI.Areas.System.Controllers
                     hour_income = sumModel.hour_income.ToString(),
                     agent_income = sumModel.agent_income.ToString(),
                     tip_income = sumModel.tip_income.ToString(),
-                    test_income = sumModel.test_income.ToString(),
+                    Platform_income = sumModel.Platform_income.ToString(),
                     Balance = sumModel.Balance.ToString()
                 }
             };

@@ -205,16 +205,16 @@ namespace Elight.Logic.Sys
                 //statu 	正常unlock 禁用 lock 审核中 audit
                 using (var db = GetSqlSugarDB(DbConnType.QPVideoAnchorDB))
                 {
-                    result = db.Queryable<SysAnchor, SysAnchorInfoEntity>((it, at) => new object[] { it.id == at.aid })
+                    result = db.Queryable<SysAnchor, SysAnchorInfoEntity>((it, at) => new object[] { JoinType.Left, it.id == at.aid })
                                  .WhereIF(dic.ContainsKey("anchorUserName") && !string.IsNullOrEmpty(dic["anchorUserName"].ToString()), it => it.anchorName.Contains(dic["anchorUserName"].ToString()) || it.nickName.Contains(dic["anchorUserName"].ToString()))
                                  .WhereIF(dic.ContainsKey("isColletCode") && dic["isColletCode"].ToString() != "-1", (it) => it.isColletCode == dic["isColletCode"].ToString())
                                  .Where(it => SqlFunc.Subqueryable<SysShopAnchorEntity>().Where(st => st.ShopID == Convert.ToInt32(dic["userID"])).Where(st => st.AnchorID == it.id).NotAny())
-                                 .Select((it,at) => new SysAnchor
+                                 .Select((it, at) => new SysAnchor
                                  {
                                      id = it.id,
                                      anchorName = it.anchorName,
                                      nickName = it.nickName,
-                                     headUrl = Image_CDN + it.headUrl,
+                                     headUrl = SqlFunc.IIF(it.headUrl.Contains("http"), it.headUrl, Image_CDN + it.headUrl),
                                      balance = at.gold,
                                      follow = at.follow,
                                      birthday = it.birthday,
