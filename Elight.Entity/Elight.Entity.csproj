@@ -164,10 +164,13 @@
     <Compile Include="Sys\GiftEntity.cs" />
     <Compile Include="Sys\LiveCallbackHourEntity.cs" />
     <Compile Include="Sys\SubCompanyCodeEntity.cs" />
+    <Compile Include="Sys\SysAgentBankEntity.cs" />
+    <Compile Include="Sys\SysAgentWithdrawalRecordEntity.cs" />
     <Compile Include="Sys\SysAnchor.cs" />
     <Compile Include="Sys\SysAnchorInfoEntity.cs" />
     <Compile Include="Sys\SysAnchorRebateEntity.cs" />
     <Compile Include="Sys\SysAnchorLiveRecordEntity.cs" />
+    <Compile Include="Sys\SysCategoryEntity.cs" />
     <Compile Include="Sys\SysIncomeEntity.cs" />
     <Compile Include="Sys\SysItem.cs" />
     <Compile Include="Sys\SysItemDetail.cs" />

@@ -469,6 +469,51 @@
             是否禁用 0否 1是
             </summary>
         </member>
+        <member name="P:Elight.Entity.Sys.SysAgentBankEntity.id">
+            <summary>
+            id
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAgentBankEntity.AgentID">
+            <summary>
+            代理ID
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAgentBankEntity.CategoryCode">
+            <summary>
+            银行卡名称
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAgentBankEntity.bankano">
+            <summary>
+            卡号
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAgentBankEntity.bankaccount">
+            <summary>
+            开户人
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAgentBankEntity.address">
+            <summary>
+            开户地址
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAgentBankEntity.createtime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAgentBankEntity.payType">
+            <summary>
+            支付类型：1：银行卡，2：支付宝，3：微信
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAgentBankEntity.AgentName">
+            <summary>
+            代理名称
+            </summary>
+        </member>
         <member name="T:Elight.Entity.Sys.SysAnchor">
             <summary>
             主播基本信息
@@ -697,6 +742,46 @@
         <member name="P:Elight.Entity.Sys.SysAnchorLiveRecordEntity.roomvalue">
             <summary>
             房间信息
+            </summary>
+        </member>
+        <member name="T:Elight.Entity.Sys.SysCategoryEntity">
+            <summary>
+            银行卡类别
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysCategoryEntity.AliasesCode">
+            <summary>
+            调用别名(不一定唯一) 查询时作为条件
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysCategoryEntity.CategoryCode">
+            <summary>
+            属性代码，唯一
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysCategoryEntity.CategoryName">
+            <summary>
+            类别名称
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysCategoryEntity.IsEnable">
+            <summary>
+            是否启用 1：启用 2：禁用
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysCategoryEntity.Sort">
+            <summary>
+            排序
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysCategoryEntity.CreateBy">
+            <summary>
+            创建人
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysCategoryEntity.CreateTime">
+            <summary>
+            创建时间
             </summary>
         </member>
         <member name="T:Elight.Entity.Sys.SysIncomeEntity">
@@ -1112,6 +1197,96 @@
         <member name="P:Elight.Entity.Sys.SysUser.ShopID">
             <summary>
             商户ID
+            </summary>
+        </member>
+        <member name="T:Elight.Entity.SysAgentWithdrawalRecordEntity">
+            <summary>
+            经纪人提现
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.SysAgentWithdrawalRecordEntity.id">
+            <summary>
+            主键id
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.SysAgentWithdrawalRecordEntity.AgentID">
+            <summary>
+            经纪人id
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.SysAgentWithdrawalRecordEntity.WithdrawalAmount">
+            <summary>
+            提现金额
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.SysAgentWithdrawalRecordEntity.AgentBankID">
+            <summary>
+            银行卡id
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.SysAgentWithdrawalRecordEntity.Remark">
+            <summary>
+            提现备注
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.SysAgentWithdrawalRecordEntity.Type">
+            <summary>
+            提现类型:1提现，2：手动扣款
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.SysAgentWithdrawalRecordEntity.Status">
+            <summary>
+            提现状态：1成功，2：驳回，3：待处理
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.SysAgentWithdrawalRecordEntity.Feedback">
+            <summary>
+            反馈信息
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.SysAgentWithdrawalRecordEntity.createTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.SysAgentWithdrawalRecordEntity.ModifiedTime">
+            <summary>
+            修改时间
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.SysAgentWithdrawalRecordEntity.ModifiedBy">
+            <summary>
+            修改人
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.SysAgentWithdrawalRecordEntity.AgentName">
+            <summary>
+            代理名称
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.SysAgentWithdrawalRecordEntity.CategoryCode">
+            <summary>
+            银行卡名称
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.SysAgentWithdrawalRecordEntity.bankano">
+            <summary>
+            卡号
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.SysAgentWithdrawalRecordEntity.bankaccount">
+            <summary>
+            开户人
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.SysAgentWithdrawalRecordEntity.address">
+            <summary>
+            开户地址
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.SysAgentWithdrawalRecordEntity.payType">
+            <summary>
+            支付类型：1：银行卡，2：支付宝，3：微信
             </summary>
         </member>
         <member name="T:Elight.Entity.SysAnchorRebateEntity">

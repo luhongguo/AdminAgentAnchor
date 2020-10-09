@@ -122,5 +122,14 @@ namespace Elight.WebUI.Areas.System.Controllers
             }
             return Success("恭喜您，该用户名可以注册");
         }
+        /// <summary>
+        /// 经纪人名称下拉框
+        /// </summary>
+        /// <returns>new {id,username}</returns>
+        [HttpGet]
+        public string GetUserIDSelect()
+        {
+            return userLogic.GetUserIDSelect();
+        }
     }
 }

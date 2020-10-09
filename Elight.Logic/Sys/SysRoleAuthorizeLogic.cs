@@ -181,7 +181,7 @@ namespace Elight.Logic.Sys
                     //不存在的就删除
                     //批量删除商户权限 ,商户角色权限
                     db.Deleteable<SysRoleAuthorize>().Where(it => removePerIDList.Contains(it.ModuleId)).ExecuteCommand();
-                    db.Deleteable<SysPermission>().In(removePerIDList);
+                    db.Deleteable<SysPermission>().In(removePerIDList).ExecuteCommand();
                     db.Ado.CommitTran();
                 }
                 catch (Exception ex)

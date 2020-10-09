@@ -24,8 +24,8 @@ namespace Elight.Entity.Sys
         [SugarColumn(ColumnName = "RealName")]
         public string RealName { get; set; }
 
-        [SugarColumn(ColumnName = "CompanyCode")]
-        public string CompanyCode { get; set; }
+        [SugarColumn(ColumnName = "Balance")]
+        public decimal Balance { get; set; }
 
         [SugarColumn(ColumnName = "Avatar")]
         public string Avatar { get; set; }

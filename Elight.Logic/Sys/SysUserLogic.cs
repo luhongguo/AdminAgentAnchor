@@ -10,6 +10,8 @@ using Elight.Utility.Operator;
 using Elight.Utility.Security;
 using Elight.Utility.Extension;
 using Elight.Utility.Log;
+using System.Net.Sockets;
+using Elight.Utility.Model;
 
 namespace Elight.Logic.Sys
 {
@@ -30,7 +32,7 @@ namespace Elight.Logic.Sys
                     ShopID = A.ShopID,
                     Account = A.Account,
                     RealName = A.RealName,
-                    CompanyCode = A.CompanyCode,
+                    Balance = A.Balance,
                     Avatar = A.Avatar,
                     Gender = A.Gender,
                     Birthday = A.Birthday,
@@ -65,7 +67,7 @@ namespace Elight.Logic.Sys
                     ShopID = A.ShopID,
                     Account = A.Account,
                     RealName = A.RealName,
-                    CompanyCode = A.CompanyCode,
+                    Balance = A.Balance,
                     Avatar = A.Avatar,
                     Gender = A.Gender,
                     Birthday = A.Birthday,
@@ -82,6 +84,26 @@ namespace Elight.Logic.Sys
                     CreateTime = A.CreateTime,
                     ModifyUser = A.ModifyUser,
                     ModifyTime = A.ModifyTime,
+                }).First();
+            }
+        }
+        /// <summary>
+        /// 获取用户
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public SysUser GetkUserByID(string id)
+        {
+            using (var db = GetInstance())
+            {
+                return db.Queryable<SysUser>().Where((A) => A.Id == id).Select(A => new SysUser
+                {
+                    Id = A.Id,
+                    ShopID = A.ShopID,
+                    Account = A.Account,
+                    RealName = A.RealName,
+                    Balance = A.Balance,
+                    Avatar = A.Avatar,
                 }).First();
             }
         }
@@ -203,7 +225,7 @@ namespace Elight.Logic.Sys
                     Avatar = A.Avatar,
                     MobilePhone = A.MobilePhone,
                     IsEnabled = A.IsEnabled,
-                    CompanyCode = A.CompanyCode,
+                    Balance = A.Balance,
                     Email = A.Email,
                     Signature = A.Signature
                 }).First();
@@ -231,7 +253,8 @@ namespace Elight.Logic.Sys
                              RealName = A.RealName,
                              Avatar = A.Avatar,
                              IsEnabled = A.IsEnabled,
-                             ShopName = B.Name
+                             ShopName = B.Name,
+                             Balance = A.Balance
                          }).ToPageList(pageIndex, pageSize, ref totalCount);
             }
         }
@@ -388,6 +411,37 @@ namespace Elight.Logic.Sys
                     return 0;
                 }
             }
+        }
+
+        /// <summary>
+        /// 经纪人名称下拉框
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="keyWord"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
+        public string GetUserIDSelect()
+        {
+            var result = "";
+            try
+            {
+                using (var db = GetInstance())
+                {
+                    result = db.Queryable<SysUser>()
+                        .Where(it => it.ShopID != 0)
+                                .Select((it) => new
+                                {
+                                    AgentName = it.Account,
+                                    it.Id,
+                                }).ToJson();
+                }
+            }
+            catch (Exception ex)
+            {
+                new LogLogic().Write(Level.Error, "经纪人名称下拉框", ex.Message, ex.StackTrace);
+            }
+            return result;
         }
     }
 }

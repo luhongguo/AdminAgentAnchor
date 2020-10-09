@@ -95,7 +95,6 @@ $.layerConfirm = function (options) {
  * @param {String} type 
  */
 $.layerMsg = function (content, type, callback) {
-    console.log(type)
     if (type != undefined) {
         var icon = "";
         if (type == 'warning' || type == 0) {

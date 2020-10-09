@@ -76,11 +76,16 @@
                 , id: "report"
             });
         }
+      
         renderTable(getWhere());
         function getWhere() {
             var Name = $("#Name").val()
             return { "parm.where": JSON.stringify({ Name: Name }) };
         }
+        //监听搜索
+        form.on('submit(search)', function (data) {
+            reloadTable(data.field)
+        });
         function reloadTable(field) {
             //执行重载
             table.reload('report', {
