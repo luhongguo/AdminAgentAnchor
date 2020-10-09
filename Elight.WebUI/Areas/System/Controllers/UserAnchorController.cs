@@ -296,6 +296,7 @@ namespace Elight.WebUI.Areas.System.Controllers
         {
             return sysUserAnchorLogic.selectCompanyCodeList();
         }
+
         //[HttpPost] 
         //public ActionResult GetAnchorReportPage(PageParm parm)
         //{

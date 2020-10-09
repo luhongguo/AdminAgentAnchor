@@ -564,7 +564,23 @@ namespace Elight.Logic.Sys
             {
                 return db.Queryable<SysAnchor>().Where((A) => A.anchorName == account).Select(A => new SysAnchor
                 {
-                   id=A.id,
+                    id = A.id,
+                }).First();
+            }
+        }
+        /// <summary>
+        /// 获取主播余额
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public SysAnchorInfoEntity GetAnchorBalance(int id)
+        {
+            using (var db = GetSqlSugarDB(DbConnType.QPVideoAnchorDB))
+            {
+                return db.Queryable<SysAnchorInfoEntity>().Where((A) => A.aid == id).Select(A => new SysAnchorInfoEntity
+                {
+                    aid=A.aid,
+                    gold = A.gold
                 }).First();
             }
         }

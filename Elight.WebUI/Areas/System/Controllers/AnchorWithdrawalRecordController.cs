@@ -10,14 +10,15 @@ using System.Web.Mvc;
 namespace Elight.WebUI.Areas.System.Controllers
 {
     [LoginChecked]
-    public class AgentWithdrawalRecordController : BaseController
+    public class AnchorWithdrawalRecordController : BaseController
     {
-        private readonly SysAgentWithdrawalRecordLogic sysAgentWithdrawalRecordLogic;
-        public AgentWithdrawalRecordController()
+        private readonly SysAnchorWithdrawalRecordLogic sysAnchorWithdrawalRecordLogic;
+        public AnchorWithdrawalRecordController()
         {
-            sysAgentWithdrawalRecordLogic = new SysAgentWithdrawalRecordLogic();
+            sysAnchorWithdrawalRecordLogic = new SysAnchorWithdrawalRecordLogic();
         }
         // GET: System/AgentWithdrawalRecord
+        [HttpGet, AuthorizeChecked]
         public ActionResult Index()
         {
             return View();
@@ -33,7 +34,7 @@ namespace Elight.WebUI.Areas.System.Controllers
         public ActionResult GetAgentWithdrawalRecordPage(PageParm parm)
         {
             int totalCount = 0;
-            var res = sysAgentWithdrawalRecordLogic.GetAgentWithdrawalRecordPage(parm, ref totalCount);
+            var res = sysAnchorWithdrawalRecordLogic.GetAgentWithdrawalRecordPage(parm, ref totalCount);
             return pageSuccess(res, totalCount);
         }
         /// <summary>
@@ -51,9 +52,9 @@ namespace Elight.WebUI.Areas.System.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost, AuthorizeChecked, ValidateAntiForgeryToken]
-        public ActionResult Form(SysAgentWithdrawalRecordEntity model)
+        public ActionResult Form(SysAnchorWithdrawalRecordEntity model)
         {
-            int row = sysAgentWithdrawalRecordLogic.Insert(model);
+            int row = sysAnchorWithdrawalRecordLogic.Insert(model);
             return row > 0 ? Success() : Error();
         }
 
@@ -74,7 +75,7 @@ namespace Elight.WebUI.Areas.System.Controllers
         [HttpPost]
         public ActionResult GetForm(long primaryKey)
         {
-            SysAgentWithdrawalRecordEntity entity = sysAgentWithdrawalRecordLogic.Get(primaryKey);
+            SysAnchorWithdrawalRecordEntity entity = sysAnchorWithdrawalRecordLogic.Get(primaryKey);
             return Content(entity.ToJson());
         }
         /// <summary>
@@ -83,17 +84,17 @@ namespace Elight.WebUI.Areas.System.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost, AuthorizeChecked, ValidateAntiForgeryToken]
-        public ActionResult Handle(SysAgentWithdrawalRecordEntity model)
+        public ActionResult Handle(SysAnchorWithdrawalRecordEntity model)
         {
-            int row ;
-            var withModel = sysAgentWithdrawalRecordLogic.Get(model.id);
+            int row;
+            var withModel = sysAnchorWithdrawalRecordLogic.Get(model.id);
             if (withModel.Status != 3)
             {
                 return Error("已经处理，不可重复处理!");
             }
             if (withModel.Status == 2)//驳回
             {
-                row = sysAgentWithdrawalRecordLogic.Reject(model);
+                row = sysAnchorWithdrawalRecordLogic.Reject(model);
             }
             else//成功
             {
@@ -101,12 +102,12 @@ namespace Elight.WebUI.Areas.System.Controllers
                 {
                     return Error("提现金额需要大于0!");
                 }
-                var agentModel = new SysUserLogic().GetkUserByID(withModel.AgentID);
-                if (agentModel.Balance < model.WithdrawalAmount)
+                var agentModel = new SysUserAnchorLogic().GetAnchorBalance(withModel.AnchorID);
+                if (agentModel.gold < model.WithdrawalAmount)
                 {
-                    return Error("提现金额不可大于余额!可提现余额：" + agentModel.Balance);
+                    return Error("提现金额不可大于余额!可提现余额：" + agentModel.gold);
                 }
-                row = sysAgentWithdrawalRecordLogic.Update(model, agentModel);
+                row = sysAnchorWithdrawalRecordLogic.Update(model, agentModel);
             }
             return row > 0 ? Success() : Error();
         }

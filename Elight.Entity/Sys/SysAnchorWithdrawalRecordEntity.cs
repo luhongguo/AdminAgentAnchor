@@ -65,7 +65,12 @@ namespace Elight.Entity
         /// 主播名称
         /// </summary>
         [SugarColumn(IsIgnore = true)]
-        public string AnchorName { get; set; }
+        public string AgentName { get; set; }
+        /// <summary>
+        /// 主播昵称
+        /// </summary>
+        [SugarColumn(IsIgnore = true)]
+        public string NickName { get; set; }
         /// <summary>
         /// 银行卡名称
         /// </summary>

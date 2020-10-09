@@ -157,6 +157,7 @@
     <Compile Include="Sys\SysAnchorBankLogic.cs" />
     <Compile Include="Sys\SysAnchorLogic.cs" />
     <Compile Include="Sys\SysAnchorRebateLogic.cs" />
+    <Compile Include="Sys\SysAnchorWithdrawalRecordLogic.cs" />
     <Compile Include="Sys\SysItemLogic.cs" />
     <Compile Include="Sys\SysItemsDetailLogic.cs" />
     <Compile Include="Sys\SysLogLogic.cs" />

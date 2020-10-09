@@ -12,16 +12,16 @@ using Elight.Entity;
 
 namespace Elight.Logic.Sys
 {
-    public class SysAgentWithdrawalRecordLogic : BaseLogic
+    public class SysAnchorWithdrawalRecordLogic : BaseLogic
     {
         /// <summary>
-        /// 获取经纪人提现记录
+        /// 获取主播提现记录
         /// </summary>
         /// <param name="parm"></param>
         /// <returns></returns>
-        public List<SysAgentWithdrawalRecordEntity> GetAgentWithdrawalRecordPage(PageParm parm, ref int totalCount)
+        public List<SysAnchorWithdrawalRecordEntity> GetAgentWithdrawalRecordPage(PageParm parm, ref int totalCount)
         {
-            var result = new List<SysAgentWithdrawalRecordEntity>();
+            var result = new List<SysAnchorWithdrawalRecordEntity>();
             try
             {
                 if (parm == null)
@@ -35,14 +35,15 @@ namespace Elight.Logic.Sys
                 }
                 using (var db = GetSqlSugarDB(DbConnType.QPAgentAnchorDB))
                 {
-                    return db.Queryable<SysAgentWithdrawalRecordEntity, SysUser, SysAgentBankEntity>((it, st, at) => new object[] { JoinType.Left, it.AgentID == st.Id, JoinType.Left, it.AgentBankID == at.id })
+                    return db.Queryable<SysAnchorWithdrawalRecordEntity, SysAnchor, SysAnchorBankEntity>((it, st, at) => new object[] { JoinType.Left, it.AnchorID == st.id, JoinType.Left, it.AgentBankID == at.id })
                           .Where((it, st, at) => it.createTime >= Convert.ToDateTime(dic["startTime"]) && it.createTime < Convert.ToDateTime(dic["endTime"]))
-                        .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (it, st) => st.Account.Contains(dic["Name"].ToString()))
+                        .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (it, st) => st.anchorName.Contains(dic["Name"].ToString()) || st.nickName.Contains(dic["Name"].ToString()))
                          .WhereIF(dic.ContainsKey("Status") && Convert.ToInt32(dic["Status"]) != -1, (it, st) => it.Status == Convert.ToInt32(dic["Status"]))
-                        .Select((it, st, at) => new SysAgentWithdrawalRecordEntity
+                        .Select((it, st, at) => new SysAnchorWithdrawalRecordEntity
                         {
                             id = it.id,
-                            AgentName = st.Account,
+                            AgentName = st.anchorName,
+                            NickName = st.nickName,
                             WithdrawalAmount = it.WithdrawalAmount,
                             CategoryCode = at.CategoryCode,
                             bankano = at.bankano,
@@ -57,21 +58,21 @@ namespace Elight.Logic.Sys
                             ModifiedTime = it.ModifiedTime,
                             ModifiedBy = it.ModifiedBy
                         })
-                                    .ToPageList(parm.page, parm.limit, ref totalCount);
+                         .ToPageList(parm.page, parm.limit, ref totalCount);
                 }
             }
             catch (Exception ex)
             {
-                new LogLogic().Write(Level.Error, "获取经纪人提现记录", ex.Message, ex.StackTrace);
+                new LogLogic().Write(Level.Error, "获取主播提现记录", ex.Message, ex.StackTrace);
             }
             return result;
         }
         /// <summary>
-        /// 新增提现记录
+        /// 新增主播提现记录
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public int Insert(SysAgentWithdrawalRecordEntity model)
+        public int Insert(SysAnchorWithdrawalRecordEntity model)
         {
             try
             {
@@ -86,7 +87,7 @@ namespace Elight.Logic.Sys
             }
             catch (Exception ex)
             {
-                new LogLogic().Write(Level.Error, "新增提现记录", ex.Message, ex.StackTrace);
+                new LogLogic().Write(Level.Error, "新增主播提现记录", ex.Message, ex.StackTrace);
             }
             return 0;
         }
@@ -95,16 +96,16 @@ namespace Elight.Logic.Sys
         /// </summary>
         /// <param name="primaryKey"></param>
         /// <returns></returns>
-        public SysAgentWithdrawalRecordEntity Get(long primaryKey)
+        public SysAnchorWithdrawalRecordEntity Get(long primaryKey)
         {
             using (var db = GetInstance())
             {
-                return db.Queryable<SysAgentWithdrawalRecordEntity>()
+                return db.Queryable<SysAnchorWithdrawalRecordEntity>()
                     .Where((A) => A.id == primaryKey)
-                    .Select((A) => new SysAgentWithdrawalRecordEntity
+                    .Select((A) => new SysAnchorWithdrawalRecordEntity
                     {
                         id = A.id,
-                        AgentID = A.AgentID,
+                        AnchorID = A.AnchorID,
                         Status = A.Status,
                         Feedback = A.Feedback,
                         WithdrawalAmount = A.WithdrawalAmount
@@ -113,11 +114,11 @@ namespace Elight.Logic.Sys
             }
         }
         /// <summary>
-        /// 处理提现成功
+        /// 处理主播提现成功
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public int Update(SysAgentWithdrawalRecordEntity model, SysUser agentModel)
+        public int Update(SysAnchorWithdrawalRecordEntity model, SysAnchorInfoEntity agentModel)
         {
             int result = 0;
             using (var db = GetInstance())
@@ -125,7 +126,7 @@ namespace Elight.Logic.Sys
                 try
                 {
                     db.Ado.BeginTran();//开启事务
-                    result = db.Updateable<SysAgentWithdrawalRecordEntity>().SetColumns(it => new SysAgentWithdrawalRecordEntity
+                    result = db.Updateable<SysAnchorWithdrawalRecordEntity>().SetColumns(it => new SysAnchorWithdrawalRecordEntity
                     {
                         Status = model.Status,
                         Feedback = model.Feedback,
@@ -133,24 +134,24 @@ namespace Elight.Logic.Sys
                         ModifiedBy = OperatorProvider.Instance.Current.Account,
                         ModifiedTime = DateTime.Now
                     }).Where(it => it.id == model.id).ExecuteCommand();
-                    //更新用户余额
-                    db.Updateable<SysUser>().SetColumns(it => new SysUser { Balance = agentModel.Balance - model.WithdrawalAmount }).Where(it => it.Id == agentModel.Id).ExecuteCommand();
+                    //更新主播余额
+                    db.Updateable<SysAnchorInfoEntity>().SetColumns(it => new SysAnchorInfoEntity { gold = agentModel.gold - model.WithdrawalAmount }).Where(it => it.aid == agentModel.aid).ExecuteCommand();
                     db.Ado.CommitTran();
                 }
                 catch (Exception ex)
                 {
                     db.Ado.RollbackTran();
-                    new LogLogic().Write(Level.Error, "处理提现金额", ex.Message, ex.StackTrace);
+                    new LogLogic().Write(Level.Error, "处理主播提现成功", ex.Message, ex.StackTrace);
                 }
                 return result;
             }
         }
         /// <summary>
-        /// 处理提现驳回
+        /// 处理主播提现驳回
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public int Reject(SysAgentWithdrawalRecordEntity model)
+        public int Reject(SysAnchorWithdrawalRecordEntity model)
         {
             var result = 0;
             using (var db = GetInstance())
@@ -169,7 +170,7 @@ namespace Elight.Logic.Sys
                 }
                 catch (Exception ex)
                 {
-                    new LogLogic().Write(Level.Error, "处理提现金额", ex.Message, ex.StackTrace);
+                    new LogLogic().Write(Level.Error, "处理主播提现驳回", ex.Message, ex.StackTrace);
                 }
                 return result;
             }
