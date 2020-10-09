@@ -95,6 +95,10 @@
                 }
             });
         }
+        //监听搜索
+        form.on('submit(search)', function (data) {
+            reloadTable(data.field)
+        });
         //监听事件
         table.on('toolbar(test)', function (obj) {
             switch (obj.event) {
