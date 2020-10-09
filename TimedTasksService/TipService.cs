@@ -124,7 +124,7 @@ namespace TimedTasksService
                     {
                         db.Updateable<SysUser>().SetColumns(gt => new SysUser { Balance = gt.Balance + it.Balance }).Where(gt => gt.Id == it.Id).ExecuteCommand();
                     });
-                    //更新主播代理余额
+                    //更新主播余额
                     var anchorBalance = list.GroupBy(s => new { s.AnchorID }).Select(group => new SysAnchorInfoEntity
                     {
                         aid = group.Key.AnchorID,
@@ -141,7 +141,7 @@ namespace TimedTasksService
                     db.Ado.CommitTran();
                     //将查询的结束时间写入
                     redis.StringSet<DateTime>(key, time);
-                    Console.WriteLine("按天统计代理的礼物收益：" + time);
+                    Console.WriteLine("统计代理的礼物收益：统计开始时间--" + startTime+",统计结束时间：--"+ time);
                 }
                 catch (Exception ex)
                 {
@@ -201,6 +201,7 @@ namespace TimedTasksService
 
                 //将最后获取到的最大时间写入
                 redis.StringSet<DateTime>(key, endTime);
+                Console.WriteLine("打赏礼物采集成功:采集开始时间--" + startTime + "，采集结束时间--" + endTime);
             }
             catch (Exception ex)
             {
@@ -208,7 +209,7 @@ namespace TimedTasksService
                 {
                     Operation = "打赏礼物采集",
                     Message = ex.Message,
-                    StackTrace = ex.StackTrace.Length > 500 ? ex.StackTrace.Substring(0, 500) : ex.StackTrace,
+                    StackTrace = ex.StackTrace.Length > 450 ? ex.StackTrace.Substring(0, 450) : ex.StackTrace,
                     CreateTime = DateTime.Now
                 });
             }

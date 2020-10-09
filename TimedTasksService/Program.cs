@@ -17,7 +17,7 @@ namespace TimedTasksService
             //1、调度器
             ISchedulerFactory sf = new StdSchedulerFactory();
             IScheduler sched = sf.GetScheduler().Result;
-            //2、创建一个任务
+            ////2、创建一个任务
             string tipByDayCron = ConfigurationManager.AppSettings["TipByDayJobCron"];
             IJobDetail job = JobBuilder.Create<TipByDayJob>()
               .WithIdentity("job1", "group1")
