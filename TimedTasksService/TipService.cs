@@ -86,7 +86,6 @@ namespace TimedTasksService
                         tip_income = group.Sum(p => p.AnchorIncome),
                         Platform_income = group.Sum(p => p.PlatformIncome),
                     }).ToList();
-
                     //获取采集时间范围内 旧的数据
                     var incomeList = db.Queryable<SysIncomeEntity>().Where(it => it.opdate >= minSendTime && it.opdate <= maxSendTime).ToList();
                     var updateIncomeList = new List<SysIncomeEntity>();//更新集合
@@ -113,8 +112,29 @@ namespace TimedTasksService
                     }
                     if (updateIncomeList.Count > 0)
                     {
-                       db.Updateable(updateIncomeList).UpdateColumns(it => new { it.agent_income, it.tip_income, it.Platform_income }).ExecuteCommand();
+                        db.Updateable(updateIncomeList).UpdateColumns(it => new { it.agent_income, it.tip_income, it.Platform_income }).ExecuteCommand();
                     }
+                    //更新代理余额
+                    var agentBalance = list.GroupBy(s => new { s.UserID }).Select(group => new SysUser
+                    {
+                        Id = group.Key.UserID,
+                        Balance = group.Sum(p => p.UserIncome),
+                    }).ToList();
+                    agentBalance.ForEach(it =>
+                    {
+                        db.Updateable<SysUser>().SetColumns(gt => new SysUser { Balance = gt.Balance + it.Balance }).Where(gt => gt.Id == it.Id).ExecuteCommand();
+                    });
+                    //更新主播代理余额
+                    var anchorBalance = list.GroupBy(s => new { s.AnchorID }).Select(group => new SysAnchorInfoEntity
+                    {
+                        aid = group.Key.AnchorID,
+                        agentGold = group.Sum(p => p.AnchorIncome),
+                    }).ToList();
+                    anchorBalance.ForEach(it =>
+                    {
+                        db.Updateable<SysAnchorInfoEntity>().SetColumns(gt => new SysAnchorInfoEntity { agentGold = gt.agentGold + it.agentGold })
+                        .Where(gt => gt.aid == it.aid).ExecuteCommand();
+                    });
                     ////批量更新状态 礼物收益表status改成0 无效
                     //db.Updateable<SysTipIncomeDetailEntity>().SetColumns(it => new SysTipIncomeDetailEntity() { status = 0 })
                     //    .Where(it => list.Select(gt => gt.orderno).Contains(it.orderno)).ExecuteCommand();
@@ -226,6 +246,7 @@ namespace TimedTasksService
                                  orderId = p["orderId"].ToString(),
                                  account = p["account"].ToString(),
                                  company = p["company"].ToString(),
+                                 liveId = p["liveId"].ToString(),//推流时间戳
                                  aid = int.Parse(p["anchorId"].ToString()),//主播ID
                                  amount = decimal.Parse(p["amount"].ToString()),
                                  num = int.Parse(p["number"].ToString()),//礼物数量
@@ -272,6 +293,7 @@ namespace TimedTasksService
                         model.confirmtime = item.orderCreateTime;
                         model.totalamount = (decimal)(item.num * item.amount);// * (model.ratio / (decimal)100.0); 暂时没有 比率
                         model.Type = item.Type;
+                        model.liveId = item.liveId;
                         //redis中不存在单号 就添加到新增集合中
                         if (!redisTips.KeyExists(model.orderno))
                         {

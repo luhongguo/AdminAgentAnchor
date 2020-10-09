@@ -29,3 +29,4 @@ E:\工作项目\AdminAgentAnchorSolution\Anchor.Redis\obj\Debug\Anchor.Redis.csp
 E:\工作项目\AdminAgentAnchorSolution\Anchor.Redis\obj\Debug\Anchor.Redis.csproj.CopyComplete
 E:\工作项目\AdminAgentAnchorSolution\Anchor.Redis\obj\Debug\Anchor.Redis.dll
 E:\工作项目\AdminAgentAnchorSolution\Anchor.Redis\obj\Debug\Anchor.Redis.pdb
+E:\工作项目\AdminAgentAnchorSolution\Anchor.Redis\obj\Debug\Anchor.Redis.csprojAssemblyReference.cache

@@ -48,7 +48,7 @@ namespace Elight.Logic.Sys
                                     anchorName = it.anchorName,
                                     nickName = it.nickName,
                                     headUrl = SqlFunc.IIF(it.headUrl.Contains("http"), it.headUrl, Image_CDN + it.headUrl),
-                                    balance = st.gold,
+                                    balance = st.agentGold,
                                     follow = st.follow,
                                     birthday = it.birthday,
                                     status = st.status,
@@ -252,15 +252,15 @@ namespace Elight.Logic.Sys
                         agent_income = SqlFunc.AggregateSum(it.agent_income),
                         hour_income = SqlFunc.AggregateSum(it.hour_income),
                         Platform_income = SqlFunc.AggregateSum(it.Platform_income),
-                        Balance = SqlFunc.AggregateSum(at.gold)
+                        Balance = SqlFunc.AggregateSum(at.agentGold)
                     }).First();
-                    res = query.GroupBy((it, st, at) => new { it.AnchorID, st.anchorName, st.nickName, at.gold })
+                    res = query.GroupBy((it, st, at) => new { it.AnchorID, st.anchorName, st.nickName, at.agentGold })
                           .Select((it, st, at) => new IncomeTemplateModel
                           {
                               AnchorID = it.AnchorID,
                               AnchorName = st.anchorName,
                               NickName = st.nickName,
-                              Balance = at.gold,
+                              Balance = at.agentGold,
                               tip_income = SqlFunc.AggregateSum(it.tip_income),
                               agent_income = SqlFunc.AggregateSum(it.agent_income),
                               hour_income = SqlFunc.AggregateSum(it.hour_income),
@@ -580,7 +580,7 @@ namespace Elight.Logic.Sys
                 return db.Queryable<SysAnchorInfoEntity>().Where((A) => A.aid == id).Select(A => new SysAnchorInfoEntity
                 {
                     aid=A.aid,
-                    gold = A.gold
+                    agentGold = A.agentGold
                 }).First();
             }
         }

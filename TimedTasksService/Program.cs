@@ -2,6 +2,7 @@
 using Quartz.Impl;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace TimedTasksService
             ISchedulerFactory sf = new StdSchedulerFactory();
             IScheduler sched = sf.GetScheduler().Result;
             //2、创建一个任务
+            string tipByDayCron = ConfigurationManager.AppSettings["TipByDayJobCron"];
             IJobDetail job = JobBuilder.Create<TipByDayJob>()
               .WithIdentity("job1", "group1")
               .Build();
@@ -25,12 +27,13 @@ namespace TimedTasksService
             //DateTimeOffset runTime = DateBuilder.EvenMinuteDate(DateTimeOffset.UtcNow);
             ITrigger trigger = TriggerBuilder.Create()
                 .WithIdentity("trigger1", "group1")
-                .WithCronSchedule("0/30 * * * * ?")     //每天凌晨0点10分执行      0 10 0 * * ?                                       
+                .WithCronSchedule(tipByDayCron)     //每天凌晨0点10分执行      0 10 0 * * ?                                       
                 .Build();
             sched.ScheduleJob(job, trigger);
 
 
             //2、创建第二个任务
+            string CollectGiftsJobCron = ConfigurationManager.AppSettings["CollectGiftsJobCron"];
             IJobDetail job2 = JobBuilder.Create<CollectGiftsJob>()
               .WithIdentity("job2", "group2")
               .Build();
@@ -39,7 +42,7 @@ namespace TimedTasksService
             //DateTimeOffset runTime = DateBuilder.EvenMinuteDate(DateTimeOffset.UtcNow);
             ITrigger trigger2 = TriggerBuilder.Create()
                 .WithIdentity("trigger2", "group2")
-                .WithCronSchedule("0 0/2 * * * ?")     //每天隔两分钟执行一次                                   
+                .WithCronSchedule(CollectGiftsJobCron)     //每天隔两分钟执行一次        0 0/2 * * * ?                            
                 .Build();
 
             sched.ScheduleJob(job2, trigger2);

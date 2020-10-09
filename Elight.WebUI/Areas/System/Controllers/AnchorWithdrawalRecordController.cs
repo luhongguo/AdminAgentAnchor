@@ -103,9 +103,9 @@ namespace Elight.WebUI.Areas.System.Controllers
                     return Error("提现金额需要大于0!");
                 }
                 var agentModel = new SysUserAnchorLogic().GetAnchorBalance(withModel.AnchorID);
-                if (agentModel.gold < model.WithdrawalAmount)
+                if (agentModel.agentGold < model.WithdrawalAmount)
                 {
-                    return Error("提现金额不可大于余额!可提现余额：" + agentModel.gold);
+                    return Error("提现金额不可大于余额!可提现余额：" + agentModel.agentGold);
                 }
                 row = sysAnchorWithdrawalRecordLogic.Update(model, agentModel);
             }

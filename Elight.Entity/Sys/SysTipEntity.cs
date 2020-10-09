@@ -135,6 +135,10 @@ namespace Elight.Entity.Sys
         /// </summary>
         public string curLogogram { get; set; }
         /// <summary>
+        /// 推流时间戳
+        /// </summary>
+        public string liveId { get; set; }
+        /// <summary>
         /// 主播名称
         /// </summary>
         [SugarColumn(IsIgnore = true)]

@@ -754,6 +754,11 @@
             TG
             </summary>
         </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorInfoEntity.agentGold">
+            <summary>
+            代理平台的主播余额
+            </summary>
+        </member>
         <member name="T:Elight.Entity.Sys.SysAnchorLiveRecordEntity">
             <summary>
             直播记录表
@@ -1179,6 +1184,11 @@
             货币类型
             </summary>
         </member>
+        <member name="P:Elight.Entity.Sys.TipEntity.liveId">
+            <summary>
+            推流时间戳
+            </summary>
+        </member>
         <member name="P:Elight.Entity.Sys.TipEntity.AnchorName">
             <summary>
             主播名称
@@ -1479,9 +1489,14 @@
             修改人
             </summary>
         </member>
-        <member name="P:Elight.Entity.SysAnchorWithdrawalRecordEntity.AnchorName">
+        <member name="P:Elight.Entity.SysAnchorWithdrawalRecordEntity.AgentName">
             <summary>
             主播名称
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.SysAnchorWithdrawalRecordEntity.NickName">
+            <summary>
+            主播昵称
             </summary>
         </member>
         <member name="P:Elight.Entity.SysAnchorWithdrawalRecordEntity.CategoryCode">
