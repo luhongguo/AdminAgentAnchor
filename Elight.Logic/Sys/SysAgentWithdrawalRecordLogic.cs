@@ -80,7 +80,7 @@ namespace Elight.Logic.Sys
                     model.Status = 3;
                     model.createTime = DateTime.Now;
                     model.ModifiedTime = DateTime.Now;
-                    model.Remark = model.Remark.Trim();
+                    model.Remark = model.Remark;
                     return db.Insertable(model).ExecuteReturnIdentity();
                 }
             }
@@ -157,15 +157,14 @@ namespace Elight.Logic.Sys
             {
                 try
                 {
-                    model.Feedback = model.Feedback.Trim();
-                    result = db.Updateable(model).UpdateColumns(it => new
+                    result = db.Updateable<SysAgentWithdrawalRecordEntity>().SetColumns(it => new SysAgentWithdrawalRecordEntity
                     {
-                        model.Status,
-                        model.Feedback,
-                        model.WithdrawalAmount,
+                        Status = model.Status,
+                        Feedback = model.Feedback,
+                        WithdrawalAmount = model.WithdrawalAmount,
                         ModifiedBy = OperatorProvider.Instance.Current.Account,
                         ModifiedTime = DateTime.Now
-                    }).ExecuteCommand();
+                    }).Where(it => it.id == model.id).ExecuteCommand();
                 }
                 catch (Exception ex)
                 {

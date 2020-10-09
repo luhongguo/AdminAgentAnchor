@@ -91,7 +91,7 @@ namespace Elight.WebUI.Areas.System.Controllers
             {
                 return Error("已经处理，不可重复处理!");
             }
-            if (withModel.Status == 2)//驳回
+            if (model.Status == 2)//驳回
             {
                 row = sysAgentWithdrawalRecordLogic.Reject(model);
             }
@@ -101,7 +101,7 @@ namespace Elight.WebUI.Areas.System.Controllers
                 {
                     return Error("提现金额需要大于0!");
                 }
-                var agentModel = new SysUserLogic().GetkUserByID(withModel.AgentID);
+                var agentModel = new SysUserLogic().GetUserByID(withModel.AgentID);
                 if (agentModel.Balance < model.WithdrawalAmount)
                 {
                     return Error("提现金额不可大于余额!可提现余额：" + agentModel.Balance);

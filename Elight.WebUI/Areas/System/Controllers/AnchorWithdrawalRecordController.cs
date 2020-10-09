@@ -92,7 +92,7 @@ namespace Elight.WebUI.Areas.System.Controllers
             {
                 return Error("已经处理，不可重复处理!");
             }
-            if (withModel.Status == 2)//驳回
+            if (model.Status == 2)//驳回
             {
                 row = sysAnchorWithdrawalRecordLogic.Reject(model);
             }

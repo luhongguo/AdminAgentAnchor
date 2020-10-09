@@ -92,7 +92,7 @@ namespace Elight.Logic.Sys
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public SysUser GetkUserByID(string id)
+        public SysUser GetUserByID(string id)
         {
             using (var db = GetInstance())
             {
