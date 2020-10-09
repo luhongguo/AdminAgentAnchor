@@ -7,8 +7,11 @@ using Newtonsoft.Json;
 using SqlSugar;
 namespace Elight.Entity.Sys
 {
-    [SugarTable("QPAgentAnchorDB.dbo.AgentBank")]
-    public class SysAgentBankEntity
+    /// <summary>
+    /// 主播银行卡
+    /// </summary>
+    [SugarTable("QPAgentAnchorDB.dbo.AnchorBank")]
+    public class SysAnchorBankEntity
     {
         /// <summary>
         /// id
@@ -20,9 +23,9 @@ namespace Elight.Entity.Sys
         /// </summary>
         public int ShopID { get; set; }
         /// <summary>
-        /// 代理ID
+        /// 主播ID
         /// </summary>
-        public string AgentID { get; set; }
+        public int AnchorID { get; set; }
         /// <summary>
         /// 银行卡名称
         /// </summary>
@@ -53,5 +56,10 @@ namespace Elight.Entity.Sys
         /// </summary>
         [SugarColumn(IsIgnore = true)]
         public string AgentName { get; set; }
+        /// <summary>
+        /// 主播昵称
+        /// </summary>
+        [SugarColumn(IsIgnore = true)]
+        public string NickName { get; set; }
     }
 }

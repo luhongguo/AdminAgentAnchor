@@ -269,6 +269,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\System\Controllers\AgentBankController.cs" />
     <Compile Include="Areas\System\Controllers\AgentWithdrawalRecordController.cs" />
+    <Compile Include="Areas\System\Controllers\AnchorBankController.cs" />
     <Compile Include="Areas\System\Controllers\AnchorRebateController.cs" />
     <Compile Include="Areas\System\Controllers\ItemController.cs" />
     <Compile Include="Areas\System\Controllers\ItemsDetailController.cs" />
@@ -2110,6 +2111,8 @@
     <Content Include="Areas\System\Views\AgentWithdrawalRecord\Index.cshtml" />
     <Content Include="Areas\System\Views\AgentWithdrawalRecord\Form.cshtml" />
     <Content Include="Areas\System\Views\AgentWithdrawalRecord\Handle.cshtml" />
+    <Content Include="Areas\System\Views\AnchorBank\Index.cshtml" />
+    <Content Include="Areas\System\Views\AnchorBank\Form.cshtml" />
     <None Include="Properties\PublishProfiles\发布.pubxml" />
     <Content Include="Scripts\buttons.js" />
     <Content Include="Scripts\index.js.flow" />

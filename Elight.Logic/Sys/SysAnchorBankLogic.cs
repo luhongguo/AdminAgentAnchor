@@ -11,16 +11,16 @@ using System.Linq;
 
 namespace Elight.Logic.Sys
 {
-    public class SysAgentBankLogic : BaseLogic
+    public class SysAnchorBankLogic : BaseLogic
     {
         /// <summary>
-        /// 经纪人银行卡分页
+        /// 主播银行卡分页
         /// </summary>
         /// <param name="parm"></param>
         /// <returns></returns>
-        public List<SysAgentBankEntity> GetAgentBankPage(PageParm parm, ref int totalCount)
+        public List<SysAnchorBankEntity> GetAgentBankPage(PageParm parm, ref int totalCount)
         {
-            var result = new List<SysAgentBankEntity>();
+            var result = new List<SysAnchorBankEntity>();
             try
             {
                 if (parm == null)
@@ -34,12 +34,13 @@ namespace Elight.Logic.Sys
                 }
                 using (var db = GetSqlSugarDB(DbConnType.QPAgentAnchorDB))
                 {
-                    return db.Queryable<SysAgentBankEntity, SysUser>((it, st) => new object[] { JoinType.Left, it.AgentID == st.Id })
-                                    .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (it, st) => st.Account.Contains(dic["Name"].ToString()))
-                                    .Select((it, st) => new SysAgentBankEntity
+                    return db.Queryable<SysAnchorBankEntity, SysAnchor>((it, st) => new object[] { JoinType.Left, it.AnchorID == st.id })
+                                    .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (it, st) => st.anchorName.Contains(dic["Name"].ToString()) || st.nickName.Contains(dic["Name"].ToString()))
+                                    .Select((it, st) => new SysAnchorBankEntity
                                     {
                                         id = it.id,
-                                        AgentName = st.Account,
+                                        AgentName = st.anchorName,
+                                        NickName = st.nickName,
                                         address = it.address,
                                         bankaccount = it.bankaccount,
                                         bankano = it.bankano,
@@ -52,7 +53,7 @@ namespace Elight.Logic.Sys
             }
             catch (Exception ex)
             {
-                new LogLogic().Write(Level.Error, "经纪人银行卡分页", ex.Message, ex.StackTrace);
+                new LogLogic().Write(Level.Error, "主播银行卡分页", ex.Message, ex.StackTrace);
             }
             return result;
         }
@@ -61,16 +62,17 @@ namespace Elight.Logic.Sys
         /// </summary>
         /// <param name="primaryKey"></param>
         /// <returns></returns>
-        public SysAgentBankEntity Get(int primaryKey)
+        public SysAnchorBankEntity Get(long primaryKey)
         {
             using (var db = GetInstance())
             {
-                return db.Queryable<SysAgentBankEntity, SysUser>((A, B) => new Object[] { JoinType.Left, A.AgentID == B.Id })
+                return db.Queryable<SysAnchorBankEntity, SysAnchor>((A, B) => new Object[] { JoinType.Left, A.AnchorID == B.id })
                     .Where((A) => A.id == primaryKey)
-                    .Select((A, B) => new SysAgentBankEntity
+                    .Select((A, B) => new SysAnchorBankEntity
                     {
                         id = A.id,
-                        AgentName = B.Account,
+                        AgentName = B.anchorName,
+                        NickName = B.nickName,
                         address = A.address,
                         bankaccount = A.bankaccount,
                         bankano = A.bankano,
@@ -81,11 +83,11 @@ namespace Elight.Logic.Sys
             }
         }
         /// <summary>
-        /// 新增经纪人银行卡
+        /// 新增主播银行卡
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public int Insert(SysAgentBankEntity model)
+        public int Insert(SysAnchorBankEntity model)
         {
             try
             {
@@ -97,23 +99,23 @@ namespace Elight.Logic.Sys
             }
             catch (Exception ex)
             {
-                new LogLogic().Write(Level.Error, "新增商户", ex.Message, ex.StackTrace);
+                new LogLogic().Write(Level.Error, "新增主播银行卡", ex.Message, ex.StackTrace);
             }
             return 0;
         }
 
         /// <summary>
-        /// 更新经纪人银行卡
+        /// 更新主播银行卡
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public int Update(SysAgentBankEntity model)
+        public int Update(SysAnchorBankEntity model)
         {
             try
             {
                 using (var db = GetInstance())
                 {
-                    return db.Updateable<SysAgentBankEntity>().SetColumns(it => new SysAgentBankEntity
+                    return db.Updateable<SysAnchorBankEntity>().SetColumns(it => new SysAnchorBankEntity
                     {
                         bankano = model.bankano,
                         CategoryCode = model.CategoryCode,
@@ -125,7 +127,7 @@ namespace Elight.Logic.Sys
             }
             catch (Exception ex)
             {
-                new LogLogic().Write(Level.Error, "更新经纪人银行卡", ex.Message, ex.StackTrace);
+                new LogLogic().Write(Level.Error, "更新主播银行卡", ex.Message, ex.StackTrace);
             }
             return 0;
         }
@@ -138,7 +140,7 @@ namespace Elight.Logic.Sys
         {
             using (var db = GetInstance())
             {
-                return db.Deleteable<SysAgentBankEntity>().In(idList).ExecuteCommand();
+                return db.Deleteable<SysAnchorBankEntity>().In(idList).ExecuteCommand();
             }
         }
         /// <summary>
@@ -146,15 +148,15 @@ namespace Elight.Logic.Sys
         /// </summary>
         /// <param name="id">经纪人id</param>
         /// <returns></returns>
-        public string GetUserBankSelect(string id)
+        public string GetUserBankSelect(int id)
         {
             var result = "";
             try
             {
                 using (var db = GetInstance())
                 {
-                    result = db.Queryable<SysAgentBankEntity>()
-                        .Where(it => it.AgentID == id)
+                    result = db.Queryable<SysAnchorBankEntity>()
+                        .Where(it => it.AnchorID == id)
                                 .Select((it) => new
                                 {
                                     BankName = it.CategoryCode + "--" + it.bankano,

@@ -113,7 +113,7 @@ namespace TimedTasksService
                     }
                     if (updateIncomeList.Count > 0)
                     {
-                        db.Updateable(updateIncomeList).UpdateColumns(it => new { it.agent_income, it.tip_income, it.Platform_income });
+                       db.Updateable(updateIncomeList).UpdateColumns(it => new { it.agent_income, it.tip_income, it.Platform_income }).ExecuteCommand();
                     }
                     ////批量更新状态 礼物收益表status改成0 无效
                     //db.Updateable<SysTipIncomeDetailEntity>().SetColumns(it => new SysTipIncomeDetailEntity() { status = 0 })

@@ -553,5 +553,20 @@ namespace Elight.Logic.Sys
                         })).ToJson();
             }
         }
+        /// <summary>
+        /// 验证主播是否存在
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public SysAnchor CheckAnchorName(string account)
+        {
+            using (var db = GetInstance())
+            {
+                return db.Queryable<SysAnchor>().Where((A) => A.anchorName == account).Select(A => new SysAnchor
+                {
+                   id=A.id,
+                }).First();
+            }
+        }
     }
 }

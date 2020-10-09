@@ -6,7 +6,7 @@
 
 <html>
 <head>
-    <title>代理银行卡</title>
+    <title>主播银行卡</title>
     <meta name="viewport" content="width=device-width" />
     <link href="~/Content/layui/css/layui.css" rel="stylesheet" />
     <link href="~/Content/framework/css/console.css" rel="stylesheet" />
@@ -21,8 +21,8 @@
             <blockquote class="layui-elem-quote">
                 <div class="form-inline layui-form user-search">
                     <div class="layui-inline">
-                        <div class="layui-input-block"  style="margin-left:5px">
-                            <input type="text" name="Name" placeholder="请输入经纪人账号" id="Name" autocomplete="off" class="layui-input" maxlength="25">
+                        <div class="layui-input-block" style="margin-left:5px">
+                            <input type="text" name="Name" placeholder="请输入主播账号" id="Name" autocomplete="off" class="layui-input" maxlength="25">
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -53,14 +53,15 @@
             table.render({
                 elem: '#table'
                 , method: "post"
-                , url: '/System/AgentBank/GetAgentBankPage' //数据接口
+                , url: '/System/AnchorBank/GetAgentBankPage' //数据接口
                 , toolbar: '#toolbar'
                 , page: true //开启分页
                 , checkbox: true
                 , where: where
                 , cols: [[ //表头
                     { type: 'checkbox' }
-                    , { field: 'AgentName', title: '经纪人账号' }
+                    , { field: 'AgentName', title: '主播账号' }
+                    , { field: 'NickName', title: '主播昵称' }
                     , { field: 'bankano', title: '支付账号' }
                     , { field: 'CategoryCode', title: '支付名称' }
                     , { field: 'address', title: '开户地址' }
@@ -126,8 +127,8 @@
                 id: "add",
                 title: "新增银行卡",
                 width: "700px",
-                height: "300px",
-                content: "/System/AgentBank/Form",
+                height: "400px",
+                content: "/System/AnchorBank/Form",
                 yes: function (iBody) {
                     iBody.find('#btnSubmit').click();
                     reloadTable({ Name: $("#Name").val() });
@@ -146,8 +147,8 @@
                 id: "edit",
                 title: "修改银行卡",
                 width: "700px",
-                height: "300px",
-                content: "/System/AgentBank/Form?primaryKey=" + ids[0].id,
+                height: "400px",
+                content: "/System/AnchorBank/Form?primaryKey=" + ids[0].id,
                 yes: function (iBody) {
                     iBody.find('#btnSubmit').click();
                     reloadTable({ Name: $("#Name").val() });
@@ -169,7 +170,7 @@
                 content: "您已选中" + ids.length + "条数据, 确定删除吗？",
                 callback: function () {
                     $.formSubmit({
-                        url: '/System/AgentBank/Delete',
+                        url: '/System/AnchorBank/Delete',
                         data: { primaryKey: result.join() },
                         success: function () {
                             reloadTable({ Name: $("#Name").val() });

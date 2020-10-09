@@ -16,12 +16,12 @@ using System.Web.Mvc;
 namespace Elight.WebUI.Areas.System.Controllers
 {
     [LoginChecked]
-    public class AgentBankController : BaseController
+    public class AnchorBankController : BaseController
     {
-        private readonly SysAgentBankLogic sysAgentBankLogic;
-        public AgentBankController()
+        private readonly SysAnchorBankLogic sysAnchorBankLogic;
+        public AnchorBankController()
         {
-            sysAgentBankLogic = new SysAgentBankLogic();
+            sysAnchorBankLogic = new SysAnchorBankLogic();
         }
         [HttpGet, AuthorizeChecked]
         public ActionResult Index()
@@ -39,7 +39,7 @@ namespace Elight.WebUI.Areas.System.Controllers
         public ActionResult GetAgentBankPage(PageParm parm)
         {
             int totalCount = 0;
-            var res = sysAgentBankLogic.GetAgentBankPage(parm, ref totalCount);
+            var res = sysAnchorBankLogic.GetAgentBankPage(parm, ref totalCount);
             return pageSuccess(res, totalCount);
         }
         /// <summary>
@@ -57,23 +57,22 @@ namespace Elight.WebUI.Areas.System.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost, AuthorizeChecked, ValidateAntiForgeryToken]
-        public ActionResult Form(SysAgentBankEntity model)
+        public ActionResult Form(SysAnchorBankEntity model)
         {
             if (model.id == 0)
             {
-                var agentModel = new SysUserLogic().CheckUserName(model.AgentName);
+                var agentModel = new SysUserAnchorLogic().CheckAnchorName(model.AgentName);
                 if (agentModel == null)
                 {
-                    return Error("经纪人不存在!");
+                    return Error("主播不存在!");
                 }
-                model.AgentID = agentModel.Id;
-                model.ShopID = agentModel.ShopID;
-                int row = sysAgentBankLogic.Insert(model);
+                model.AnchorID = agentModel.id;
+                int row = sysAnchorBankLogic.Insert(model);
                 return row > 0 ? Success() : Error();
             }
             else
             {
-                int row = sysAgentBankLogic.Update(model);
+                int row = sysAnchorBankLogic.Update(model);
                 return row > 0 ? Success() : Error();
             }
         }
@@ -83,9 +82,9 @@ namespace Elight.WebUI.Areas.System.Controllers
         /// <param name="primaryKey"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult GetForm(int primaryKey)
+        public ActionResult GetForm(long primaryKey)
         {
-            SysAgentBankEntity entity = sysAgentBankLogic.Get(primaryKey);
+            SysAnchorBankEntity entity = sysAnchorBankLogic.Get(primaryKey);
             return Content(entity.ToJson());
         }
         /// <summary>
@@ -102,17 +101,17 @@ namespace Elight.WebUI.Areas.System.Controllers
             {
                 idlist.Add(Convert.ToInt64(it));
             });
-            int row = sysAgentBankLogic.Delete(idlist);
+            int row = sysAnchorBankLogic.Delete(idlist);
             return row > 0 ? Success() : Error();
         }
         /// <summary>
-        /// 经纪人银行卡
+        /// 主播银行卡
         /// </summary>
         /// <returns>new {id,username}</returns>
         [HttpGet]
-        public string GetUserBankSelect(string id)
+        public string GetUserBankSelect(int id)
         {
-            return sysAgentBankLogic.GetUserBankSelect(id);
+            return sysAnchorBankLogic.GetUserBankSelect(id);
         }
     }
 }
