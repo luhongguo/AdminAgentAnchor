@@ -1,4 +1,5 @@
-﻿using Elight.Entity.Model;
+﻿using Elight.Entity.Enum;
+using Elight.Entity.Model;
 using Elight.Entity.Sys;
 using Elight.Logic.Base;
 using Elight.Utility.Log;
@@ -39,9 +40,9 @@ namespace Elight.Logic.Sys
                 {
                     result = db.Queryable<SysAnchor, SysAnchorInfoEntity>((it, st) => new object[] { JoinType.Left, it.id == st.aid })
                                 .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (it) => it.anchorName.Contains(dic["Name"].ToString()) || it.nickName.Contains(dic["Name"].ToString()))
-                                .WhereIF(dic.ContainsKey("startTime") && !string.IsNullOrEmpty(dic["startTime"].ToString()) && !string.IsNullOrEmpty(dic["endTime"].ToString()), (it) => it.createTime >= Convert.ToDateTime(dic["startTime"]) && it.createTime <= Convert.ToDateTime(dic["endTime"]))
-                                //.WhereIF(dic.ContainsKey("isCollet") && Convert.ToInt32(dic["isCollet"]) != -1, (it) => it.isColletCode == Convert.ToInt32(dic["isCollet"]))
-                                .WhereIF(dic.ContainsKey("isColletCode") && dic["isColletCode"].ToString() != "-1", (it) => it.isColletCode == dic["isColletCode"].ToString())
+                                .WhereIF(dic.ContainsKey("startTime") && !string.IsNullOrEmpty(dic["startTime"].ToString()) && dic.ContainsKey("endTime") && !string.IsNullOrEmpty(dic["endTime"].ToString()), (it) => it.createTime >= Convert.ToDateTime(dic["startTime"]) && it.createTime <= Convert.ToDateTime(dic["endTime"]))
+                                .WhereIF(dic.ContainsKey("Status") && Convert.ToInt32(dic["Status"]) != -1, (it, st) => st.status == (AnchorStatus)Convert.ToInt32(dic["Status"]))
+                                .WhereIF(dic.ContainsKey("isColletCode") && !string.IsNullOrEmpty(dic["isColletCode"].ToString()), (it, st) => it.isColletCode == dic["isColletCode"].ToString())
                                 .Select((it, st) => new SysAnchor
                                 {
                                     id = it.id,
@@ -53,7 +54,9 @@ namespace Elight.Logic.Sys
                                     birthday = it.birthday,
                                     status = st.status,
                                     createTime = it.createTime
-                                }).ToPageList(parm.page, parm.limit, ref totalCount);
+                                })
+                                .OrderBy(" st.agentGold desc")
+                                .ToPageList(parm.page, parm.limit, ref totalCount);
                 }
             }
             catch (Exception ex)
@@ -243,8 +246,7 @@ namespace Elight.Logic.Sys
                     var query = db.Queryable<SysIncomeEntity, SysAnchor, SysAnchorInfoEntity>((it, st, at) => new object[] { JoinType.Left, it.AnchorID == st.id, JoinType.Left, st.id == at.aid })
                           .Where((it, st) => it.opdate >= Convert.ToDateTime(dic["startTime"]) && it.opdate < Convert.ToDateTime(dic["endTime"]))
                           .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (it, st) => st.anchorName.Contains(dic["Name"].ToString()) || st.nickName.Contains(dic["Name"].ToString()))
-                          // .WhereIF(dic.ContainsKey("isCollet") && Convert.ToInt32(dic["isCollet"]) != -1, (it, st) => st.isCollet == Convert.ToInt32(dic["isCollet"]))
-                          .WhereIF(dic.ContainsKey("isColletCode") && dic["isColletCode"].ToString() != "-1", (it, st) => st.isColletCode == dic["isColletCode"].ToString())
+                           .WhereIF(dic.ContainsKey("isColletCode") && !string.IsNullOrEmpty(dic["isColletCode"].ToString()), (it, st, at) => st.isColletCode == dic["isColletCode"].ToString())
                           .WithCache(60);
                     sumModel = query.Clone().Select((it, st, at) => new IncomeTemplateModel
                     {
@@ -579,7 +581,7 @@ namespace Elight.Logic.Sys
             {
                 return db.Queryable<SysAnchorInfoEntity>().Where((A) => A.aid == id).Select(A => new SysAnchorInfoEntity
                 {
-                    aid=A.aid,
+                    aid = A.aid,
                     agentGold = A.agentGold
                 }).First();
             }

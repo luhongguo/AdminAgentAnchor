@@ -296,20 +296,5 @@ namespace Elight.WebUI.Areas.System.Controllers
         {
             return sysUserAnchorLogic.selectCompanyCodeList();
         }
-
-        //[HttpPost] 
-        //public ActionResult GetAnchorReportPage(PageParm parm)
-        //{
-        //    var res = sysUserAnchorLogic.GetAnchorReportPage(parm);
-        //    int totalCount = 0;
-        //    var result = new
-        //    {
-        //        code = 0,
-        //        msg = "success",
-        //        data = res,
-        //        count = totalCount// pageData.Count
-        //    };
-        //    return Content(result.ToJson());
-        //}
     }
 }
