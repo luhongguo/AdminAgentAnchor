@@ -81,7 +81,7 @@ namespace Elight.Logic.Sys
                         AnchorName = B.anchorName,
                         AnchorNickName = B.nickName,
                         TipRebate = A.TipRebate,
-                        HourRebate = A.TipRebate,
+                        HourRebate = A.HourRebate,
                         UserAccount = C.Account
                     }).First();
             }

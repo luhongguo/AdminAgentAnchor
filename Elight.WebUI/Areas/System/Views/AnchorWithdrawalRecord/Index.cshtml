@@ -22,7 +22,8 @@
             <blockquote class="layui-elem-quote">
                 <div class="form-inline layui-form user-search">
                     <div class="layui-inline">
-                        <div class="layui-input-block" style="margin-left:5px">
+                        <label class="layui-form-label">主播账号</label>
+                        <div class="layui-input-block" >
                             <input type="text" name="Name" placeholder="请输入主播账号或昵称" id="Name" autocomplete="off" class="layui-input" maxlength="25">
                         </div>
                     </div>
@@ -156,7 +157,10 @@
         form.on('submit(search)', function (data) {
             reloadTable(data.field)
         });
-
+        //监听下拉框的搜索
+        form.on('select(Level)', function (data) {
+            reloadTable(getWhere(2));
+        });
         function reloadTable(field) {
             //执行重载
             table.reload('report', {

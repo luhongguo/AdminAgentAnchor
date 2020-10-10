@@ -20,12 +20,10 @@
             <blockquote class="layui-elem-quote">
                 <div class="form-inline layui-form user-search">
                     <div class="layui-inline">
-                        <label class="layui-form-label">主播昵称</label>
+                        <label class="layui-form-label">主播账号</label>
                         <div class="layui-input-block">
-                            <select name="userName" id="UserNameReload" lay-filter="Level" lay-search>
-                            </select>
+                            <input type="text" name="Name" placeholder="请输入主播名称或昵称" id="Name" autocomplete="off" class="layui-input" maxlength="25">
                         </div>
-
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">是否直播</label>
@@ -151,19 +149,19 @@
         });
         //监听下拉框的搜索
         form.on('select(Level)', function (data) {
-            var userName = $("#UserNameReload").val()
+            var Name = $("#Name").val()
             var startTime = $("#startTimeReload").val();
             var endTime = $("#endTimeReload").val();
             var isLive = $("#isLiveReload").val()
-            var obj = { userName: userName, startTime: startTime, endTime: endTime, isLive: isLive }
+            var obj = { Name: Name, startTime: startTime, endTime: endTime, isLive: isLive }
             reloadTable(obj);
         });
         function getWhere() {
-            var userName = $("#UserNameReload").val()
+            var Name = $("#Name").val()
             var startTime = $("#startTimeReload").val();
             var endTime = $("#endTimeReload").val();
             var isLive = $("#isLiveReload").val()
-            return { "parm.where": JSON.stringify({ userName: userName, startTime: startTime, endTime: endTime, isLive: isLive  }) };
+            return { "parm.where": JSON.stringify({ Name: Name, startTime: startTime, endTime: endTime, isLive: isLive  }) };
             //var where = {
             //    page: 1, where: JSON.stringify({ "parm.where": { userName: userName, startTime: startTime, endTime: endTime } })
             //}

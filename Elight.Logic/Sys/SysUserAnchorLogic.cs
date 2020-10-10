@@ -53,7 +53,8 @@ namespace Elight.Logic.Sys
                                     follow = st.follow,
                                     birthday = it.birthday,
                                     status = st.status,
-                                    createTime = it.createTime
+                                    createTime = it.createTime,
+                                    isColletCode = it.isColletCode
                                 })
                                 .OrderBy(" st.agentGold desc")
                                 .ToPageList(parm.page, parm.limit, ref totalCount);
@@ -382,7 +383,7 @@ namespace Elight.Logic.Sys
                               giftname = it.giftname,
                               price = it.price,
                               quantity = it.quantity,
-                              ratio = it.ratio,
+                              Type = it.Type,
                               totalamount = it.totalamount,
                               username = it.username,
                               sendtime = it.sendtime,
@@ -424,7 +425,7 @@ namespace Elight.Logic.Sys
                                    .Where(it => it.ontime >= Convert.ToDateTime(dic["startTime"]) && it.ontime < Convert.ToDateTime(dic["endTime"]))
                                    .WhereIF(dic.ContainsKey("isLive") && Convert.ToInt32(dic["isLive"]) == 1, it => SqlFunc.IsNullOrEmpty(it.uptime))
                                    .WhereIF(dic.ContainsKey("isLive") && Convert.ToInt32(dic["isLive"]) == 0, it => !SqlFunc.IsNullOrEmpty(it.uptime))
-                                   .WhereIF(dic.ContainsKey("userName") && Convert.ToInt32(dic["userName"]) != -1, (it, st) => st.id == Convert.ToInt32(dic["userName"]))
+                                   .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (it, st) => st.anchorName.Contains(dic["Name"].ToString()) || st.nickName.Contains(dic["Name"].ToString()))
                                    .WithCache(30);//缓存30秒
                     var sumReuslt = query.Clone().Select((it, st) => new { amount = SqlFunc.AggregateSum(it.amount), duration = SqlFunc.AggregateSum(it.livetime) }).First();
                     sumAmount = sumReuslt.amount;

@@ -1061,7 +1061,7 @@
         </member>
         <member name="P:Elight.Entity.Sys.TipEntity.Type">
             <summary>
-            类型1礼物   2;房间扣费
+            类型1打赏礼物 2;房间扣费 ,3:计时扣费
             </summary>
         </member>
         <member name="P:Elight.Entity.Sys.TipEntity.gift">

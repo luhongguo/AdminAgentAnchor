@@ -22,8 +22,9 @@
             <blockquote class="layui-elem-quote">
                 <div class="form-inline layui-form user-search">
                     <div class="layui-inline">
-                        <div class="layui-input-block" style="margin-left:10px">
-                            <input type="text" name="Name" placeholder="请输入主播名称或昵称" id="Name" autocomplete="off" class="layui-input" maxlength="25">
+                        <label class="layui-form-label">主播账号</label>
+                        <div class="layui-input-block" >
+                            <input type="text" name="Name" placeholder="请输入主播账号或昵称" id="Name" autocomplete="off" class="layui-input" maxlength="25">
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -65,8 +66,8 @@
                     , { field: 'AnchorName', title: '主播账号' }
                     , { field: 'AnchorNickName', title: '主播昵称' }
                     , { field: 'UserAccount', title: '上级账号'}
-                    , { field: 'TipRebate', title: '礼物返点' }
-                    , { field: 'HourRebate', title: '工时返点' }
+                    , { field: 'TipRebate', title: '礼物返点(%)' }
+                    , { field: 'HourRebate', title: '工时返点(%)' }
                     , { field: 'ModifiedBy', title: '修改人' }
                     , { field: 'ModifiedTime', title: '修改时间' }
                     , { field: 'CreateTime', title: '创建时间' }

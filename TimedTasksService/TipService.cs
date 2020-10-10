@@ -38,6 +38,7 @@ namespace TimedTasksService
                     }
                     db.Ado.BeginTran();//开启事务
                     List<TipEntity> updateTipList = new List<TipEntity>();//采集礼物的id集合
+                    //处理500条数据
                     List<SysTipIncomeDetailEntity> list = db.Queryable<TipEntity, SysAnchorRebateEntity, SysRebateEntity>((at, st, ct) =>
                      new object[] {
                             JoinType.Left, at.AnchorID==st.AnchorID,
@@ -65,11 +66,12 @@ namespace TimedTasksService
                                it.UserIncome = (it.totalamount - it.PlatformIncome) * it.UserRebate / 100;//经纪人收益=总金额减去平台收益 * 主播返点
                                it.AnchorIncome = (it.totalamount - it.PlatformIncome) * (100 - it.UserRebate) / 100;//主播收益=总金额减去平台收益 * （100-主播返点）
                            })
-                           .ToList();
+                           .ToPageList(1, 500);
                     if (list.Count == 0)
                     {
-                        //将查询的结束时间写入
+                        //将查询的结束时间写入 
                         redis.StringSet<DateTime>(key, time);
+                        Console.WriteLine("统计代理的礼物收益：统计开始时间--" + startTime + ",统计结束时间：--" + time + "，统计数据+" + list.Count);
                         return;
                     }
                     db.Insertable(list).ExecuteCommand();
@@ -139,22 +141,16 @@ namespace TimedTasksService
                     //db.Updateable<SysTipIncomeDetailEntity>().SetColumns(it => new SysTipIncomeDetailEntity() { status = 0 })
                     //    .Where(it => list.Select(gt => gt.orderno).Contains(it.orderno)).ExecuteCommand();
                     db.Ado.CommitTran();
-                    //将查询的结束时间写入
-                    redis.StringSet<DateTime>(key, time);
-                    Console.WriteLine("统计代理的礼物收益：统计开始时间--" + startTime+",统计结束时间：--"+ time);
+                    //将查询数据的最大时间写入
+                    redis.StringSet<DateTime>(key, maxSendTime);
+                    Console.WriteLine("统计代理的礼物收益：统计开始时间--" + startTime + ",统计结束时间：--" + time + "，统计数据+" + list.Count);
                 }
                 catch (Exception ex)
                 {
                     db.Ado.RollbackTran();
                     //统一记录日志
                     Console.WriteLine("按天统计代理的礼物收益异常：" + ex.Message + "------" + ex.StackTrace);
-                    new LogLogic().Write(new SysLog
-                    {
-                        Operation = "按天统计代理的礼物收益",
-                        Message = ex.Message,
-                        StackTrace = ex.StackTrace,
-                        CreateTime = DateTime.Now
-                    });
+                    LogHelper.WriteLogTips("按天统计代理的礼物收益异常：" + ex.Message + "------" + ex.StackTrace);
                 }
             }
         }
@@ -201,17 +197,12 @@ namespace TimedTasksService
 
                 //将最后获取到的最大时间写入
                 redis.StringSet<DateTime>(key, endTime);
-                Console.WriteLine("打赏礼物采集成功:采集开始时间--" + startTime + "，采集结束时间--" + endTime);
+                Console.WriteLine("打赏礼物采集成功:采集开始时间--" + startTime + "，采集礼物最大时间--" + endTime);
             }
             catch (Exception ex)
             {
-                new LogLogic().Write(new SysLog
-                {
-                    Operation = "打赏礼物采集",
-                    Message = ex.Message,
-                    StackTrace = ex.StackTrace.Length > 450 ? ex.StackTrace.Substring(0, 450) : ex.StackTrace,
-                    CreateTime = DateTime.Now
-                });
+                Console.WriteLine("采集礼物异常:" + ex.Message + "------" + ex.StackTrace);
+                LogHelper.WriteLogTips("采集礼物异常:" + ex.Message + "------" + ex.StackTrace);
             }
         }
         public static void PagingCollect(List<GiftEntity> gifts, int pageSize, DateTime startTime, DateTime endTime, out int totalCount, out DateTime maxDateTime)
@@ -237,6 +228,7 @@ namespace TimedTasksService
                 string result = Utils.HttpGet(api_url + string.Format("?pageIndex={0}&pageSize={1}&startTime={2}&endTime={3}",
                      1, pageSize, startTime, endTime), "Bearer QW5jaG9yX01vtaunclo66M2ak1odXFSSW54YUQ=");
                 //将json转换为JObject  
+                LogHelper.WriteLogTips("采集礼物开始时间：" + startTime + "，结束时间:" + endTime + "，采集结果:" + result);
                 JObject jObj = JObject.Parse(result);
                 var s = jObj["et"]["data"].Children().ToList();
                 if (Convert.ToInt32(jObj["code"]) == 20000 && jObj["et"]["data"].Children().Count() > 0)
@@ -328,13 +320,8 @@ namespace TimedTasksService
             }
             catch (Exception ex)
             {
-                new LogLogic().Write(new SysLog
-                {
-                    Operation = "打赏礼物采集",
-                    Message = ex.Message,
-                    StackTrace = ex.StackTrace.Length > 500 ? ex.StackTrace.Substring(0, 500) : ex.StackTrace,
-                    CreateTime = DateTime.Now
-                });
+                Console.WriteLine("采集礼物异常:" + ex.Message + "------" + ex.StackTrace);
+                LogHelper.WriteLogTips("采集礼物异常:" + ex.Message + "------" + ex.StackTrace);
                 totalCount = 0;
                 maxDateTime = DateTime.Now;
                 return;

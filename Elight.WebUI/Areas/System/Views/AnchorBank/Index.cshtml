@@ -21,8 +21,9 @@
             <blockquote class="layui-elem-quote">
                 <div class="form-inline layui-form user-search">
                     <div class="layui-inline">
-                        <div class="layui-input-block" style="margin-left:5px">
-                            <input type="text" name="Name" placeholder="请输入主播账号" id="Name" autocomplete="off" class="layui-input" maxlength="25">
+                        <label class="layui-form-label">主播账号</label>
+                        <div class="layui-input-block" >
+                            <input type="text" name="Name" placeholder="请输入主播账号或昵称" id="Name" autocomplete="off" class="layui-input" maxlength="25">
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -62,10 +63,6 @@
                     { type: 'checkbox' }
                     , { field: 'AgentName', title: '主播账号' }
                     , { field: 'NickName', title: '主播昵称' }
-                    , { field: 'bankano', title: '支付账号' }
-                    , { field: 'CategoryCode', title: '支付名称' }
-                    , { field: 'address', title: '开户地址' }
-                    , { field: 'bankaccount', title: '开户人' }
                     , {
                         field: 'payType', title: '支付类型', templet: function (d) {
                             if (d.payType == 1) {
@@ -77,6 +74,10 @@
                             }
                         }
                     }
+                    , { field: 'bankano', title: '支付账号' }
+                    , { field: 'CategoryCode', title: '支付名称' }
+                    , { field: 'address', title: '开户地址' }
+                    , { field: 'bankaccount', title: '开户人' }
                     , { field: 'createtime', title: '创建时间' }
                 ]]
                 , request: {

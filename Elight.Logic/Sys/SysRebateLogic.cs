@@ -75,7 +75,7 @@ namespace Elight.Logic.Sys
                         id = A.id,
                         UserAccount = B.Account,
                         TipRebate = A.TipRebate,
-                        HourRebate = A.TipRebate
+                        HourRebate = A.HourRebate
                     }).First();
             }
         }

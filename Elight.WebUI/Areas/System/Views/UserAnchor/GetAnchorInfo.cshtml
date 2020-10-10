@@ -30,12 +30,18 @@
             <blockquote class="layui-elem-quote">
                 <div class="form-inline layui-form user-search">
                     <div class="layui-inline">
+                        <label class="layui-form-label">主播账号</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Name" placeholder="请输入主播账号或昵称" id="Name" autocomplete="off" class="layui-input" maxlength="25">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
                         <label class="layui-form-label">直播状态</label>
                         <div class="layui-input-block">
                             <select name="Status" id="Status" lay-filter="Level" lay-search>
                                 <option value="-1" selected>全部</option>
-                                <option value="0">正常</option>
                                 <option value="1">直播</option>
+                                <option value="0">正常</option>
                                 <option value="2">离线</option>
                                 <option value="3">禁用</option>
                             </select>
@@ -45,12 +51,6 @@
                         <label class="layui-form-label">采集公司</label>
                         <div class="layui-input-inline">
                             <input type="text" name="isColletCode" placeholder="请输入采集公司名称" id="isColletCode" autocomplete="off" class="layui-input" maxlength="25">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">主播账号</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="Name" placeholder="请输入主播账号或昵称" id="Name" autocomplete="off" class="layui-input" maxlength="25">
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -141,6 +141,7 @@
                     }
                     , { field: 'createTime', title: '注册时间' }
                     , { field: 'birthday', title: '出生日期' }
+                    , { field: 'isColletCode', title: '采集公司' }
                 ]]
                 , request: {
                     pageName: 'parm.page' //页码的参数名称，默认：page
@@ -154,16 +155,15 @@
         form.on('submit(search)', function (data) {
             reloadTable(data.field)
         });
-        ////监听下拉框的搜索
-        //form.on('select(Level)', function (data) {
-        //    var startTime = $("#startTimeReload").val();
-        //    var endTime = $("#endTimeReload").val();
-        //    var Name = $("#Name").val();
-        //    var isCollet = $("#isCollet").val();
-        //    var isColletCode = $("#isColletCode").val();
-        //    var obj = { isCollet: data.value, startTime: startTime, endTime: endTime, Name: Name, isCollet: isCollet, isColletCode: isColletCode }
-        //    reloadTable(obj);
-        //});
+        //监听下拉框的搜索
+        form.on('select(Level)', function (data) {
+            var startTime = $("#startTimeReload").val();
+            var endTime = $("#endTimeReload").val();
+            var Name = $("#Name").val();
+            var Status = $("#Status").val();
+            var obj = { startTime: startTime, endTime: endTime, Name: Name, Status: Status }
+            reloadTable(obj);
+        });
         function reloadTable(field) {
             //执行重载
             table.reload('report', {

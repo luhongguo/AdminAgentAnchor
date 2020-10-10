@@ -58,8 +58,6 @@ E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\Elight.Logic.pdb
 E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\Elight.Logic.dll.config
 E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\Elight.Utility.pdb
 E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\Elight.Utility.dll.config
-E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\TimedTasksService.pdb
-E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\TimedTasksService.exe.config
 E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.xml
 E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml
 E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\StackExchange.Redis.xml
@@ -96,3 +94,5 @@ E:\工作项目\AdminAgentAnchorSolution\UnitTest\obj\Debug\UnitTest.csproj.Copy
 E:\工作项目\AdminAgentAnchorSolution\UnitTest\obj\Debug\UnitTest.dll
 E:\工作项目\AdminAgentAnchorSolution\UnitTest\obj\Debug\UnitTest.pdb
 E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\System.Numerics.Vectors.xml
+E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\TimedTasksService.pdb
+E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\TimedTasksService.exe.config

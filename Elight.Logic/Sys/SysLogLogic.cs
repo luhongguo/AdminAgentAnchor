@@ -49,32 +49,26 @@ namespace Elight.Logic.Sys
             {
                 try
                 {
-                    SysLog log = new SysLog();
-                    log.CreateTime = DateTime.Now;
-                    log.LogLevel = LogHelper.GetEnumDescription(level);
-                    log.Operation = operation;
-                    log.Message = message;
-                    log.Account = account;
-                    log.RealName = realName;
-                    log.IP = Net.Ip;
-                    log.IPAddress = Net.GetAddress(Net.Ip);
-                    log.Browser = Net.Browser;
-                    log.StackTrace = stackTrace.Length > 450 ? stackTrace.Substring(0, 450) : stackTrace;
-                    db.Insertable<SysLog>(log).ExecuteCommand();
-                }
-                catch (Exception ex)
-                {
-
-                }
-            }
-        }
-        public void Write(SysLog logModel)
-        {
-            using (var db = GetInstance())
-            {
-                try
-                {
-                    db.Insertable<SysLog>(logModel).ExecuteCommand();
+                    if (level != Level.Info)
+                    {
+                        LogHelper.WriteLog("错误信息:" + message + ",详细信息:" + stackTrace);
+                        return;
+                    }
+                    else
+                    {  //普通消息
+                        SysLog log = new SysLog();
+                        log.CreateTime = DateTime.Now;
+                        log.LogLevel = LogHelper.GetEnumDescription(level);
+                        log.Operation = operation;
+                        log.Message = message;
+                        log.Account = account;
+                        log.RealName = realName;
+                        log.IP = Net.Ip;
+                        log.IPAddress = Net.GetAddress(Net.Ip);
+                        log.Browser = Net.Browser;
+                        log.StackTrace = stackTrace.Length > 450 ? stackTrace.Substring(0, 450) : stackTrace;
+                        db.Insertable<SysLog>(log).ExecuteCommand();
+                    }
                 }
                 catch (Exception ex)
                 {
