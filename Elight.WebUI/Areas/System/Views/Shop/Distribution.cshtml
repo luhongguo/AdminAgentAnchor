@@ -37,23 +37,9 @@
             </div>
             <blockquote class="layui-elem-quote">
                 <div class="form-inline layui-form user-search">
-                    @*<div class="layui-inline" id="isColletDiv">
-                        <label class="layui-form-label">主播来源</label>
-                        <div class="layui-input-block">
-                            <select name="isCollet" id="isCollet" lay-filter="Level" lay-search>
-                                <option value="-1" selected>全部</option>
-                                <option value="0">非采集</option>
-                                <option value="1">采集</option>
-                            </select>
-                        </div>
-                    </div>*@
-                    <div class="layui-inline" id="isColletCodeDiv">
-                        <label class="layui-form-label">采集公司</label>
-                        <div class="layui-input-block">
-                            <select name="isColletCode" id="isColletCode" lay-filter="Level" lay-search>
-                                <option value="-1" selected>全部</option>
-                                <option value="_LY1">_LY1</option>
-                            </select>
+                    <div class="layui-inline">
+                        <div class="layui-input-block" style="margin-left:5px">
+                            <input type="text" name="isColletCode" placeholder="请输入采集公司名称" id="isColletCode" autocomplete="off" class="layui-input" maxlength="25">
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -81,6 +67,7 @@
                         <th>关注数</th>
                         <th>注册时间</th>
                         <th>出生日期</th>
+                        <th>采集公司</th>
                     </tr>
                 </thead>
                 <!--内容容器-->
@@ -110,6 +97,11 @@
         <td>{{item.follow}} </td>
         <td>{{item.createTime}} </td>
         <td>{{item.birthday}} </td>
+        <td>
+            {{# if(item.isColletCode==null) { }} {{ "" }}
+            {{# }else{ }} {{item.isColletCode}}
+            {{# } }}
+        </td>
     </tr>
     {{#  }); }}
     {{# if(d.list.length<=0) { }}
