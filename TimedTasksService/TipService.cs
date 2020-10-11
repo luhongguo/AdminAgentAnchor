@@ -29,13 +29,9 @@ namespace TimedTasksService
             {
                 try
                 {
-                    //实例化Redis
-                    RedisHelper redis = new RedisHelper(6);//只记录最大的时间
-                    string key = "last_StatisticsTips_max_datetime";
-                    if (redis.KeyExists(key))
-                    {
-                        startTime = redis.StringGet<DateTime>(key).AddSeconds(-2);//读取上次采集数据的结束时间 往前加2秒重新采集（怕漏单）
-                    }
+                    string key = "StatisticsTipMaxTime";
+                    //统计开始时间
+                    startTime = Convert.ToDateTime(db.Queryable<SysConfigEntity>().Where(it => it.name == key).First().values).AddSeconds(-2);
                     db.Ado.BeginTran();//开启事务
                     List<TipEntity> updateTipList = new List<TipEntity>();//采集礼物的id集合
                     //处理500条数据
@@ -70,7 +66,7 @@ namespace TimedTasksService
                     if (list.Count == 0)
                     {
                         //将查询的结束时间写入 
-                        redis.StringSet<DateTime>(key, time);
+                        db.Updateable<SysConfigEntity>().SetColumns(it => new SysConfigEntity { values = time.ToString() }).Where(it => it.name == key);
                         Console.WriteLine("统计代理的礼物收益：统计开始时间--" + startTime + ",统计结束时间：--" + time + "，统计数据+" + list.Count);
                         return;
                     }
@@ -142,7 +138,7 @@ namespace TimedTasksService
                     //    .Where(it => list.Select(gt => gt.orderno).Contains(it.orderno)).ExecuteCommand();
                     db.Ado.CommitTran();
                     //将查询数据的最大时间写入
-                    redis.StringSet<DateTime>(key, maxSendTime);
+                    db.Updateable<SysConfigEntity>().SetColumns(it => new SysConfigEntity { values = maxSendTime.ToString() }).Where(it => it.name == key);
                     Console.WriteLine("统计代理的礼物收益：统计开始时间--" + startTime + ",统计结束时间：--" + time + "，统计数据+" + list.Count);
                 }
                 catch (Exception ex)
@@ -165,38 +161,27 @@ namespace TimedTasksService
             {
                 ////设置成5分钟后重启（为了防止下面的逻辑执行速度不快时，延长的时间，一旦执行完成，将会把当前的执行周期改为正常的值）
                 //(sender as System.Timers.Timer).Interval = 5 * 60 * 1000;
-
-                //实例化Redis
-                RedisHelper redis = new RedisHelper(6);//只记录最大的时间
-
                 int totalCount = 0;
-                string key = "last_tips_max_datetime";
-
-                DateTime startTime = time.AddHours(-12);//第一次执行获取前面12个小时的数据
-                if (redis.KeyExists(key))
+                string key = "tipMaxTime";
+                DateTime startTime;//数据库中获取采集开始时间 倒退2秒
+                using (var db = sugarClient.GetInstance())
                 {
-                    startTime = redis.StringGet<DateTime>(key).AddSeconds(-2);//读取上次采集数据的最大时间 往前加2秒重新采集（怕漏单）
+                    startTime = Convert.ToDateTime(db.Queryable<SysConfigEntity>().Where(it => it.name == key).First().values).AddSeconds(-2);
                 }
                 DateTime endTime = DateTime.Now;//当前时间即可
                 //List<Model.dt_anchor> dt_Anchors = new BLL.dt_anchor().GetModelList("");
                 //获取所有的礼物数据
                 List<GiftEntity> gifts = new List<GiftEntity>();
-                if (redis.KeyExists("anchor_gift_"))
+                using (var db = sugarClient.GetSqlSugarDB(sugarClient.DbConnType.QPVideoAnchorDB))
                 {
-                    gifts = redis.StringGet<List<GiftEntity>>("anchor_gift_");
-                }
-                else
-                {
-                    using (var db = sugarClient.GetSqlSugarDB(sugarClient.DbConnType.QPVideoAnchorDB))
-                    {
-                        gifts = db.Queryable<GiftEntity>().ToList();
-                        redis.StringSet("anchor_gift_", gifts, TimeSpan.FromMinutes(5));
-                    }
+                    gifts = db.Queryable<GiftEntity>().ToList();
                 }
                 PagingCollect(gifts, pageSize, startTime, endTime, out totalCount, out endTime);
-
                 //将最后获取到的最大时间写入
-                redis.StringSet<DateTime>(key, endTime);
+                using (var db = sugarClient.GetInstance())
+                {
+                    db.Updateable<SysConfigEntity>().SetColumns(it => new SysConfigEntity { values = endTime.ToString() }).Where(it => it.name == key);
+                }
                 Console.WriteLine("打赏礼物采集成功:采集开始时间--" + startTime + "，采集礼物最大时间--" + endTime);
             }
             catch (Exception ex)
@@ -209,21 +194,7 @@ namespace TimedTasksService
         {
             try
             {
-                //实例化Redis
-                RedisHelper redisTips = new RedisHelper(6);//只记录打赏的订单号
                 string api_url = System.Configuration.ConfigurationManager.AppSettings["tips_data_api"];
-                //using (var db = sugarClient.GetSqlSugarDB(sugarClient.DbConnType.QPVideoAnchorDB))  测试
-                //{
-                //    var addList = db.SqlQueryable<TipEntity>($@"select 75 as AnchorID,orderno,giftname,price,quantity,ratio, totalamount,username,sendtime  from tip_zb001").ToList();
-                //    //找出数据库中已经存在的订单号
-                //    var checkOrdernoList = db.Queryable<TipEntity>().In(it => it.orderno, addList.Select(it=>it.orderno)).Select(it => it.orderno).ToList();
-                //    if (checkOrdernoList != null && checkOrdernoList.Count > 0)
-                //    {
-                //        //新增集合中移除已经存在的订单号
-                //        addList.RemoveAll(it => checkOrdernoList.Contains(it.orderno));
-                //    }
-                //    db.Insertable(addList).ExecuteCommand();
-                //}
                 //时间段内的n条数据，
                 string result = Utils.HttpGet(api_url + string.Format("?pageIndex={0}&pageSize={1}&startTime={2}&endTime={3}",
                      1, pageSize, startTime, endTime), "Bearer QW5jaG9yX01vtaunclo66M2ak1odXFSSW54YUQ=");
@@ -287,12 +258,9 @@ namespace TimedTasksService
                         model.totalamount = (decimal)(item.num * item.amount);// * (model.ratio / (decimal)100.0); 暂时没有 比率
                         model.Type = item.Type;
                         model.liveId = item.liveId;
-                        //redis中不存在单号 就添加到新增集合中
-                        if (!redisTips.KeyExists(model.orderno))
-                        {
-                            addList.Add(model);
-                            ordernoList.Add(model.orderno);
-                        }
+                        //添加到集合
+                        addList.Add(model);
+                        ordernoList.Add(model.orderno);
                     }
                     //写入前，要判定是否存在
                     using (var db = sugarClient.GetSqlSugarDB(sugarClient.DbConnType.QPVideoAnchorDB))
@@ -303,14 +271,9 @@ namespace TimedTasksService
                         {
                             //新增集合中移除已经存在的订单号
                             addList.RemoveAll(it => checkOrdernoList.Contains(it.orderno));
-
                         }
                         int count = db.Insertable(addList).ExecuteCommand();
                     }
-                    ordernoList.ForEach(it =>
-                    {
-                        redisTips.StringSet<string>(it, it, TimeSpan.FromHours(48));//保存2天的数据
-                    });
                     totalCount = int.Parse(jObj["et"]["count"].ToString());
                     return;
                 }

@@ -41,10 +41,12 @@
                 <thead>
                     <tr>
                         <th>
-                            <input type="checkbox" lay-skin="primary"></th>
+                            <input type="checkbox" lay-skin="primary">
+                        </th>
+                        <th>商户名称</th>
                         <th>账号</th>
                         <th>姓名</th>
-                        <th>公司代码</th>
+                        <th>余额</th>
                         <th>状态</th>
                     </tr>
                 </thead>
@@ -60,19 +62,25 @@
 <!--内容模板-->
 <script id="contentTpl" type="text/html">
     {{#  layui.each(d.list, function(index, item){ }}
-  <tr>
-      <td>
-          <input type="checkbox" lay-skin="primary" value="{{item.Id}}"></td>
-      <td>{{item.Account}}</td>
-      <td>{{item.RealName}}</td>
-      <td>
-          {{item.CompanyCode}}
-      </td>
-      <td>{{# if(item.IsEnabled==true){ }}  <span class="label label-success label-sm">启用</span>
-          {{# }else{ }}  <span class="label label-dark label-sm">禁用</span>
-          {{# } }}
-      </td>
-  </tr>
+    <tr>
+        <td>
+            <input type="checkbox" lay-skin="primary" value="{{item.Id}}">
+        </td>
+        <td>
+            {{# if(item.ShopName==null){ }}
+            超管
+            {{# }else{ }}{{ item.ShopName }}
+            {{# } }}
+        </td>
+        <td>{{item.Account}}</td>
+        <td>{{item.RealName}}</td>
+        <td>{{item.Balance}}</td>
+        <td>
+            {{# if(item.IsEnabled==true){ }}  <span class="label label-success label-sm">启用</span>
+            {{# }else{ }}  <span class="label label-dark label-sm">禁用</span>
+            {{# } }}
+        </td>
+    </tr>
     {{#  }); }}
      {{# if(d.list.length<=0) { }}
         <tr style="color: red">

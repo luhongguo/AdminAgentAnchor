@@ -1,0 +1,100 @@
+﻿@{
+    ViewBag.Title = "主播发起提现";
+    Layout = "~/Views/Shared/_Form.cshtml";
+}
+<form id="form" class="layui-form" style="margin-top: 25px">
+    @Html.AntiForgeryToken()
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label label-required">主播昵称</label>
+            <div class="layui-input-inline">
+                <select name="AnchorID" id="AgentNameReload" lay-filter="Level" lay-search>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label label-required">提现金额</label>
+            <div class="layui-input-inline">
+                <input type="number" name="WithdrawalAmount" lay-verify="required" placeholder="请输入提现金额" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">提现类型</label>
+            <div class="layui-input-inline">
+                <select name="Type" id="Type" lay-filter="Leve2" lay-search>
+                    <option value="1">提现</option>
+                    <option value="2">手动扣款</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label label-required">提现账号</label>
+            <div class="layui-input-inline">
+                <select name="AgentBankID" id="BankNameReload" lay-filter="Leve2" lay-search>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-form-item">
+            <label class="layui-form-label">提现备注</label>
+            <div class="layui-input-block" style="width: 200px;">
+                <textarea name="Remark" placeholder="请输入内容" class="layui-textarea"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item" style="display: none">
+        <div class="layui-input-inline">
+            <button id="btnSubmit" class="layui-btn" lay-submit lay-filter="add">提交</button>
+        </div>
+    </div>
+</form>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        $.ajax({
+            url: "/System/UserAnchor/AnchorUserIDSelect",
+            type: "get",
+            success: function (data) {
+                var $html = " ";
+                $.each(eval("(" + data + ")"), function (i, v) {
+                    $html += "<option value='" + v.id + "'>" + v.nickName + "</option>";
+                })
+                $("select[name='AnchorID']").append($html);
+                //append后必须从新渲染
+                form.render('select');
+                GetBank($("#AgentNameReload").find("option:selected").val());
+            }
+        }, 'json');
+        //监听下拉框 （获取经纪人的提现账号）
+        form.on('select(Level)', function (data) {
+            GetBank(data.value);
+        });
+        form.render();  //必须要加
+        form.on('submit(add)', function (data) {
+            $.formSubmit({
+                url: "/System/AnchorWithdrawalRecord/Form",
+                data: data.field
+            });
+            return false;
+        });
+        function GetBank(id) {
+            $("#BankNameReload").empty();
+            $.ajax({
+                url: "/System/AnchorBank/GetUserBankSelect?id=" + id,
+                type: "get",
+                success: function (dataTwo) {
+                    var $htmlTwo = " <option value='0'>手动扣款</option>";
+                    $.each(eval("(" + dataTwo + ")"), function (i, v) {
+                        $htmlTwo += "<option value='" + v.id + "'>" + v.BankName + "</option>";
+                    })
+                    $("select[name='AgentBankID']").append($htmlTwo);
+                    //append后必须从新渲染
+                    form.render('select');
+                }
+            }, 'json');
+        }
+    });
+</script>

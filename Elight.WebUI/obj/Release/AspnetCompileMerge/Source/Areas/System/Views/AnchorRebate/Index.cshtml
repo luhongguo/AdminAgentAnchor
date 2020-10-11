@@ -1,0 +1,187 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+
+<html>
+<head>
+    <title>主播返点</title>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Content/framework/css/console.css" rel="stylesheet" />
+    <link href="~/Content/framework/css/animate.css" rel="stylesheet" />
+    <script src="~/Content/jquery/jquery.min.js"></script>
+    <script src="~/Content/layui/layui.js"></script>
+    <script src="~/Content/framework/js/global.js"></script>
+</head>
+<body>
+    <div class="panel animated fadeIn">
+        <div class="panel-body">
+            <blockquote class="layui-elem-quote">
+                <div class="form-inline layui-form user-search">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">主播账号</label>
+                        <div class="layui-input-block" >
+                            <input type="text" name="Name" placeholder="请输入主播账号或昵称" id="Name" autocomplete="off" class="layui-input" maxlength="25">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button class="layui-btn layuiadmin-btn-admin" lay-submit lay-filter="search" data-type="reload">
+                            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                        </button>
+                    </div>
+                </div>
+            </blockquote>
+            <table id="table" lay-filter="test"></table>
+        </div>
+    </div>
+</body>
+</html>
+@*工具栏模板：*@
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="add">添加</button>
+        <button class="layui-btn layui-btn-sm" lay-event="update">编辑</button>
+        <button class="layui-btn layui-btn-sm" lay-event="delete">删除</button>
+    </div>
+</script>
+<script type="text/javascript">
+    layui.use(['form', 'table','layer'], function () {
+        var form = layui.form;
+        var table = layui.table;
+        var layer = layui.layer;
+        function renderTable(where) {
+            table.render({
+                elem: '#table'
+                , method: "post"
+                , url: '/System/AnchorRebate/GetRebateListPage' //数据接口
+                , page: true //开启分页
+                , checkbox: true
+                , toolbar: '#toolbar'
+                , where: where
+                , cols: [[ //表头
+                    { type: 'checkbox' }
+                    , { field: 'AnchorName', title: '主播账号' }
+                    , { field: 'AnchorNickName', title: '主播昵称' }
+                    , { field: 'UserAccount', title: '上级账号'}
+                    , { field: 'TipRebate', title: '礼物返点(%)' }
+                    , { field: 'HourRebate', title: '工时返点(%)' }
+                    , { field: 'ModifiedBy', title: '修改人' }
+                    , { field: 'ModifiedTime', title: '修改时间' }
+                    , { field: 'CreateTime', title: '创建时间' }
+                ]]
+                , request: {
+                    pageName: 'parm.page' //页码的参数名称，默认：page
+                    , limitName: 'parm.limit' //每页数据量的参数名，默认：limit
+                }
+                , limit: 10
+                , id: "report"
+            });
+        }
+        renderTable(getWhere());
+        function getWhere() {
+            var Name = $("#Name").val()
+            return { "parm.where": JSON.stringify({ Name: Name }) };
+        }
+        function reloadTable(field) {
+            //执行重载
+            table.reload('report', {
+                page: {
+                    curr: 1
+                },
+                where: {
+                    "parm.where": JSON.stringify(field)
+                }
+            });
+        }
+        //监听搜索
+        form.on('submit(search)', function (data) {
+            reloadTable(data.field)
+        });
+        //监听事件
+        table.on('toolbar(test)', function (obj) {
+            switch (obj.event) {
+                case 'add':
+                    btn_add();
+                    break;
+                case 'delete':
+                    btn_delete();
+                    break;
+                case 'update':
+                    btn_edit()
+                    break;
+            };
+        });
+        function btn_add() {
+            $.layerOpen({
+                id: "add",
+                title: "新增返点",
+                width: "500px",
+                height: "400px",
+                content: "/System/AnchorRebate/Form",
+                yes: function (iBody) {
+                    iBody.find('#btnSubmit').click();
+                    reloadTable({ Name: $("#Name").val() });
+                    //window.location.href = "/System/Shop/Index";
+                }
+            });
+        }
+
+        function btn_edit() {
+            var ids = table.checkStatus('report').data;
+            if (ids.length != 1) {
+                $.layerMsg("请勾选单条记录编辑。", "warning");
+                return;
+            }
+            $.layerOpen({
+                id: "edit",
+                title: "修改返点",
+                width: "500px",
+                height: "400px",
+                content: "/System/AnchorRebate/Form?primaryKey=" + ids[0].id,
+                yes: function (iBody) {
+                    iBody.find('#btnSubmit').click();
+                    reloadTable({ Name: $("#Name").val() });
+                }
+            });
+        }
+        function btn_delete() {
+            var ids = table.checkStatus('report').data;
+            if (ids.length < 1) {
+                $.layerMsg("请勾选需要删除的用户返点。", "warning");
+                return;
+            }
+            var result = [];
+            for (var i = 0; i < ids.length; i++) {
+                result.push(ids[i].id);
+            }
+            //layer.confirm('确定删除？', { icon: 3, title: '提示信息' }, function (index) {
+            //    $.ajax({
+            //        url: '/System/AnchorRebate/Delete',
+            //        type: "post",
+            //        dataType: 'json',
+            //        contentType: 'application/json',
+            //        data: JSON.stringify({ primaryKey: result.join() }),
+            //        success: function (data) {
+            //            console.log(data);
+            //             reloadTable({ Name: $("#Name").val() });
+            //        }
+            //    });
+            //});
+            $.layerConfirm({
+                content: "您已选中" + ids.length + "条数据, 确定删除吗？",
+                callback: function () {
+                    $.formSubmit({
+                        url: '/System/AnchorRebate/Delete',
+                        data: { primaryKey: result.join() },
+                        success: function (data) {
+                            reloadTable({ Name: $("#Name").val() });
+                        }
+                    });
+                }
+            });
+        }
+    });
+</script>

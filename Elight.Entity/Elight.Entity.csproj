@@ -173,6 +173,7 @@
     <Compile Include="Sys\SysAnchorLiveRecordEntity.cs" />
     <Compile Include="Sys\SysAnchorWithdrawalRecordEntity.cs" />
     <Compile Include="Sys\SysCategoryEntity.cs" />
+    <Compile Include="Sys\SysConfigEntity.cs" />
     <Compile Include="Sys\SysIncomeEntity.cs" />
     <Compile Include="Sys\SysItem.cs" />
     <Compile Include="Sys\SysItemDetail.cs" />

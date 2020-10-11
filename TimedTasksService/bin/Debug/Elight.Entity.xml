@@ -854,6 +854,26 @@
             创建时间
             </summary>
         </member>
+        <member name="T:Elight.Entity.Sys.SysConfigEntity">
+            <summary>
+            主播基本信息
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysConfigEntity.id">
+            <summary>
+            主键ID
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysConfigEntity.name">
+            <summary>
+            key
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysConfigEntity.values">
+            <summary>
+            值
+            </summary>
+        </member>
         <member name="T:Elight.Entity.Sys.SysIncomeEntity">
             <summary>
             收益报表

@@ -1,4 +1,5 @@
-﻿using StackExchange.Redis;
+﻿using Elight.Utility.Log;
+using StackExchange.Redis;
 using System;
 using System.Collections.Concurrent;
 using System.Configuration;
@@ -57,18 +58,26 @@ namespace Anchor.StackExchange.Redis.Helper
 
         private static ConnectionMultiplexer GetManager(string connectionString = null)
         {
-            connectionString = connectionString ?? RedisConnectionString;
-            var connect = ConnectionMultiplexer.Connect(connectionString);
+            try
+            {
+                connectionString = connectionString ?? RedisConnectionString;
+                var connect = ConnectionMultiplexer.Connect(connectionString);
 
-            //注册如下事件
-            connect.ConnectionFailed += MuxerConnectionFailed;
-            connect.ConnectionRestored += MuxerConnectionRestored;
-            connect.ErrorMessage += MuxerErrorMessage;
-            connect.ConfigurationChanged += MuxerConfigurationChanged;
-            connect.HashSlotMoved += MuxerHashSlotMoved;
-            connect.InternalError += MuxerInternalError;
+                //注册如下事件
+                connect.ConnectionFailed += MuxerConnectionFailed;
+                connect.ConnectionRestored += MuxerConnectionRestored;
+                connect.ErrorMessage += MuxerErrorMessage;
+                connect.ConfigurationChanged += MuxerConfigurationChanged;
+                connect.HashSlotMoved += MuxerHashSlotMoved;
+                connect.InternalError += MuxerInternalError;
 
-            return connect;
+                return connect;
+            }
+            catch (Exception ex)
+            {
+                LogHelper.WriteLog("redis连接错误:" + ex.Message + ",详细信息:" + ex.StackTrace);
+                throw ex;
+            }
         }
 
         #region 事件

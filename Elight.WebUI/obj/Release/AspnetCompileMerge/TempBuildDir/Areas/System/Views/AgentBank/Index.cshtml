@@ -1,0 +1,182 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>代理银行卡</title>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Content/framework/css/console.css" rel="stylesheet" />
+    <link href="~/Content/framework/css/animate.css" rel="stylesheet" />
+    <script src="~/Content/jquery/jquery.min.js"></script>
+    <script src="~/Content/layui/layui.js"></script>
+    <script src="~/Content/framework/js/global.js"></script>
+</head>
+<body>
+    <div class="panel animated fadeIn">
+        <div class="panel-body">
+            <blockquote class="layui-elem-quote">
+                <div class="form-inline layui-form user-search">
+                    <div class="layui-inline">
+                        <div class="layui-input-block"  style="margin-left:5px">
+                            <input type="text" name="Name" placeholder="请输入经纪人账号" id="Name" autocomplete="off" class="layui-input" maxlength="25">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button class="layui-btn layuiadmin-btn-admin" lay-submit lay-filter="search" data-type="reload">
+                            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                        </button>
+                    </div>
+                </div>
+            </blockquote>
+            <table id="table" lay-filter="test"></table>
+        </div>
+    </div>
+</body>
+</html>
+@*工具栏模板：*@
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="add">添加</button>
+        <button class="layui-btn layui-btn-sm" lay-event="update">编辑</button>
+        <button class="layui-btn layui-btn-sm" lay-event="delete">删除</button>
+    </div>
+</script>
+<script type="text/javascript">
+    layui.use(['form', 'table'], function () {
+        var form = layui.form;
+        var table = layui.table;
+        function renderTable(where) {
+            table.render({
+                elem: '#table'
+                , method: "post"
+                , url: '/System/AgentBank/GetAgentBankPage' //数据接口
+                , toolbar: '#toolbar'
+                , page: true //开启分页
+                , checkbox: true
+                , where: where
+                , cols: [[ //表头
+                    { type: 'checkbox' }
+                    , { field: 'AgentName', title: '经纪人账号' }
+                    , { field: 'bankano', title: '支付账号' }
+                    , { field: 'CategoryCode', title: '支付名称' }
+                    , { field: 'address', title: '开户地址' }
+                    , { field: 'bankaccount', title: '开户人' }
+                    , {
+                        field: 'payType', title: '支付类型', templet: function (d) {
+                            if (d.payType == 1) {
+                                return "银行卡"
+                            } else if (d.payType == 2) {
+                                return "支付宝"
+                            } else {
+                                return "微信"
+                            }
+                        }
+                    }
+                    , { field: 'createtime', title: '创建时间' }
+                ]]
+                , request: {
+                    pageName: 'parm.page' //页码的参数名称，默认：page
+                    , limitName: 'parm.limit' //每页数据量的参数名，默认：limit
+                }
+                , limit: 10
+                , id: "report"
+            });
+        }
+        //监听搜索
+        form.on('submit(search)', function (data) {
+            reloadTable(data.field)
+        });
+        function getWhere() {
+            var Name = $("#Name").val();
+            return { "parm.where": JSON.stringify({ Name: Name }) };
+        }
+        function reloadTable(field) {
+            //执行重载
+            table.reload('report', {
+                page: {
+                    curr: 1
+                },
+                where: {
+                    "parm.where": JSON.stringify(field)
+                }
+            });
+        }
+
+        renderTable(getWhere());
+        //监听事件
+        table.on('toolbar(test)', function (obj) {
+            switch (obj.event) {
+                case 'add':
+                    btn_add();
+                    break;
+                case 'delete':
+                    btn_delete();
+                    break;
+                case 'update':
+                    btn_edit()
+                    break;
+            };
+        });
+        function btn_add() {
+            $.layerOpen({
+                id: "add",
+                title: "新增银行卡",
+                width: "700px",
+                height: "300px",
+                content: "/System/AgentBank/Form",
+                yes: function (iBody) {
+                    iBody.find('#btnSubmit').click();
+                    reloadTable({ Name: $("#Name").val() });
+                    //window.location.href = "/System/Shop/Index";
+                }
+            });
+        }
+
+        function btn_edit() {
+            var ids = table.checkStatus('report').data;
+            if (ids.length != 1) {
+                $.layerMsg("请勾选单条记录编辑。", "warning");
+                return;
+            }
+            $.layerOpen({
+                id: "edit",
+                title: "修改银行卡",
+                width: "700px",
+                height: "300px",
+                content: "/System/AgentBank/Form?primaryKey=" + ids[0].id,
+                yes: function (iBody) {
+                    iBody.find('#btnSubmit').click();
+                    reloadTable({ Name: $("#Name").val() });
+                }
+            });
+        }
+
+        function btn_delete() {
+            var ids = table.checkStatus('report').data;
+            if (ids.length < 1) {
+                $.layerMsg("请勾选需要删除的银行卡。", "warning");
+                return;
+            }
+            var result = [];
+            for (var i = 0; i < ids.length; i++) {
+                result.push(ids[i].id);
+            }
+            $.layerConfirm({
+                content: "您已选中" + ids.length + "条数据, 确定删除吗？",
+                callback: function () {
+                    $.formSubmit({
+                        url: '/System/AgentBank/Delete',
+                        data: { primaryKey: result.join() },
+                        success: function () {
+                            reloadTable({ Name: $("#Name").val() });
+                        }
+                    });
+                }
+            });
+        }
+    });
+</script>

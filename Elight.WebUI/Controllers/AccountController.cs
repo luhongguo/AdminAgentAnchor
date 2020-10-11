@@ -83,47 +83,55 @@ namespace Elight.WebUI.Controllers
         [HttpPost]
         public ActionResult Login(string userName, string password, string verifyCode)
         {
-            if (userName.IsNullOrEmpty() || password.IsNullOrEmpty() || verifyCode.IsNullOrEmpty())
+            try
             {
-                return Error("请求失败，缺少必要参数。");
+                if (userName.IsNullOrEmpty() || password.IsNullOrEmpty() || verifyCode.IsNullOrEmpty())
+                {
+                    return Error("请求失败，缺少必要参数。");
+                }
+                if (verifyCode.ToLower() != WebHelper.GetSession(Keys.SESSION_KEY_VCODE))
+                {
+                    return Warning("验证码错误，请重新输入。");
+                }
+                var userEntity = userlogic.GetByUserName(userName);
+                if (userEntity == null)
+                {
+                    return Warning("该账户不存在，请重新输入。");
+                }
+                if (userEntity.IsEnabled != "1")
+                {
+                    return Warning("该账户已被禁用，请联系管理员。");
+                }
+                var userLogOnEntity = userLogOnLogic.GetByAccount(userEntity.Id);
+                string inputPassword = password.DESEncrypt(userLogOnEntity.SecretKey).MD5Encrypt();
+                if (inputPassword != userLogOnEntity.Password)
+                {
+                    //LogHelper.Write(Level.Info, "系统登录", "密码错误", userEntity.Account, userEntity.RealName);
+                    logLogic.Write(Level.Info, "系统登录", "密码错误", "", userEntity.Account, userEntity.RealName);
+                    return Warning("密码错误，请重新输入。");
+                }
+                else
+                {
+                    Operator operatorModel = new Operator();
+                    operatorModel.UserId = userEntity.Id;
+                    operatorModel.Account = userEntity.Account;
+                    operatorModel.RealName = userEntity.RealName;
+                    operatorModel.Avatar = userEntity.Avatar;
+                    operatorModel.CompanyId = userEntity.CompanyId;
+                    //operatorModel.DepartmentId = userEntity.DepartmentId;
+                    operatorModel.LoginTime = DateTime.Now;
+                    operatorModel.Token = Guid.NewGuid().ToString().Replace("-", "").DESEncrypt();
+                    operatorModel.ShopID = userEntity.ShopID;
+                    OperatorProvider.Instance.Current = operatorModel;
+                    userLogOnLogic.UpdateLogin(userLogOnEntity);
+                    logLogic.Write(Level.Info, "系统登录", "登录成功", "", userEntity.Account, userEntity.RealName);
+                    return Success();
+                }
             }
-            if (verifyCode.ToLower() != WebHelper.GetSession(Keys.SESSION_KEY_VCODE))
+            catch (Exception ex)
             {
-                return Warning("验证码错误，请重新输入。");
-            }
-            var userEntity = userlogic.GetByUserName(userName);
-            if (userEntity == null)
-            {
-                return Warning("该账户不存在，请重新输入。");
-            }
-            if (userEntity.IsEnabled != "1")
-            {
-                return Warning("该账户已被禁用，请联系管理员。");
-            }
-            var userLogOnEntity = userLogOnLogic.GetByAccount(userEntity.Id);
-            string inputPassword = password.DESEncrypt(userLogOnEntity.SecretKey).MD5Encrypt();
-            if (inputPassword != userLogOnEntity.Password)
-            {
-                //LogHelper.Write(Level.Info, "系统登录", "密码错误", userEntity.Account, userEntity.RealName);
-                logLogic.Write(Level.Info, "系统登录", "密码错误","", userEntity.Account, userEntity.RealName);
-                return Warning("密码错误，请重新输入。");
-            }
-            else
-            {
-                Operator operatorModel = new Operator();
-                operatorModel.UserId = userEntity.Id;
-                operatorModel.Account = userEntity.Account;
-                operatorModel.RealName = userEntity.RealName;
-                operatorModel.Avatar = userEntity.Avatar;
-                operatorModel.CompanyId = userEntity.CompanyId;
-                //operatorModel.DepartmentId = userEntity.DepartmentId;
-                operatorModel.LoginTime = DateTime.Now;
-                operatorModel.Token = Guid.NewGuid().ToString().Replace("-", "").DESEncrypt();
-                operatorModel.ShopID = userEntity.ShopID;
-                OperatorProvider.Instance.Current = operatorModel;
-                userLogOnLogic.UpdateLogin(userLogOnEntity);
-                logLogic.Write(Level.Info, "系统登录", "登录成功","", userEntity.Account, userEntity.RealName);
-                return Success();
+                LogHelper.WriteLog(ex.Message + "---" + ex.StackTrace);
+                return Error();
             }
         }
 

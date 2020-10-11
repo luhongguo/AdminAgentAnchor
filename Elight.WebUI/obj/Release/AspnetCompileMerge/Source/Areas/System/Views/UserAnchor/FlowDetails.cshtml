@@ -20,12 +20,10 @@
             <blockquote class="layui-elem-quote">
                 <div class="form-inline layui-form user-search">
                     <div class="layui-inline">
-                        <label class="layui-form-label">主播昵称</label>
-                        <div class="layui-input-block">
-                            <select name="userName" id="UserNameReload" lay-filter="Level" lay-search>
-                            </select>
+                        <label class="layui-form-label">主播账号</label>
+                        <div class="layui-input-block" >
+                            <input type="text" name="userName" placeholder="请输入主播账号或昵称" id="userName" autocomplete="off" class="layui-input" maxlength="25">
                         </div>
-
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">开始时间</label>
@@ -46,17 +44,6 @@
                     </div>
                 </div>
             </blockquote>
-            <div id="toolbar" class="elight-table-toolbar">
-                <div class="layui-btn-group">
-
-                </div>
-                @*<button id="btnSearch" class="toolbar-search-button layui-btn layui-btn-normal layui-btn-small">
-                        <i class="layui-icon">&#xe615;</i>
-                    </button>
-                    <div class="toolbar-search-input">
-                        <input type="text" id="keyWord" placeholder="主播账号或昵称" autocomplete="off" class="layui-input" style="height:39px">
-                    </div>*@
-            </div>
             <table id="table" lay-filter="table"></table>
         </div>
     </div>
@@ -79,24 +66,22 @@
             , type: 'datetime'
             , value: getNowFormatDate("data", 1) + " 00:00:00"
         });
-
-        $.ajax({
-            url: "/System/UserAnchor/AnchorUserNameSelect",
-            type: "get",
-            success: function (data) {
-                if (data == "[]") {
-                    return layer.msg("没有主播，请联系管理员添加！");
-                }
-                var $html = "";
-                $.each(eval("(" + data + ")"), function (i, v) {
-                    $html += "<option value='" + v.userName + "'>" + v.nickName + "</option>";
-                })
-                $("select[name='userName']").append($html);
-                //append后必须从新渲染
-                form.render('select');
-                renderTable(getWhere());
-            }
-        }, 'json');
+        //$.ajax({
+        //    url: "/System/UserAnchor/AnchorUserNameSelect",
+        //    type: "get",
+        //    success: function (data) {
+        //        if (data == "[]") {
+        //            return layer.msg("没有主播，请联系管理员添加！");
+        //        }
+        //        var $html = "";
+        //        $.each(eval("(" + data + ")"), function (i, v) {
+        //            $html += "<option value='" + v.userName + "'>" + v.nickName + "</option>";
+        //        })
+        //        $("select[name='userName']").append($html);
+        //        //append后必须从新渲染
+        //        form.render('select');
+        //    }
+        //}, 'json');
         function renderTable(where) {
             table.render({
                 elem: '#table'
@@ -106,31 +91,28 @@
                 , totalRow: true //开启合计
                 , where: where
                 , cols: [[ //表头
-                    { field: 'orderno', title: '订单号', totalRowText:'合计：'}
+                    { field: 'AnchorName', title: '主播账号', totalRowText: '合计：' }
+                    , { field: 'AnchorNickName', title: '主播昵称' }
+                    , { field: 'orderno', title: '订单号' }
                     , { field: 'giftname', title: '礼物名称' }
                     //, { field: 'gift', title: '礼物类型' }
                     , { field: 'price', title: '单价' }
                     , { field: 'quantity', title: '数量' }
                     , {
-                        field: 'ratio', title: '比率', templet: function (d) {
-                            return d.ratio + "%";
+                        field: 'Type', title: '收益类型', templet: function (d) {
+                            if (d.Type == 1) {
+                                return '<span class="layui-badge layui-bg-green">打赏礼物</span>'
+                            } else if (d.Type == 2) {
+                                return '<span class="layui-badge layui-bg-orange">房间扣费</span>'
+                            } else {
+                                return ' <span class="layui-badge">计时扣费</span>'
+                            }
                         }
                     }
                     , { field: 'totalamount', title: '总金额', totalRow: true }
                     , { field: 'username', title: '打赏人' }
                     , { field: 'sendtime', title: '打赏时间' }
                 ]]
-                //, parseData: function (res) { //res 即为原始返回的数据
-                //    return {
-                //        "code": res.status, //解析接口状态
-                //        "msg": res.msg, //解析提示文本
-                //        "count": res.data.total, //解析数据长度
-                //        "data": res.data.items //解析数据列表
-                //    };
-                //}
-                //, response: {
-                //    statusCode: "success"
-                //}
                 , request: {
                     pageName: 'parm.page' //页码的参数名称，默认：page
                     , limitName: 'parm.limit' //每页数据量的参数名，默认：limit
@@ -139,16 +121,10 @@
                 , id: "report"
             });
         }
+        renderTable(getWhere());
         //监听搜索
         form.on('submit(search)', function (data) {
             reloadTable(data.field)
-        });
-        //监听下拉框的搜索
-        form.on('select(Level)', function (data) {
-            var startTime = $("#startTimeReload").val();
-            var endTime = $("#endTimeReload").val();
-            var obj = { userName: data.value, startTime: startTime, endTime: endTime }
-            reloadTable(obj);
         });
         function getWhere() {
             var userName = $("#UserNameReload").val()
@@ -160,9 +136,6 @@
             //}
         }
         function reloadTable(field) {
-            if (field.userName == "") {
-                return layer.msg("没有主播，请联系管理员添加！");
-            }
             if (field.endTime != "" && field.startTime == "") {
                 return layer.msg("开始时间不能为空");
             }

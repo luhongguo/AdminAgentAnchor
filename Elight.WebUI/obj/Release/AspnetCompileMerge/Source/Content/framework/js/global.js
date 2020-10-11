@@ -244,6 +244,7 @@ $.fn.bindChangeEvent = function ($event) {
             $toolbar.css('height', '50px');
         }
     }
+   
 
 /**
  * 获取数据表格选中行主键值。
@@ -364,18 +365,26 @@ $.formSubmit = function (options) {
         async: options.async,
         dataType: "json",
         success: function (data) {
-            if (options.success && $.isFunction(options.success)) {
-                options.success(data);
-            }
-            if (options.close) {
-                $.layerClose();
-            }
-            if (options.shoQingDaig) {
+            if (data.state == 1) {//1成功
+                if (options.success && $.isFunction(options.success)) {
+                    options.success(data);
+                }
+                if (options.close) {
+                    $.layerClose();
+                }
+                if (options.shoQingDaig) {
+                    $.layerMsg(data.message, data.state);
+                }
+            } else {
                 $.layerMsg(data.message, data.state);
             }
         },
         error: function (xhr, status, error) {
-            $.layerMsg(error, "error");
+            if (xhr.status == 200 && xhr.statusText == "OK" && xhr.responseText.indexOf("对不起，您没有权限访问当前页面。") > 0) {//ajax请求无权限判断
+                alert("对不起，您没有权限操作")
+            } else {
+                $.layerMsg(error, "error");
+            }
         },
         beforeSend: function () {
 

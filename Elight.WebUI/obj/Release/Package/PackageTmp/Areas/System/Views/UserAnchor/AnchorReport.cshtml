@@ -22,23 +22,16 @@
         <div class="panel-body">
             <blockquote class="layui-elem-quote">
                 <div class="form-inline layui-form user-search">
-                    <div class="layui-inline" id="isColletDiv">
-                        <label class="layui-form-label">主播来源</label>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">主播账号</label>
                         <div class="layui-input-block">
-                            <select name="isCollet" id="isCollet" lay-filter="Level" lay-search>
-                                <option value="-1" selected>全部</option>
-                                <option value="0">非采集</option>
-                                <option value="1">采集</option>
-                            </select>
+                            <input type="text" name="Name" placeholder="请输入主播账号或昵称" id="Name" autocomplete="off" class="layui-input" maxlength="25">
                         </div>
                     </div>
-                    <div class="layui-inline" id="isColletCodeDiv">
+                    <div class="layui-inline">
                         <label class="layui-form-label">采集公司</label>
-                        <div class="layui-input-block">
-                            <select name="isColletCode" id="isColletCode" lay-filter="Level" lay-search>
-                                <option value="-1" selected>全部</option>
-                                <option value="_LY1">_LY1</option>
-                            </select>
+                        <div class="layui-input-inline">
+                            <input type="text" name="isColletCode" placeholder="请输入采集公司名称" id="isColletCode" autocomplete="off" class="layui-input" maxlength="25">
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -51,11 +44,6 @@
                         <label class="layui-form-label">结束时间</label>
                         <div class="layui-input-inline">
                             <input type="text" class="layui-input" id="endTimeReload" name="endTime" placeholder="">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <div class="layui-input-block">
-                            <input type="text" name="Name" placeholder="请输入主播账号或昵称" id="Name" autocomplete="off" class="layui-input" maxlength="25">
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -87,12 +75,6 @@
             , type: 'datetime'
             , value: getNowFormatDate("data", 1) + " 00:00:00"
         });
-        var type = @ViewData["type"];
-    //判断是否是管理员 不是就隐藏
-        if (type != 1) {
-            $("#isColletDiv").hide();
-            $("#isColletCodeDiv").hide()
-        } 
         function renderTable(where) {
             table.render({
                 elem: '#table'
@@ -108,16 +90,7 @@
                     , { field: 'tip_income', title: '打赏收益', totalRow: true }
                     , { field: 'hour_income', title: '工时收益', totalRow: true }
                     , { field: 'agent_income', title: '代理收益', totalRow: true }
-                    , { field: 'test_income', title: '代理收益', totalRow: true }
-                    , {
-                        field: 'isCollet', title: '是否采集', templet: function (d) {
-                            if (d.isCollet == "1") {
-                                return '<span class="label label-success label-sm">是</span>'
-                            } else {
-                                return '<span class="label label-dark label-sm">否</span>'
-                            }
-                        }
-                    }
+                    , { field: 'Platform_income', title: '平台收益', totalRow: true }
                 ]]
                 , request: {
                     pageName: 'parm.page' //页码的参数名称，默认：page
@@ -161,7 +134,9 @@
         function getWhere() {
             var startTime = $("#startTimeReload").val();
             var endTime = $("#endTimeReload").val();
-            return { "parm.where": JSON.stringify({ startTime: startTime, endTime: endTime }) };
+            var Name = $("#Name").val();
+            var isColletCode = $("#isColletCode").val();
+            return { "parm.where": JSON.stringify({ startTime: startTime, endTime: endTime, Name: Name, isColletCode: isColletCode }) };
         }
         renderTable(getWhere());
     });

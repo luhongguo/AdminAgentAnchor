@@ -1,0 +1,62 @@
+﻿@{
+    ViewBag.Title = "发起提现";
+    Layout = "~/Views/Shared/_Form.cshtml";
+}
+<form id="form" class="layui-form" style="margin-top: 25px">
+    @Html.AntiForgeryToken()
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <input type="hidden" name="id" />
+            <label class="layui-form-label">单选框</label>
+            <div class="layui-input-block">
+                <input type="radio" name="Status" value="1" title="成功" checked="">
+                <input type="radio" name="Status" value="2" title="驳回">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label label-required">提现金额</label>
+            <div class="layui-input-inline">
+                <input type="number" name="WithdrawalAmount" lay-verify="required" placeholder="请输入提现金额" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-form-item">
+            <label class="layui-form-label">反馈信息</label>
+            <div class="layui-input-block" style="width: 200px;">
+                <textarea name="Feedback" placeholder="请输入内容" class="layui-textarea"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item" style="display: none">
+        <div class="layui-input-inline">
+            <button id="btnSubmit" class="layui-btn" lay-submit lay-filter="add">提交</button>
+        </div>
+    </div>
+</form>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        var primaryKey = $.getQueryString("primaryKey");
+        if (primaryKey) {
+            $.ajax({
+                url: "/System/AgentWithdrawalRecord/GetForm",
+                data: { primaryKey: primaryKey },
+                type: "post",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    $("#form").formSerialize(data);
+                }
+            });
+        }
+        form.render();
+        form.on('submit(add)', function (data) {
+            $.formSubmit({
+                url: "/System/AgentWithdrawalRecord/Handle",
+                data: data.field
+            });
+            return false;
+        });
+    });
+</script>

@@ -85,3 +85,7 @@ E:\工作项目\AdminAgentAnchorSolution\TimedTasksService\obj\Debug\TimedTasksS
 E:\工作项目\AdminAgentAnchorSolution\TimedTasksService\obj\Debug\TimedTasksService.pdb
 E:\工作项目\AdminAgentAnchorSolution\TimedTasksService\bin\Debug\System.Diagnostics.PerformanceCounter.dll
 E:\工作项目\AdminAgentAnchorSolution\TimedTasksService\bin\Debug\System.Diagnostics.PerformanceCounter.xml
+E:\工作项目\AdminAgentAnchorSolution\TimedTasksService\bin\Debug\TimedTasksService.exe.manifest
+E:\工作项目\AdminAgentAnchorSolution\TimedTasksService\bin\Debug\TimedTasksService.application
+E:\工作项目\AdminAgentAnchorSolution\TimedTasksService\obj\Debug\TimedTasksService.exe.manifest
+E:\工作项目\AdminAgentAnchorSolution\TimedTasksService\obj\Debug\TimedTasksService.application

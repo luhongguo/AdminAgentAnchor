@@ -12,6 +12,7 @@ using Elight.Utility.ResponseModels;
 using Elight.Utility.Format;
 using Elight.Utility.Extension;
 using Elight.Utility.Operator;
+using Elight.Utility.Log;
 
 namespace Elight.WebUI.Areas.System.Controllers
 {
@@ -61,28 +62,36 @@ namespace Elight.WebUI.Areas.System.Controllers
         [HttpPost, AuthorizeChecked, ValidateAntiForgeryToken]
         public ActionResult Form(SysUser model, string password, string roleIds)
         {
-            if (model.Id.IsNullOrEmpty())
+            try
             {
-                var userEntity = userLogic.CheckUserName(model.Account);
-                if (userEntity != null)
+                if (model.Id.IsNullOrEmpty())
                 {
-                    return Error("已存在当前用户名，请重新输入");
+                    var userEntity = userLogic.CheckUserName(model.Account);
+                    if (userEntity != null)
+                    {
+                        return Error("已存在当前用户名，请重新输入");
+                    }
+                    DateTime defaultDt = DateTime.Today;
+                    DateTime.TryParse(model.StrBirthday + " 00:00:00", out defaultDt);
+                    model.Birthday = defaultDt;
+                    int row = userLogic.Insert(model, password, roleIds.ToStrArray());
+                    return row > 0 ? Success() : Error();
                 }
-                DateTime defaultDt = DateTime.Today;
-                DateTime.TryParse(model.StrBirthday + " 00:00:00", out defaultDt);
-                model.Birthday = defaultDt;
-                int row = userLogic.Insert(model, password, roleIds.ToStrArray());
-                return row > 0 ? Success() : Error();
+                else
+                {
+                    DateTime defaultDt = DateTime.Today;
+                    DateTime.TryParse(model.StrBirthday + " 00:00:00", out defaultDt);
+                    model.Birthday = defaultDt;
+                    //更新用户基本信息。
+                    int row = userLogic.UpdateAndSetRole(model, password, roleIds.ToStrArray());
+                    //更新用户角色信息。
+                    return row > 0 ? Success() : Error();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                DateTime defaultDt = DateTime.Today;
-                DateTime.TryParse(model.StrBirthday + " 00:00:00", out defaultDt);
-                model.Birthday = defaultDt;
-                //更新用户基本信息。
-                int row = userLogic.UpdateAndSetRole(model, password, roleIds.ToStrArray());
-                //更新用户角色信息。
-                return row > 0 ? Success() : Error();
+                LogHelper.WriteLog(ex.Message + "---" + ex.StackTrace);
+                return Error();
             }
         }
 

@@ -88,10 +88,15 @@
     <Compile Include="Helper\RedisHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Elight.Utility\Elight.Utility.csproj">
+      <Project>{8bc219d9-cf88-4397-8c71-b696519118df}</Project>
+      <Name>Elight.Utility</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
