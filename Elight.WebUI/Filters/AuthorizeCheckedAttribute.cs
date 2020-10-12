@@ -26,7 +26,6 @@ namespace Elight.WebUI.Filters
 
         public override void OnAuthorization(AuthorizationContext filterContext)
         {
-            SysPermissionLogic logic = new SysPermissionLogic();
             if (Ignore)
             {
                 return;
@@ -42,6 +41,7 @@ namespace Elight.WebUI.Filters
                 }
                 else
                 {
+                    SysPermissionLogic logic = new SysPermissionLogic();
                     var action = HttpContext.Current.Request.ServerVariables["SCRIPT_NAME"].ToString();
                     bool hasPermission = logic.ActionValidate(current.UserId, action);
                     if (!hasPermission)

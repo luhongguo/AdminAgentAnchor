@@ -66,7 +66,7 @@ namespace TimedTasksService
                     if (list.Count == 0)
                     {
                         //将查询的结束时间写入 
-                        db.Updateable<SysConfigEntity>().SetColumns(it => new SysConfigEntity { values = time.ToString() }).Where(it => it.name == key);
+                        db.Updateable<SysConfigEntity>().SetColumns(it => new SysConfigEntity { values = time.ToString("yyyy-MM-dd HH:mm:ss") }).Where(it => it.name == key).ExecuteCommand();
                         Console.WriteLine("统计代理的礼物收益：统计开始时间--" + startTime + ",统计结束时间：--" + time + "，统计数据+" + list.Count);
                         return;
                     }
@@ -138,7 +138,7 @@ namespace TimedTasksService
                     //    .Where(it => list.Select(gt => gt.orderno).Contains(it.orderno)).ExecuteCommand();
                     db.Ado.CommitTran();
                     //将查询数据的最大时间写入
-                    db.Updateable<SysConfigEntity>().SetColumns(it => new SysConfigEntity { values = maxSendTime.ToString() }).Where(it => it.name == key);
+                    db.Updateable<SysConfigEntity>().SetColumns(it => new SysConfigEntity { values = maxSendTime.ToString("yyyy-MM-dd HH:mm:ss") }).Where(it => it.name == key).ExecuteCommand();
                     Console.WriteLine("统计代理的礼物收益：统计开始时间--" + startTime + ",统计结束时间：--" + time + "，统计数据+" + list.Count);
                 }
                 catch (Exception ex)
@@ -180,7 +180,7 @@ namespace TimedTasksService
                 //将最后获取到的最大时间写入
                 using (var db = sugarClient.GetInstance())
                 {
-                    db.Updateable<SysConfigEntity>().SetColumns(it => new SysConfigEntity { values = endTime.ToString() }).Where(it => it.name == key);
+                    db.Updateable<SysConfigEntity>().SetColumns(it => new SysConfigEntity { values = endTime.ToString("yyyy-MM-dd HH:mm:ss") }).Where(it => it.name == key).ExecuteCommand();
                 }
                 Console.WriteLine("打赏礼物采集成功:采集开始时间--" + startTime + "，采集礼物最大时间--" + endTime);
             }
@@ -212,7 +212,7 @@ namespace TimedTasksService
                                  company = p["company"].ToString(),
                                  liveId = p["liveId"].ToString(),//推流时间戳
                                  aid = int.Parse(p["anchorId"].ToString()),//主播ID
-                                 amount = decimal.Parse(p["amount"].ToString()),
+                                 amount = decimal.Parse(p["amount"].ToString()) ,//总金额
                                  num = int.Parse(p["number"].ToString()),//礼物数量
                                  Type = int.Parse(p["actionType"].ToString()),//1是打赏，2是房间,3计时
                                  code = p["code"].ToString(),//礼物编码
@@ -222,6 +222,7 @@ namespace TimedTasksService
                     //最大时间
                     maxDateTime = q.Max(p => p.orderCreateTime);
                     string giftName = string.Empty;
+                    decimal? price = 0;
                     List<TipEntity> addList = new List<TipEntity>();
                     List<string> ordernoList = new List<string>();//订单号集合
                     foreach (var item in q)
@@ -235,9 +236,15 @@ namespace TimedTasksService
                                 };
 
                         if (g != null && g.Count() > 0)
+                        {
                             giftName = g.FirstOrDefault().codeName;
+                            price = g.FirstOrDefault().price;
+                        }
                         else
+                        {
                             giftName = item.code;
+                            price = item.amount / item.num;
+                        }
                         TipEntity model = new TipEntity();
                         model.AnchorID = item.aid;
                         model.isconfirm = 1;
@@ -251,11 +258,11 @@ namespace TimedTasksService
                         model.giftname = giftName;
                         model.istest = 0;
                         model.orderno = item.orderId;
-                        model.price = item.amount;
+                        model.price = price;
                         model.quantity = item.num;
                         model.sendtime = item.orderCreateTime;
                         model.confirmtime = item.orderCreateTime;
-                        model.totalamount = (decimal)(item.num * item.amount);// * (model.ratio / (decimal)100.0); 暂时没有 比率
+                        model.totalamount = item.amount;// * (model.ratio / (decimal)100.0); 暂时没有 比率
                         model.Type = item.Type;
                         model.liveId = item.liveId;
                         //添加到集合

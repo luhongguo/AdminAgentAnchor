@@ -49,7 +49,7 @@ namespace Elight.Logic.Sys
                                     anchorName = it.anchorName,
                                     nickName = it.nickName,
                                     headUrl = SqlFunc.IIF(it.headUrl.Contains("http"), it.headUrl, Image_CDN + it.headUrl),
-                                    balance = st.agentGold,
+                                    balance = st.agentGold / 10,
                                     follow = st.follow,
                                     birthday = it.birthday,
                                     status = st.status,
@@ -248,15 +248,18 @@ namespace Elight.Logic.Sys
                           .Where((it, st) => it.opdate >= Convert.ToDateTime(dic["startTime"]) && it.opdate < Convert.ToDateTime(dic["endTime"]))
                           .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (it, st) => st.anchorName.Contains(dic["Name"].ToString()) || st.nickName.Contains(dic["Name"].ToString()))
                            .WhereIF(dic.ContainsKey("isColletCode") && !string.IsNullOrEmpty(dic["isColletCode"].ToString()), (it, st, at) => st.isColletCode == dic["isColletCode"].ToString())
-                          .WithCache(60);
+                          ;
                     sumModel = query.Clone().Select((it, st, at) => new IncomeTemplateModel
                     {
                         tip_income = SqlFunc.AggregateSum(it.tip_income),
                         agent_income = SqlFunc.AggregateSum(it.agent_income),
                         hour_income = SqlFunc.AggregateSum(it.hour_income),
                         Platform_income = SqlFunc.AggregateSum(it.Platform_income),
-                        Balance = SqlFunc.AggregateSum(at.agentGold)
                     }).First();
+                    if (sumModel == null)
+                    {
+                        sumModel = new IncomeTemplateModel();
+                    }
                     res = query.GroupBy((it, st, at) => new { it.AnchorID, st.anchorName, st.nickName, at.agentGold })
                           .Select((it, st, at) => new IncomeTemplateModel
                           {
@@ -374,6 +377,7 @@ namespace Elight.Logic.Sys
                     var query = db.Queryable<TipEntity, SysAnchor>((it, st) => new object[] { JoinType.Left, it.AnchorID == st.id })
                           .Where(it => it.sendtime >= Convert.ToDateTime(dic["startTime"]) && it.sendtime < Convert.ToDateTime(dic["endTime"]))
                           .WhereIF(dic.ContainsKey("userName") && !string.IsNullOrEmpty(dic["userName"].ToString()), (it, st) => st.anchorName.Contains(dic["userName"].ToString()) || st.nickName.Contains(dic["userName"].ToString()))
+                          .WhereIF(dic.ContainsKey("RewardName") && !string.IsNullOrEmpty(dic["RewardName"].ToString()), (it, st) => it.username.Contains(dic["RewardName"].ToString()) || it.userNickname.Contains(dic["RewardName"].ToString()))
                           .WithCache(60);
                     sumTotalAmount = query.Clone().Sum(it => it.totalamount);
                     res = query
@@ -388,7 +392,8 @@ namespace Elight.Logic.Sys
                               username = it.username,
                               sendtime = it.sendtime,
                               AnchorName = st.anchorName,
-                              AnchorNickName = st.nickName
+                              AnchorNickName = st.nickName,
+                              userNickname = it.userNickname
                           })
                          .OrderBy(" it.sendtime desc")
                          .ToPageList(parm.page, parm.limit, ref totalCount);

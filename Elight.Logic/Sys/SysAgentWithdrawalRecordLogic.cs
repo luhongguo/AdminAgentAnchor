@@ -57,7 +57,8 @@ namespace Elight.Logic.Sys
                             ModifiedTime = it.ModifiedTime,
                             ModifiedBy = it.ModifiedBy
                         })
-                                    .ToPageList(parm.page, parm.limit, ref totalCount);
+                        .OrderBy(" it.Status desc")
+                        .ToPageList(parm.page, parm.limit, ref totalCount);
                 }
             }
             catch (Exception ex)
@@ -81,6 +82,7 @@ namespace Elight.Logic.Sys
                     model.createTime = DateTime.Now;
                     model.ModifiedTime = DateTime.Now;
                     model.Remark = model.Remark;
+                    model.WithdrawalAmount = Math.Truncate(model.WithdrawalAmount * 100) / 100;
                     return db.Insertable(model).ExecuteReturnIdentity();
                 }
             }
@@ -134,7 +136,7 @@ namespace Elight.Logic.Sys
                         ModifiedTime = DateTime.Now
                     }).Where(it => it.id == model.id).ExecuteCommand();
                     //更新用户余额
-                    db.Updateable<SysUser>().SetColumns(it => new SysUser { Balance = agentModel.Balance - model.WithdrawalAmount }).Where(it => it.Id == agentModel.Id).ExecuteCommand();
+                    db.Updateable<SysUser>().SetColumns(it => new SysUser { Balance = agentModel.Balance - model.WithdrawalAmount*10 }).Where(it => it.Id == agentModel.Id).ExecuteCommand();
                     db.Ado.CommitTran();
                 }
                 catch (Exception ex)

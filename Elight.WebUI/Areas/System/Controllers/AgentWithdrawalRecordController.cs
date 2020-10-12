@@ -53,6 +53,15 @@ namespace Elight.WebUI.Areas.System.Controllers
         [HttpPost, AuthorizeChecked, ValidateAntiForgeryToken]
         public ActionResult Form(SysAgentWithdrawalRecordEntity model)
         {
+            var agentModel = new SysUserLogic().GetUserByID(model.AgentID);
+            if (agentModel == null)
+            {
+                return Error("经纪人不存在!");
+            }
+            if (agentModel.Balance/10 < model.WithdrawalAmount)
+            {
+                return Error("提现金额不可大于余额!可提现余额：" + agentModel.Balance / 10);
+            }
             int row = sysAgentWithdrawalRecordLogic.Insert(model);
             return row > 0 ? Success() : Error();
         }
@@ -102,9 +111,13 @@ namespace Elight.WebUI.Areas.System.Controllers
                     return Error("提现金额需要大于0!");
                 }
                 var agentModel = new SysUserLogic().GetUserByID(withModel.AgentID);
-                if (agentModel.Balance < model.WithdrawalAmount)
+                if (agentModel==null)
                 {
-                    return Error("提现金额不可大于余额!可提现余额：" + agentModel.Balance);
+                    return Error("经纪人不存在!");
+                }
+                if (agentModel.Balance/10 < model.WithdrawalAmount)
+                {
+                    return Error("提现金额不可大于余额!可提现余额：" + agentModel.Balance/10);
                 }
                 row = sysAgentWithdrawalRecordLogic.Update(model, agentModel);
             }

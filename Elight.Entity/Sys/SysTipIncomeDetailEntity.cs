@@ -66,5 +66,6 @@ namespace Elight.Entity.Sys
         /// 是否有效（0否，1是）
         /// </summary>
         public byte status { get; set; }
+       
     }
 }

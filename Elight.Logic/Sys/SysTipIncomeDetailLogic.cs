@@ -68,8 +68,10 @@ namespace Elight.Logic.Sys
                              price = dt.price,
                              quantity = dt.quantity,
                              totalamount = dt.totalamount,
-                             sendtime = dt.sendtime
+                             sendtime = dt.sendtime,
+                             Type=dt.Type
                          }).WithCache(60)
+                         .OrderBy(" dt.sendtime desc")
                         .ToPageList(parm.page, parm.limit, ref totalCount);
                 }
             }

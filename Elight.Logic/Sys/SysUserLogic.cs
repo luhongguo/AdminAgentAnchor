@@ -254,7 +254,7 @@ namespace Elight.Logic.Sys
                              Avatar = A.Avatar,
                              IsEnabled = A.IsEnabled,
                              ShopName = B.Name,
-                             Balance = A.Balance
+                             Balance = A.Balance/10
                          }).ToPageList(pageIndex, pageSize, ref totalCount);
             }
         }

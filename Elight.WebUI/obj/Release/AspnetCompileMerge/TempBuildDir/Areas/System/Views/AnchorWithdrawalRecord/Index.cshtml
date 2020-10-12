@@ -132,12 +132,12 @@
                     , {
                         field: 'Status', title: '提现状态', templet: function (d) {
                             if (d.Status == 3) {
-                                return "待处理";
+                                   return '<span class="layui-badge layui-bg-green">待处理</span>'
                             }
                             else if (d.Status == 1) {
-                                return "成功";
+                                return '<span class="layui-badge layui-bg-blue">成功</span>';
                             } else {
-                                return "驳回";
+                                return '<span class="layui-badge">驳回</span>';
                             }
                         }
                     }

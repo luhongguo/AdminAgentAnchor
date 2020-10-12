@@ -79,5 +79,9 @@ namespace Elight.Entity.Model
         ///// 打赏人
         ///// </summary>
         //public string Rewarder { get; set; }
+        /// <summary>
+        /// 类型1打赏礼物 2;房间扣费 ,3:计时扣费
+        /// </summary>
+        public int Type { get; set; }
     }
 }

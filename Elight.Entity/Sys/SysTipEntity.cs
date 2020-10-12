@@ -74,6 +74,10 @@ namespace Elight.Entity.Sys
         /// </summary>
         public string username { get; set; }
         /// <summary>
+        /// 打赏人昵称
+        /// </summary>
+        public string userNickname { get; set; }
+        /// <summary>
         /// 比率
         /// </summary>
         public int ratio { get; set; }

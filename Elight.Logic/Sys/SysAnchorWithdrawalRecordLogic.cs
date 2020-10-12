@@ -58,7 +58,8 @@ namespace Elight.Logic.Sys
                             ModifiedTime = it.ModifiedTime,
                             ModifiedBy = it.ModifiedBy
                         })
-                         .ToPageList(parm.page, parm.limit, ref totalCount);
+                        .OrderBy(" it.Status desc")
+                        .ToPageList(parm.page, parm.limit, ref totalCount);
                 }
             }
             catch (Exception ex)
@@ -82,6 +83,7 @@ namespace Elight.Logic.Sys
                     model.createTime = DateTime.Now;
                     model.ModifiedTime = DateTime.Now;
                     model.Remark = model.Remark;
+                    model.WithdrawalAmount = Math.Truncate(model.WithdrawalAmount * 100) / 100;
                     return db.Insertable(model).ExecuteReturnIdentity();
                 }
             }
@@ -135,7 +137,7 @@ namespace Elight.Logic.Sys
                         ModifiedTime = DateTime.Now
                     }).Where(it => it.id == model.id).ExecuteCommand();
                     //更新主播余额
-                    db.Updateable<SysAnchorInfoEntity>().SetColumns(it => new SysAnchorInfoEntity { agentGold = agentModel.agentGold - model.WithdrawalAmount }).Where(it => it.aid == agentModel.aid).ExecuteCommand();
+                    db.Updateable<SysAnchorInfoEntity>().SetColumns(it => new SysAnchorInfoEntity { agentGold = agentModel.agentGold - model.WithdrawalAmount*10 }).Where(it => it.aid == agentModel.aid).ExecuteCommand();
                     db.Ado.CommitTran();
                 }
                 catch (Exception ex)

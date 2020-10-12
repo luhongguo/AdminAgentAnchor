@@ -244,6 +244,11 @@
             打赏时间
             </summary>
         </member>
+        <member name="P:Elight.Entity.Model.TipIncomeDetailModel.Type">
+            <summary>
+            类型1打赏礼物 2;房间扣费 ,3:计时扣费
+            </summary>
+        </member>
         <member name="T:Elight.Entity.Model.TipTemplateModel">
             <summary>
             打赏类
@@ -1132,6 +1137,11 @@
         <member name="P:Elight.Entity.Sys.TipEntity.username">
             <summary>
             打赏人
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.TipEntity.userNickname">
+            <summary>
+            打赏人昵称
             </summary>
         </member>
         <member name="P:Elight.Entity.Sys.TipEntity.ratio">

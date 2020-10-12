@@ -58,6 +58,8 @@ E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\Elight.Logic.pdb
 E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\Elight.Logic.dll.config
 E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\Elight.Utility.pdb
 E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\Elight.Utility.dll.config
+E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\TimedTasksService.pdb
+E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\TimedTasksService.exe.config
 E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.xml
 E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml
 E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\StackExchange.Redis.xml
@@ -81,6 +83,7 @@ E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\ServiceStack.Text.xm
 E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\ServiceStack.Common.xml
 E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\Microsoft.Extensions.Logging.Abstractions.xml
 E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\System.Diagnostics.DiagnosticSource.xml
+E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\System.Numerics.Vectors.xml
 E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\Google.Protobuf.pdb
 E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\Google.Protobuf.xml
@@ -93,6 +96,3 @@ E:\工作项目\AdminAgentAnchorSolution\UnitTest\obj\Debug\UnitTest.csproj.Core
 E:\工作项目\AdminAgentAnchorSolution\UnitTest\obj\Debug\UnitTest.csproj.CopyComplete
 E:\工作项目\AdminAgentAnchorSolution\UnitTest\obj\Debug\UnitTest.dll
 E:\工作项目\AdminAgentAnchorSolution\UnitTest\obj\Debug\UnitTest.pdb
-E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\System.Numerics.Vectors.xml
-E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\TimedTasksService.pdb
-E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\TimedTasksService.exe.config

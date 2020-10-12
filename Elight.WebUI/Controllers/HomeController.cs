@@ -23,7 +23,6 @@ namespace QingDai.WebUI.Controllers
         private SysItemsDetailLogic itemDetailLogic;
         private SysUserLogOnLogic userLogOnLogic;
         private SysPermissionLogic permissionLogic;
-
         public HomeController()
         {
             userLogic = new SysUserLogic();
@@ -58,7 +57,7 @@ namespace QingDai.WebUI.Controllers
         /// </summary>
         /// <returns></returns>
         [Route("Home/Default")]
-        [HttpGet]
+        [HttpGet, LoginChecked]
         public ActionResult Default()
         {
             return View();
@@ -69,7 +68,7 @@ namespace QingDai.WebUI.Controllers
         /// </summary>
         /// <returns></returns>
         [Route("Home/GetLeftMenu")]
-        [HttpPost]
+        [HttpPost, LoginChecked]
         public ActionResult GetLeftMenu()
         {
             string userId = OperatorProvider.Instance.Current.UserId;
@@ -95,7 +94,7 @@ namespace QingDai.WebUI.Controllers
         /// </summary>
         /// <returns></returns>
         [Route("Home/GetPermission")]
-        [HttpPost]
+        [HttpPost, LoginChecked]
         public ActionResult GetPermission()
         {
             var userId = OperatorProvider.Instance.Current.UserId;

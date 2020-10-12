@@ -94,10 +94,10 @@
                     { field: 'AnchorName', title: '主播账号', totalRowText: '合计：' }
                     , { field: 'AnchorNickName', title: '主播昵称' }
                     , { field: 'orderno', title: '订单号' }
-                    , { field: 'giftname', title: '礼物名称' }
-                    //, { field: 'gift', title: '礼物类型' }
-                    , { field: 'price', title: '单价' }
+                    , { field: 'price', title: '单价(花币)' }
                     , { field: 'quantity', title: '数量' }
+                    , { field: 'totalamount', title: '总金额(花币)', totalRow: true }
+                    , { field: 'giftname', title: '礼物名称' }
                     , {
                         field: 'Type', title: '收益类型', templet: function (d) {
                             if (d.Type == 1) {
@@ -109,7 +109,6 @@
                             }
                         }
                     }
-                    , { field: 'totalamount', title: '总金额', totalRow: true }
                     , { field: 'username', title: '打赏人' }
                     , { field: 'sendtime', title: '打赏时间' }
                 ]]
