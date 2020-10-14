@@ -180,7 +180,12 @@ namespace Elight.WebUI.Areas.System.Controllers
         [HttpPost]
         public ActionResult addShopAnchor(string idList, int userID)
         {
-            var result = sysShopLogic.AddShopAnchor(idList.ToStrArray(), userID);
+            var agentUser = new SysUserLogic().GetUserByShopID(userID);
+            if (agentUser == null)
+            {
+                return Error("商户没有经纪人，请先添加经纪人!");
+            }
+            var result = sysShopLogic.AddShopAnchor(idList.ToStrArray(), userID, agentUser);
             if (result)
             {
                 return Success();

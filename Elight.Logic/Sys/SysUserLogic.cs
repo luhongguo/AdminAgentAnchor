@@ -184,6 +184,18 @@ namespace Elight.Logic.Sys
                     userLogOnEntity.LoginCount = 0;
                     userLogOnEntity.IsOnLine = "0";
                     row = db.Insertable<SysUserLogOn>(userLogOnEntity).ExecuteCommand();
+                    //初始化返点
+                    SysRebateEntity rebateModel = new SysRebateEntity
+                    {
+                        ShopID = model.ShopID,
+                        UserID = model.Id,
+                        TipRebate = 0,
+                        HourRebate = 0,
+                        ModifiedBy = OperatorProvider.Instance.Current.Account,
+                        CreateTime = DateTime.Now,
+                        ModifiedTime = DateTime.Now
+                    };
+                    row = db.Insertable<SysRebateEntity>(rebateModel).ExecuteCommand();
                     if (row == 0)
                     {
                         db.Ado.RollbackTran();
@@ -203,7 +215,23 @@ namespace Elight.Logic.Sys
             }
         }
 
-
+        /// <summary>
+        /// 获取商户下第一个经纪人 (初始化返点)
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public SysUser GetUserByShopID(int shopID)
+        {
+            using (var db = GetInstance())
+            {
+                return db.Queryable<SysUser>().Where((A) => A.ShopID == shopID).Select(A => new SysUser
+                {
+                    Id = A.Id,
+                })
+                    .OrderBy(A => A.CreateTime)
+                    .First();
+            }
+        }
 
         /// <summary>
         /// 根据主键得到用户信息
@@ -254,7 +282,7 @@ namespace Elight.Logic.Sys
                              Avatar = A.Avatar,
                              IsEnabled = A.IsEnabled,
                              ShopName = B.Name,
-                             Balance = A.Balance/10
+                             Balance = A.Balance / 10
                          }).ToPageList(pageIndex, pageSize, ref totalCount);
             }
         }

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using SqlSugar;
 using System.Linq;
+using Elight.Entity;
 
 namespace Elight.Logic.Sys
 {
@@ -239,26 +240,43 @@ namespace Elight.Logic.Sys
         /// <param name="idList">主播ID集合</param>
         /// <param name="userID">用户ID</param>
         /// <returns></returns>
-        public bool AddShopAnchor(string[] idList, int userID)
+        public bool AddShopAnchor(string[] idList, int userID, SysUser agentUser)
         {
             var result = true;
-            try
+            using (var db = GetInstance())
             {
-                using (var db = GetInstance())
+                try
                 {
+                    db.Ado.BeginTran();//开启事务
                     List<SysShopAnchorEntity> list = new List<SysShopAnchorEntity>();
+                    List<SysAnchorRebateEntity> rebateList = new List<SysAnchorRebateEntity>();
                     foreach (var item in idList)
                     {
                         list.Add(new SysShopAnchorEntity { ShopID = userID, AnchorID = Convert.ToInt32(item), CreateTime = DateTime.Now });
+                        rebateList.Add(new SysAnchorRebateEntity
+                        {
+                            AnchorID = Convert.ToInt32(item),
+                            ShopID = 0,
+                            TipRebate = 0,
+                            HourRebate = 0,
+                            ModifiedBy = OperatorProvider.Instance.Current.Account,
+                            CreateTime = DateTime.Now,
+                            ModifiedTime = DateTime.Now,
+                            parentID = agentUser.Id
+                        });
                     }
                     var count = db.Insertable(list.ToArray()).ExecuteCommand();
+                    //初始化返点，上级选商户下创建的第一个经纪人
+                    db.Insertable(rebateList.ToArray()).ExecuteCommand();
                     result = count == idList.Count() ? true : false;
+                    db.Ado.CommitTran();
                 }
-            }
-            catch (Exception ex)
-            {
-                new LogLogic().Write(Level.Error, "添加主播给经纪人", ex.Message, ex.StackTrace);
-                result = false;
+                catch (Exception ex)
+                {
+                    db.Ado.RollbackTran();
+                    new LogLogic().Write(Level.Error, "添加主播给经纪人", ex.Message, ex.StackTrace);
+                    result = false;
+                }
             }
             return result;
         }
@@ -273,18 +291,23 @@ namespace Elight.Logic.Sys
         public bool Delete(string[] idList, int userID)
         {
             var result = true;
-            try
+            using (var db = GetInstance())
             {
-                using (var db = GetInstance())
+                try
                 {
+                    db.Ado.BeginTran();//开启事务
                     var count = db.Deleteable<SysShopAnchorEntity>().Where(it => it.ShopID == userID).In(it => it.AnchorID, idList).ExecuteCommand();
+                    //删除主播返点
+                    db.Deleteable<SysAnchorRebateEntity>().In(it => it.AnchorID, idList).ExecuteCommand();
                     result = count == idList.Count() ? true : false;
+                    db.Ado.CommitTran();
                 }
-            }
-            catch (Exception ex)
-            {
-                new LogLogic().Write(Level.Error, "删除商户主播", ex.Message, ex.StackTrace);
-                result = false;
+                catch (Exception ex)
+                {
+                    db.Ado.RollbackTran();
+                    new LogLogic().Write(Level.Error, "删除商户主播", ex.Message, ex.StackTrace);
+                    result = false;
+                }
             }
             return result;
         }

@@ -22,7 +22,7 @@
                 <div class="form-inline layui-form user-search">
                     <div class="layui-inline">
                         <label class="layui-form-label">主播账号</label>
-                        <div class="layui-input-block" >
+                        <div class="layui-input-block">
                             <input type="text" name="Name" placeholder="请输入主播账号或昵称" id="Name" autocomplete="off" class="layui-input" maxlength="25">
                         </div>
                     </div>
@@ -47,9 +47,24 @@
     </div>
 </script>
 <script type="text/javascript">
+    function show_img(t) {
+        var t = $(t).find("img");
+        //页面层
+        layer.open({
+            title: "头像",
+            type: 1,
+            area: ['300px', '300px'], //宽高
+            shadeClose: true, //开启遮罩关闭
+            end: function (index, layero) {
+                return false;
+            },
+            content: '<div style="text-align:center"><img src="' + $(t).attr('src') + '" height="200" width="200"/></div>'
+        });
+    }
     layui.use(['form', 'table'], function () {
         var form = layui.form;
         var table = layui.table;
+       
         function renderTable(where) {
             table.render({
                 elem: '#table'
@@ -78,6 +93,15 @@
                     , { field: 'CategoryCode', title: '支付名称' }
                     , { field: 'address', title: '开户地址' }
                     , { field: 'bankaccount', title: '开户人' }
+                    , {
+                        field: 'ImgUrl', title: '支付图片', templet: function (d) {
+                            if (d.payType != 1) {
+                                return '<div onclick="show_img(this)"><img src="' + d.ImgUrl+'"/></div>'
+                            } else {
+                                return "";
+                            }
+                        }
+                    }
                     , { field: 'createtime', title: '创建时间' }
                 ]]
                 , request: {

@@ -36,7 +36,7 @@
         <div class="layui-inline">
             <label class="layui-form-label label-required">上级账号</label>
             <div class="layui-input-inline">
-                <input type="text" name="UserAccount" lay-verify="required"  placeholder="请输入上级账号" autocomplete="off" class="layui-input">
+                <input type="text" name="UserAccount" lay-verify="required" placeholder="请输入上级账号" autocomplete="off" class="layui-input">
             </div>
         </div>
     </div>
@@ -66,6 +66,14 @@
         }
         form.render();
         form.on('submit(add)', function (data) {
+            if (data.field.TipRebate > 100 || data.field.HourRebate>100) {
+                $.layerMsg("返点不能大于100%", "warning",2);
+                return false;
+            }
+            if (data.field.TipRebate < 0 || data.field.HourRebate < 0) {
+                $.layerMsg("返点不能小于0", "warning",2);
+                return false;
+            }
             $.formSubmit({
                 url: "/System/AnchorRebate/Form",
                 data: data.field,

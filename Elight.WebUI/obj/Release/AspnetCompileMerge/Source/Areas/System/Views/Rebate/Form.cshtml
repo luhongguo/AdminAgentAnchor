@@ -57,6 +57,14 @@
         }
         form.render();
         form.on('submit(add)', function (data) {
+            if (data.field.TipRebate > 100 || data.field.HourRebate > 100) {
+                $.layerMsg("返点不能大于100%", "warning");
+                return false;
+            }
+            if (data.field.TipRebate < 0 || data.field.HourRebate < 0) {
+                $.layerMsg("返点不能小于0", "warning");
+                return false;
+            }
             $.formSubmit({
                 url: "/System/Rebate/Form",
                 data: data.field
