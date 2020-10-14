@@ -62,6 +62,14 @@ namespace Elight.WebUI.Areas.System.Controllers
         [HttpPost, AuthorizeChecked, ValidateAntiForgeryToken]
         public ActionResult Form(SysAnchorRebateEntity model)
         {
+            if (model.TipRebate > 100 || model.HourRebate > 100)
+            {
+                return Error("返点不能大于100%");
+            }
+            if (model.TipRebate < 0 || model.HourRebate < 0)
+            {
+                return Error("返点不能小于0");
+            }
             if (model.id == 0)
             {
                 var userModel = sysAnchorRebateLogic.CheckAnchor(model.AnchorName);

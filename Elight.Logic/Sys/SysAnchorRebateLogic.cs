@@ -17,7 +17,6 @@ namespace Elight.Logic.Sys
 {
     public class SysAnchorRebateLogic : BaseLogic
     {
-        public readonly int ShopID = OperatorProvider.Instance.Current.ShopID;
         /// <summary>
         /// 主播返点分页信息
         /// </summary>

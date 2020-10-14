@@ -61,5 +61,9 @@ namespace Elight.Entity.Sys
         /// </summary>
         [SugarColumn(IsIgnore = true)]
         public string NickName { get; set; }
+        /// <summary>
+        /// 支付图片
+        /// </summary>
+        public string ImgUrl { get; set; }
     }
 }

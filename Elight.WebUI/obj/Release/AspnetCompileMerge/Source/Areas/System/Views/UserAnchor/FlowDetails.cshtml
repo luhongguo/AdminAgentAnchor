@@ -21,8 +21,14 @@
                 <div class="form-inline layui-form user-search">
                     <div class="layui-inline">
                         <label class="layui-form-label">主播账号</label>
-                        <div class="layui-input-block" >
+                        <div class="layui-input-block">
                             <input type="text" name="userName" placeholder="请输入主播账号或昵称" id="userName" autocomplete="off" class="layui-input" maxlength="25">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">打赏人</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="RewardName" placeholder="请输入打赏人账号或昵称" id="RewardName" autocomplete="off" class="layui-input" maxlength="25">
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -110,6 +116,7 @@
                         }
                     }
                     , { field: 'username', title: '打赏人' }
+                    , { field: 'userNickname', title: '打赏昵称' }
                     , { field: 'sendtime', title: '打赏时间' }
                 ]]
                 , request: {
@@ -129,7 +136,8 @@
             var userName = $("#UserNameReload").val()
             var startTime = $("#startTimeReload").val();
             var endTime = $("#endTimeReload").val();
-            return { "parm.where": JSON.stringify({ userName: userName, startTime: startTime, endTime: endTime }) };
+            var RewardName = $("#RewardName").val()
+            return { "parm.where": JSON.stringify({ userName: userName, startTime: startTime, endTime: endTime, RewardName: RewardName }) };
             //var where = {
             //    page: 1, where: JSON.stringify({ "parm.where": { userName: userName, startTime: startTime, endTime: endTime } })
             //}

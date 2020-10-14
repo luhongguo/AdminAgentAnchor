@@ -16,7 +16,6 @@ namespace Elight.Logic.Sys
 {
     public class SysRebateLogic : BaseLogic
     {
-        public readonly int ShopID = OperatorProvider.Instance.Current.ShopID;
         /// <summary>
         /// 用户返点分页信息
         /// </summary>

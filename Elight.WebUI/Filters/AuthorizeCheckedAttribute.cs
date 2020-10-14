@@ -35,9 +35,10 @@ namespace Elight.WebUI.Filters
                 var current = OperatorProvider.Instance.Current;
                 if (current == null)
                 {
-                    StringBuilder script = new StringBuilder();
-                    script.Append("<script>alert('对不起，Session已过期，请重新登录');</script>");
-                    filterContext.Result = new ContentResult() { Content = script.ToString() };
+                    filterContext.HttpContext.Response.Write("<script>top.location.href = '/Account/Login'</script>");
+                    //StringBuilder script = new StringBuilder();
+                    //script.Append("<script>alert('对不起，Session已过期，请重新登录');</script>");
+                    //filterContext.Result = new ContentResult() { Content = script.ToString() };
                 }
                 else
                 {

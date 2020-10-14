@@ -18,7 +18,6 @@ namespace Elight.Logic.Sys
     public class SysPermissionLogic : BaseLogic
     {
 
-        public readonly int ShopID = OperatorProvider.Instance.Current.ShopID;
         public bool ActionValidate(string userId, string action)
         {
             var authorizeModules = GetList(userId);
@@ -50,7 +49,7 @@ namespace Elight.Logic.Sys
                       JoinType.Left,A.RoleId == B.RoleId,
                       JoinType.Left,C.Id == B.ModuleId,
                     })
-                    .Where((A, B, C) => A.UserId == userId && C.IsEnable == "1" && C.DeleteMark == "0" && C.ShopID == ShopID)
+                    .Where((A, B, C) => A.UserId == userId && C.IsEnable == "1" && C.DeleteMark == "0" && C.ShopID == OperatorProvider.Instance.Current.ShopID)
                     .OrderBy((A, B, C) => C.SortCode)
                     .Select((A, B, C) => new SysPermission
                     {
@@ -81,11 +80,11 @@ namespace Elight.Logic.Sys
             {
                 if (keyWord.IsNullOrEmpty())
                 {
-                    totalCount = db.Queryable<SysPermission>().Where(it => it.DeleteMark == "0" && it.ShopID == ShopID).Count();
-                    return db.Queryable<SysPermission>().Where(it => it.DeleteMark == "0" && it.ShopID == ShopID).OrderBy(it => it.SortCode).ToPageList(pageIndex, pageSize);
+                    totalCount = db.Queryable<SysPermission>().Where(it => it.DeleteMark == "0" && it.ShopID == OperatorProvider.Instance.Current.ShopID).Count();
+                    return db.Queryable<SysPermission>().Where(it => it.DeleteMark == "0" && it.ShopID == OperatorProvider.Instance.Current.ShopID).OrderBy(it => it.SortCode).ToPageList(pageIndex, pageSize);
                 }
-                totalCount = db.Queryable<SysPermission>().Where(it => it.DeleteMark == "0" && it.ShopID == ShopID && (it.Name.Contains(keyWord) || it.EnCode.Contains(keyWord))).Count();
-                return db.Queryable<SysPermission>().Where(it => it.DeleteMark == "0" && it.ShopID == ShopID && (it.Name.Contains(keyWord) || it.EnCode.Contains(keyWord))).OrderBy(it => it.SortCode).ToPageList(pageIndex, pageSize);
+                totalCount = db.Queryable<SysPermission>().Where(it => it.DeleteMark == "0" && it.ShopID == OperatorProvider.Instance.Current.ShopID && (it.Name.Contains(keyWord) || it.EnCode.Contains(keyWord))).Count();
+                return db.Queryable<SysPermission>().Where(it => it.DeleteMark == "0" && it.ShopID == OperatorProvider.Instance.Current.ShopID && (it.Name.Contains(keyWord) || it.EnCode.Contains(keyWord))).OrderBy(it => it.SortCode).ToPageList(pageIndex, pageSize);
             }
         }
 
@@ -157,7 +156,7 @@ namespace Elight.Logic.Sys
                 model.CreateTime = DateTime.Now;
                 model.ModifyUser = model.CreateUser;
                 model.ModifyTime = model.CreateTime;
-                model.ShopID = ShopID;
+                model.ShopID = OperatorProvider.Instance.Current.ShopID;
                 return db.Insertable<SysPermission>(model).ExecuteCommand();
             }
         }

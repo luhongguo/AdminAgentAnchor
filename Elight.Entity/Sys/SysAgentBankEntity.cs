@@ -53,5 +53,6 @@ namespace Elight.Entity.Sys
         /// </summary>
         [SugarColumn(IsIgnore = true)]
         public string AgentName { get; set; }
+       
     }
 }

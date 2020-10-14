@@ -694,6 +694,11 @@
             主播昵称
             </summary>
         </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorBankEntity.ImgUrl">
+            <summary>
+            支付图片
+            </summary>
+        </member>
         <member name="T:Elight.Entity.Sys.SysAnchorInfoEntity">
             <summary>
             主播补充信息

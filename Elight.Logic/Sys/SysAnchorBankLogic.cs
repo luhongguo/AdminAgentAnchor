@@ -46,7 +46,8 @@ namespace Elight.Logic.Sys
                                         bankano = it.bankano,
                                         CategoryCode = it.CategoryCode,
                                         createtime = it.createtime,
-                                        payType = it.payType
+                                        payType = it.payType,
+                                        ImgUrl = Image_CDN + it.ImgUrl
                                     })
                                     .ToPageList(parm.page, parm.limit, ref totalCount);
                 }
