@@ -96,5 +96,10 @@ namespace Elight.Entity
         /// </summary>
         [SugarColumn(IsIgnore = true)]
         public int payType { get; set; }
+        /// <summary>
+        /// 支付图片
+        /// </summary>
+        [SugarColumn(IsIgnore = true)]
+        public string ImgUrl { get; set; }
     }
 }

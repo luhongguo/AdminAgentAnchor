@@ -70,6 +70,20 @@
     </div>
 </script>
 <script type="text/javascript">
+    function show_img(t) {
+        var t = $(t).find("img");
+        //页面层
+        layer.open({
+            title: "头像",
+            type: 1,
+            area: ['300px', '300px'], //宽高
+            shadeClose: true, //开启遮罩关闭
+            end: function (index, layero) {
+                return false;
+            },
+            content: '<div style="text-align:center"><img src="' + $(t).attr('src') + '" height="200" width="200"/></div>'
+        });
+    }
     layui.use(['laydate', 'form', 'table'], function () {
         var form = layui.form;
         var table = layui.table;
@@ -138,6 +152,15 @@
                                 return '<span class="layui-badge layui-bg-blue">成功</span>';
                             } else {
                                 return '<span class="layui-badge">驳回</span>';
+                            }
+                        }
+                    }
+                    , {
+                        field: 'ImgUrl', title: '支付二维码', width: 120, templet: function (d) {
+                            if (d.payType != 1) {
+                                return '<div onclick="show_img(this)"><img src="' + d.ImgUrl + '"/></div>'
+                            } else {
+                                return "";
                             }
                         }
                     }
