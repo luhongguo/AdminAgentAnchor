@@ -1559,5 +1559,10 @@
             支付类型：1：银行卡，2：支付宝，3：微信
             </summary>
         </member>
+        <member name="P:Elight.Entity.SysAnchorWithdrawalRecordEntity.ImgUrl">
+            <summary>
+            支付图片
+            </summary>
+        </member>
     </members>
 </doc>

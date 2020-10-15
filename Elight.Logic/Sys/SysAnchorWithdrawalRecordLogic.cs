@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using SqlSugar;
 using System.Linq;
 using Elight.Entity;
+using System.Runtime.Remoting.Messaging;
 
 namespace Elight.Logic.Sys
 {
@@ -74,25 +75,31 @@ namespace Elight.Logic.Sys
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public int Insert(SysAnchorWithdrawalRecordEntity model)
+        public int Insert(SysAnchorInfoEntity agentModel, SysAnchorWithdrawalRecordEntity model)
         {
-            try
+            var result = 0;
+            using (var db = GetInstance())
             {
-                using (var db = GetInstance())
+                try
                 {
+                    db.Ado.BeginTran();
+                    //更新主播余额
+                    db.Updateable<SysAnchorInfoEntity>().SetColumns(it => new SysAnchorInfoEntity { agentGold = agentModel.agentGold - model.WithdrawalAmount * 10 }).Where(it => it.aid == agentModel.aid).ExecuteCommand();
                     model.Status = 3;
                     model.createTime = DateTime.Now;
                     model.ModifiedTime = DateTime.Now;
                     model.Remark = model.Remark;
                     model.WithdrawalAmount = Math.Truncate(model.WithdrawalAmount * 100) / 100;
-                    return db.Insertable(model).ExecuteReturnIdentity();
+                    result = db.Insertable(model).ExecuteCommand();
+                    db.Ado.CommitTran();
+                }
+                catch (Exception ex)
+                {
+                    db.Ado.RollbackTran();
+                    new LogLogic().Write(Level.Error, "新增主播提现记录", ex.Message, ex.StackTrace);
                 }
             }
-            catch (Exception ex)
-            {
-                new LogLogic().Write(Level.Error, "新增主播提现记录", ex.Message, ex.StackTrace);
-            }
-            return 0;
+            return result;
         }
         /// <summary>
         /// 根据主键得到提现记录信息
@@ -109,9 +116,9 @@ namespace Elight.Logic.Sys
                     {
                         id = A.id,
                         AnchorID = A.AnchorID,
-                        Status = A.Status,
                         Feedback = A.Feedback,
-                        WithdrawalAmount = A.WithdrawalAmount
+                        Status=A.Status,
+                        WithdrawalAmount=A.WithdrawalAmount
                     })
                     .First();
             }
@@ -121,57 +128,55 @@ namespace Elight.Logic.Sys
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public int Update(SysAnchorWithdrawalRecordEntity model, SysAnchorInfoEntity agentModel)
+        public int Update(SysAnchorWithdrawalRecordEntity model)
         {
             int result = 0;
             using (var db = GetInstance())
             {
                 try
                 {
-                    db.Ado.BeginTran();//开启事务
                     result = db.Updateable<SysAnchorWithdrawalRecordEntity>().SetColumns(it => new SysAnchorWithdrawalRecordEntity
                     {
-                        Status = model.Status,
+                        Status = 1,
                         Feedback = model.Feedback,
-                        WithdrawalAmount = model.WithdrawalAmount,
                         ModifiedBy = OperatorProvider.Instance.Current.Account,
                         ModifiedTime = DateTime.Now
                     }).Where(it => it.id == model.id).ExecuteCommand();
-                    //更新主播余额
-                    db.Updateable<SysAnchorInfoEntity>().SetColumns(it => new SysAnchorInfoEntity { agentGold = agentModel.agentGold - model.WithdrawalAmount * 10 }).Where(it => it.aid == agentModel.aid).ExecuteCommand();
-                    db.Ado.CommitTran();
                 }
                 catch (Exception ex)
                 {
-                    db.Ado.RollbackTran();
                     new LogLogic().Write(Level.Error, "处理主播提现成功", ex.Message, ex.StackTrace);
                 }
                 return result;
             }
         }
         /// <summary>
-        /// 处理主播提现驳回
+        /// 处理主播提现驳回  把钱返回
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public int Reject(SysAnchorWithdrawalRecordEntity model)
+        public int Reject(SysAnchorWithdrawalRecordEntity model, SysAnchorInfoEntity sysAnchorInfoModel)
         {
             var result = 0;
             using (var db = GetInstance())
             {
                 try
                 {
+                    db.Ado.BeginTran();//事务
+                    //更新主播余额
+                    db.Updateable<SysAnchorInfoEntity>().SetColumns(it => new SysAnchorInfoEntity { agentGold = sysAnchorInfoModel.agentGold + model.WithdrawalAmount * 10 }).Where(it => it.aid == sysAnchorInfoModel.aid).ExecuteCommand();
                     result = db.Updateable<SysAnchorWithdrawalRecordEntity>().SetColumns(it => new SysAnchorWithdrawalRecordEntity
                     {
-                        Status = model.Status,
+                        Status = 2,
                         Feedback = model.Feedback,
-                        WithdrawalAmount = model.WithdrawalAmount,
                         ModifiedBy = OperatorProvider.Instance.Current.Account,
                         ModifiedTime = DateTime.Now
                     }).Where(it => it.id == model.id).ExecuteCommand();
+                    db.Ado.CommitTran();
                 }
                 catch (Exception ex)
                 {
+                    db.Ado.RollbackTran();
                     new LogLogic().Write(Level.Error, "处理主播提现驳回", ex.Message, ex.StackTrace);
                 }
                 return result;

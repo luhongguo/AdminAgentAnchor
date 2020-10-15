@@ -63,7 +63,7 @@ namespace Elight.WebUI.Areas.System.Controllers
             {
                 return Error("提现金额不可大于余额!可提现余额：" + agentModel.agentGold / 10);
             }
-            int row = sysAnchorWithdrawalRecordLogic.Insert(model);
+            int row = sysAnchorWithdrawalRecordLogic.Insert(agentModel, model);
             return row > 0 ? Success() : Error();
         }
 
@@ -101,22 +101,15 @@ namespace Elight.WebUI.Areas.System.Controllers
             {
                 return Error("已经处理，不可重复处理!");
             }
+            var agentModel = new SysUserAnchorLogic().GetAnchorBalance(withModel.AnchorID);
             if (model.Status == 2)//驳回
             {
-                row = sysAnchorWithdrawalRecordLogic.Reject(model);
+                model.WithdrawalAmount = withModel.WithdrawalAmount;//返回提现金额
+                row = sysAnchorWithdrawalRecordLogic.Reject(model, agentModel);
             }
             else//成功
             {
-                if (model.WithdrawalAmount <= 0)
-                {
-                    return Error("提现金额需要大于0!");
-                }
-                var agentModel = new SysUserAnchorLogic().GetAnchorBalance(withModel.AnchorID);
-                if (agentModel.agentGold/10 < model.WithdrawalAmount)
-                {
-                    return Error("提现金额不可大于余额!可提现余额：" + agentModel.agentGold/10);
-                }
-                row = sysAnchorWithdrawalRecordLogic.Update(model, agentModel);
+                row = sysAnchorWithdrawalRecordLogic.Update(model);
             }
             return row > 0 ? Success() : Error();
         }
