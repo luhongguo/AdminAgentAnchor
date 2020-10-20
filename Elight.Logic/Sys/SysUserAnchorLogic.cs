@@ -38,12 +38,17 @@ namespace Elight.Logic.Sys
                 //statu 	正常unlock 禁用 lock 审核中 audit
                 using (var db = GetInstance())
                 {
-                    result = db.Queryable<SysAnchor, SysAnchorInfoEntity>((it, st) => new object[] { JoinType.Left, it.id == st.aid })
+                    result = db.Queryable<SysAnchor, SysAnchorInfoEntity, SysShopAnchorEntity, SysShopEntity>((it, st, ot, dt) => new object[] {
+                        JoinType.Left, it.id == st.aid,
+                        JoinType.Left, it.id == ot.AnchorID,
+                        JoinType.Left, ot.ShopID==dt.ID
+                    })
                                 .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (it) => it.anchorName.Contains(dic["Name"].ToString()) || it.nickName.Contains(dic["Name"].ToString()))
                                 .WhereIF(dic.ContainsKey("startTime") && !string.IsNullOrEmpty(dic["startTime"].ToString()) && dic.ContainsKey("endTime") && !string.IsNullOrEmpty(dic["endTime"].ToString()), (it) => it.createTime >= Convert.ToDateTime(dic["startTime"]) && it.createTime <= Convert.ToDateTime(dic["endTime"]))
                                 .WhereIF(dic.ContainsKey("Status") && Convert.ToInt32(dic["Status"]) != -1, (it, st) => st.status == (AnchorStatus)Convert.ToInt32(dic["Status"]))
                                 .WhereIF(dic.ContainsKey("isColletCode") && !string.IsNullOrEmpty(dic["isColletCode"].ToString()), (it, st) => it.isColletCode == dic["isColletCode"].ToString())
-                                .Select((it, st) => new SysAnchor
+                                .WhereIF(dic.ContainsKey("ShopID") && Convert.ToInt32(dic["ShopID"]) != -1, (it, st, ot) => ot.ShopID == Convert.ToInt32(dic["ShopID"]))
+                                .Select((it, st, ot, dt) => new SysAnchor
                                 {
                                     id = it.id,
                                     anchorName = it.anchorName,
@@ -54,7 +59,8 @@ namespace Elight.Logic.Sys
                                     birthday = it.birthday,
                                     status = st.status,
                                     createTime = it.createTime,
-                                    isColletCode = it.isColletCode
+                                    isColletCode = it.isColletCode,
+                                    shopName = dt.Name
                                 })
                                 .OrderBy(" st.agentGold desc")
                                 .ToPageList(parm.page, parm.limit, ref totalCount);
@@ -244,11 +250,12 @@ namespace Elight.Logic.Sys
                 }
                 using (var db = GetSqlSugarDB(DbConnType.QPAnchorRecordDB))
                 {
-                    var query = db.Queryable<SysIncomeEntity, SysAnchor, SysAnchorInfoEntity>((it, st, at) => new object[] { JoinType.Left, it.AnchorID == st.id, JoinType.Left, st.id == at.aid })
+                    var query = db.Queryable<SysIncomeEntity, SysAnchor, SysAnchorInfoEntity, SysShopAnchorEntity>((it, st, at, ot) => new object[] { JoinType.Left, it.AnchorID == st.id, JoinType.Left, st.id == at.aid, JoinType.Left, st.id == ot.AnchorID })
                           .Where((it, st) => it.opdate >= Convert.ToDateTime(dic["startTime"]) && it.opdate < Convert.ToDateTime(dic["endTime"]))
                           .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (it, st) => st.anchorName.Contains(dic["Name"].ToString()) || st.nickName.Contains(dic["Name"].ToString()))
                            .WhereIF(dic.ContainsKey("isColletCode") && !string.IsNullOrEmpty(dic["isColletCode"].ToString()), (it, st, at) => st.isColletCode == dic["isColletCode"].ToString())
-                          ;
+                            .WhereIF(dic.ContainsKey("ShopID") && Convert.ToInt32(dic["ShopID"]) != -1, (it, st, at, ot) => ot.ShopID == Convert.ToInt32(dic["ShopID"]))
+                            ;
                     sumModel = query.Clone().Select((it, st, at) => new IncomeTemplateModel
                     {
                         tip_income = SqlFunc.AggregateSum(it.tip_income),
@@ -374,13 +381,14 @@ namespace Elight.Logic.Sys
                 }
                 using (var db = GetSqlSugarDB(DbConnType.QPAnchorRecordDB))
                 {
-                    var query = db.Queryable<TipEntity, SysAnchor>((it, st) => new object[] { JoinType.Left, it.AnchorID == st.id })
+                    var query = db.Queryable<TipEntity, SysAnchor, SysShopAnchorEntity>((it, st, ot) => new object[] { JoinType.Left, it.AnchorID == st.id, JoinType.Left, st.id == ot.AnchorID })
                           .Where(it => it.sendtime >= Convert.ToDateTime(dic["startTime"]) && it.sendtime < Convert.ToDateTime(dic["endTime"]))
                           .WhereIF(dic.ContainsKey("userName") && !string.IsNullOrEmpty(dic["userName"].ToString()), (it, st) => st.anchorName.Contains(dic["userName"].ToString()) || st.nickName.Contains(dic["userName"].ToString()))
                           .WhereIF(dic.ContainsKey("RewardName") && !string.IsNullOrEmpty(dic["RewardName"].ToString()), (it, st) => it.username.Contains(dic["RewardName"].ToString()) || it.userNickname.Contains(dic["RewardName"].ToString()))
-                          .WhereIF(dic.ContainsKey("Type") && Convert.ToInt32(dic["Type"].ToString())!=-1, (it, st) => it.Type== Convert.ToInt32(dic["Type"].ToString()))
-                          .WithCache(60);
-                    sumTotalAmount = query.Clone().Sum(it => it.totalamount);
+                          .WhereIF(dic.ContainsKey("Type") && Convert.ToInt32(dic["Type"].ToString()) != -1, (it, st) => it.Type == Convert.ToInt32(dic["Type"].ToString()))
+                           .WhereIF(dic.ContainsKey("ShopID") && Convert.ToInt32(dic["ShopID"]) != -1, (it, st, ot) => ot.ShopID == Convert.ToInt32(dic["ShopID"]))
+                          ;
+                    sumTotalAmount = query.Clone().WithCache(60).Sum(it => it.totalamount);
                     res = query
                           .Select((it, st) => new TipEntity
                           {
@@ -396,6 +404,7 @@ namespace Elight.Logic.Sys
                               AnchorNickName = st.nickName,
                               userNickname = it.userNickname
                           })
+                          .WithCache(60)
                          .OrderBy(" it.sendtime desc")
                          .ToPageList(parm.page, parm.limit, ref totalCount);
                 }
@@ -427,17 +436,21 @@ namespace Elight.Logic.Sys
                 }
                 using (var db = GetSqlSugarDB(DbConnType.QPVideoAnchorDB))
                 {
-                    var query = db.Queryable<SysAnchorLiveRecordEntity, SysAnchor>((it, st) => new object[] { JoinType.Left, it.aid == st.id })
+                    var query = db.Queryable<SysAnchorLiveRecordEntity, SysAnchor, SysShopAnchorEntity>((it, st, ot) => new object[] {
+                        JoinType.Left, it.aid == st.id,
+                        JoinType.Left, st.id == ot.AnchorID
+                    })
                                    .Where(it => it.ontime >= Convert.ToDateTime(dic["startTime"]) && it.ontime < Convert.ToDateTime(dic["endTime"]))
                                    .WhereIF(dic.ContainsKey("isLive") && Convert.ToInt32(dic["isLive"]) == 1, it => SqlFunc.IsNullOrEmpty(it.uptime))
                                    .WhereIF(dic.ContainsKey("isLive") && Convert.ToInt32(dic["isLive"]) == 0, it => !SqlFunc.IsNullOrEmpty(it.uptime))
                                    .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (it, st) => st.anchorName.Contains(dic["Name"].ToString()) || st.nickName.Contains(dic["Name"].ToString()))
-                                   .WithCache(30);//缓存30秒
-                    var sumReuslt = query.Clone().Select((it, st) => new { amount = SqlFunc.AggregateSum(it.amount), duration = SqlFunc.AggregateSum(it.livetime) }).First();
+                                   .WhereIF(dic.ContainsKey("ShopID") && Convert.ToInt32(dic["ShopID"]) != -1, (it, st,  ot) => ot.ShopID == Convert.ToInt32(dic["ShopID"]))
+                                   ;//缓存30秒
+                    var sumReuslt = query.Clone().Select((it, st) => new { amount = SqlFunc.AggregateSum(it.amount), duration = SqlFunc.AggregateSum(it.livetime) }).WithCache(30).First();
                     sumAmount = sumReuslt.amount;
                     sumDuration = sumReuslt.duration;
                     return query
-                          .Select((it, st) => new HourModel
+                          .Select((it, st, ot) => new HourModel
                           {
                               AnchorName = st.anchorName,
                               NickName = st.nickName,
@@ -446,6 +459,7 @@ namespace Elight.Logic.Sys
                               duration = it.livetime,
                               islive = SqlFunc.IIF(SqlFunc.IsNullOrEmpty(it.uptime), 1, 0)
                           })
+                          .WithCache(30)
                           .OrderBy(" it.ontime desc")
                           .ToPageList(parm.page, parm.limit, ref totalCount);
                 }

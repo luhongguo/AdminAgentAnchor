@@ -34,8 +34,9 @@ namespace Elight.Logic.Sys
                 }
                 using (var db = GetSqlSugarDB(DbConnType.QPAgentAnchorDB))
                 {
-                    return db.Queryable<SysAnchorBankEntity, SysAnchor>((it, st) => new object[] { JoinType.Left, it.AnchorID == st.id })
+                    return db.Queryable<SysAnchorBankEntity, SysAnchor,SysShopAnchorEntity>((it, st,ot) => new object[] { JoinType.Left, it.AnchorID == st.id,JoinType.Left,st.id==ot.AnchorID })
                                     .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (it, st) => st.anchorName.Contains(dic["Name"].ToString()) || st.nickName.Contains(dic["Name"].ToString()))
+                                     .WhereIF(dic.ContainsKey("ShopID") && Convert.ToInt32(dic["ShopID"]) != -1, (it, st, ot) => ot.ShopID == Convert.ToInt32(dic["ShopID"]))
                                     .Select((it, st) => new SysAnchorBankEntity
                                     {
                                         id = it.id,
@@ -49,6 +50,7 @@ namespace Elight.Logic.Sys
                                         payType = it.payType,
                                         ImgUrl = Image_CDN + it.ImgUrl
                                     })
+                                    .WithCache(60)
                                     .ToPageList(parm.page, parm.limit, ref totalCount);
                 }
             }

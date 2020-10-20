@@ -37,15 +37,17 @@ namespace Elight.Logic.Sys
                 }
                 using (var db = GetSqlSugarDB(DbConnType.QPAnchorRecordDB))
                 {
-                    var query = db.Queryable<SysTipIncomeDetailEntity, SysUser, SysAnchor, TipEntity>((at, bt, ct, dt) => new object[] {
+                    var query = db.Queryable<SysTipIncomeDetailEntity, SysUser, SysAnchor, TipEntity, SysShopAnchorEntity>((at, bt, ct, dt, ot) => new object[] {
                                 JoinType.Left,at.UserID==bt.Id,
                                 JoinType.Left,at.AnchorID==ct.id,
-                                JoinType.Left,at.orderno==dt.orderno
+                                JoinType.Left,at.orderno==dt.orderno,
+                                JoinType.Left,ct.id==ot.AnchorID
                       })
                           .Where((at, bt, ct, dt) => at.StartDate >= Convert.ToDateTime(dic["startTime"]) && at.StartDate <= Convert.ToDateTime(dic["endTime"]))
                           .WhereIF(dic.ContainsKey("AgentName") && !string.IsNullOrEmpty(dic["AgentName"].ToString()), (at, bt, ct, dt) => bt.Account.Contains(dic["AgentName"].ToString()))
                           .WhereIF(dic.ContainsKey("AnchorName") && !string.IsNullOrEmpty(dic["AnchorName"].ToString()), (at, bt, ct, dt) => ct.anchorName.Contains(dic["AnchorName"].ToString()) || ct.nickName.Contains(dic["AnchorName"].ToString()))
-                          .WhereIF(dic.ContainsKey("Type") && Convert.ToInt32(dic["Type"].ToString()) != -1, (at, bt, ct, dt) => dt.Type == Convert.ToInt32(dic["Type"].ToString()));
+                          .WhereIF(dic.ContainsKey("Type") && Convert.ToInt32(dic["Type"].ToString()) != -1, (at, bt, ct, dt) => dt.Type == Convert.ToInt32(dic["Type"].ToString()))
+                          .WhereIF(dic.ContainsKey("ShopID") && Convert.ToInt32(dic["ShopID"]) != -1, (at, bt, ct, dt, ot) => ot.ShopID == Convert.ToInt32(dic["ShopID"]));
                     sumModel = query.Clone().Select((at, bt, ct, dt) => new TipIncomeDetailModel
                     {
                         AnchorIncome = SqlFunc.AggregateSum(at.AnchorIncome),
@@ -58,7 +60,7 @@ namespace Elight.Logic.Sys
                          {
                              UserName = bt.Account,
                              AnchorName = ct.anchorName,
-                             AnchorNickName=ct.nickName,
+                             AnchorNickName = ct.nickName,
                              UserIncome = at.UserIncome,
                              AnchorIncome = at.AnchorIncome,
                              PlatformIncome = at.PlatformIncome,
@@ -70,7 +72,7 @@ namespace Elight.Logic.Sys
                              quantity = dt.quantity,
                              totalamount = dt.totalamount,
                              sendtime = dt.sendtime,
-                             Type=dt.Type
+                             Type = dt.Type
                          }).WithCache(60)
                          .OrderBy(" dt.sendtime desc")
                         .ToPageList(parm.page, parm.limit, ref totalCount);

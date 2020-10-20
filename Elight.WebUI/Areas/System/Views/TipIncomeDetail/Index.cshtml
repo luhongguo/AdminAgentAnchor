@@ -32,17 +32,6 @@
                         </div>
                     </div>
                     <div class="layui-inline">
-                        <label class="layui-form-label">收益类型</label>
-                        <div class="layui-input-block">
-                            <select name="Type" id="TypeReload" lay-filter="Level" lay-search>
-                                <option value="-1" selected>全部</option>
-                                <option value="1">打赏礼物</option>
-                                <option value="2">房间扣费</option>
-                                <option value="3">计时扣费</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="layui-inline">
                         <label class="layui-form-label">开始时间</label>
                         <div class="layui-input-inline">
                             <input type="text" class="layui-input" id="startTimeReload" name="startTime" placeholder="" autocomplete="off">
@@ -54,6 +43,26 @@
                             <input type="text" class="layui-input" id="endTimeReload" name="endTime" placeholder="" autocomplete="off">
                         </div>
                     </div>
+                    <br />
+                    <div class="layui-inline">
+                        <label class="layui-form-label ">商户名称</label>
+                        <div class="layui-input-inline" style="width:182px">
+                            <select name="ShopID" id="ShopNameReload" lay-filter="Level" lay-verify="required" lay-search>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">收益类型</label>
+                        <div class="layui-input-block" style="width:182px">
+                            <select name="Type" id="TypeReload" lay-filter="Level" lay-search>
+                                <option value="-1" selected>全部</option>
+                                <option value="1">打赏礼物</option>
+                                <option value="2">房间扣费</option>
+                                <option value="3">计时扣费</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="layui-inline">
                         <button class="layui-btn layuiadmin-btn-admin" lay-submit lay-filter="search" data-type="reload">
                             <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
@@ -153,6 +162,20 @@
                 , id: "report"
             });
         }
+        //商户下拉框
+        $.ajax({
+            url: "/System/Shop/GetShopSelectList",
+            type: "get",
+            success: function (data) {
+                var $html = " <option value='-1'>全部</option>";
+                $.each(eval("(" + data + ")"), function (i, v) {
+                    $html += "<option value='" + v.ID + "'>" + v.Name + "</option>";
+                })
+                $("select[name='ShopID']").append($html);
+                //append后必须从新渲染
+                form.render('select');
+            }
+        });
         //监听搜索
         form.on('submit(search)', function (data) {
             reloadTable(data.field)
@@ -162,15 +185,16 @@
             reloadTable(getWhere(2));
         });
         function getWhere(flag) {
-            var AgentName = $("#AgentName").val();
-            var AnchorName = $("#AnchorName").val()
             var startTime = $("#startTimeReload").val();
             var endTime = $("#endTimeReload").val();
-            var Type = $("#TypeReload").val();
             if (flag==1) {
-                return { "parm.where": JSON.stringify({ AgentName: AgentName, AnchorName: AnchorName, startTime: startTime, endTime: endTime, Type: Type }) };
+                return { "parm.where": JSON.stringify({  startTime: startTime, endTime: endTime }) };
             }
-            return { AgentName: AgentName, AnchorName: AnchorName, startTime: startTime, endTime: endTime, Type: Type };
+            var AgentName = $("#AgentName").val();
+            var AnchorName = $("#AnchorName").val()
+            var Type = $("#TypeReload").val();
+            var ShopID = $("#ShopNameReload").val();
+            return { AgentName: AgentName, AnchorName: AnchorName, startTime: startTime, endTime: endTime, Type: Type, ShopID: ShopID };
         }
         function reloadTable(field) {
             if (field.userName == "") {

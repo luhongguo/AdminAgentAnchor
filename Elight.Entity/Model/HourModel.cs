@@ -1,4 +1,5 @@
-﻿using Elight.Entity.Sys;
+﻿using Elight.Entity.Enum;
+using Elight.Entity.Sys;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

@@ -634,6 +634,11 @@
             直播状态
             </summary>
         </member>
+        <member name="P:Elight.Entity.Sys.SysAnchor.shopName">
+            <summary>
+            商户名称
+            </summary>
+        </member>
         <member name="T:Elight.Entity.Sys.SysAnchorBankEntity">
             <summary>
             主播银行卡

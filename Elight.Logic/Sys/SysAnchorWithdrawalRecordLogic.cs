@@ -36,32 +36,38 @@ namespace Elight.Logic.Sys
                 }
                 using (var db = GetSqlSugarDB(DbConnType.QPAgentAnchorDB))
                 {
-                    return db.Queryable<SysAnchorWithdrawalRecordEntity, SysAnchor, SysAnchorBankEntity>((it, st, at) => new object[] { JoinType.Left, it.AnchorID == st.id, JoinType.Left, it.AgentBankID == at.id })
+                    return db.Queryable<SysAnchorWithdrawalRecordEntity, SysAnchor, SysAnchorBankEntity, SysShopAnchorEntity>((it, st, at, ot) => new object[] {
+                        JoinType.Left, it.AnchorID == st.id,
+                        JoinType.Left, it.AgentBankID == at.id ,
+                        JoinType.Left, st.id==ot.AnchorID
+                    })
                           .Where((it, st, at) => it.createTime >= Convert.ToDateTime(dic["startTime"]) && it.createTime < Convert.ToDateTime(dic["endTime"]))
-                        .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (it, st) => st.anchorName.Contains(dic["Name"].ToString()) || st.nickName.Contains(dic["Name"].ToString()))
-                         .WhereIF(dic.ContainsKey("Status") && Convert.ToInt32(dic["Status"]) != -1, (it, st) => it.Status == Convert.ToInt32(dic["Status"]))
-                        .Select((it, st, at) => new SysAnchorWithdrawalRecordEntity
-                        {
-                            id = it.id,
-                            AgentName = st.anchorName,
-                            NickName = st.nickName,
-                            WithdrawalAmount = it.WithdrawalAmount,
-                            CategoryCode = at.CategoryCode,
-                            bankano = at.bankano,
-                            bankaccount = at.bankaccount,
-                            address = at.address,
-                            Remark = it.Remark,
-                            payType = at.payType,
-                            Type = it.Type,
-                            Feedback = it.Feedback,
-                            Status = it.Status,
-                            createTime = it.createTime,
-                            ModifiedTime = it.ModifiedTime,
-                            ModifiedBy = it.ModifiedBy,
-                            ImgUrl = Image_CDN + at.ImgUrl
-                        })
-                        .OrderBy(" it.createTime desc")
-                        .ToPageList(parm.page, parm.limit, ref totalCount);
+                          .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (it, st) => st.anchorName.Contains(dic["Name"].ToString()) || st.nickName.Contains(dic["Name"].ToString()))
+                          .WhereIF(dic.ContainsKey("Status") && Convert.ToInt32(dic["Status"]) != -1, (it, st) => it.Status == Convert.ToInt32(dic["Status"]))
+                          .WhereIF(dic.ContainsKey("ShopID") && Convert.ToInt32(dic["ShopID"]) != -1, (it, st, at, ot) => ot.ShopID == Convert.ToInt32(dic["ShopID"]))
+                          .Select((it, st, at) => new SysAnchorWithdrawalRecordEntity
+                          {
+                              id = it.id,
+                              AgentName = st.anchorName,
+                              NickName = st.nickName,
+                              WithdrawalAmount = it.WithdrawalAmount,
+                              CategoryCode = at.CategoryCode,
+                              bankano = at.bankano,
+                              bankaccount = at.bankaccount,
+                              address = at.address,
+                              Remark = it.Remark,
+                              payType = at.payType,
+                              Type = it.Type,
+                              Feedback = it.Feedback,
+                              Status = it.Status,
+                              createTime = it.createTime,
+                              ModifiedTime = it.ModifiedTime,
+                              ModifiedBy = it.ModifiedBy,
+                              ImgUrl = Image_CDN + at.ImgUrl
+                          })
+                          .WithCache(60)
+                          .OrderBy(" it.createTime desc")
+                          .ToPageList(parm.page, parm.limit, ref totalCount);
                 }
             }
             catch (Exception ex)
@@ -117,8 +123,8 @@ namespace Elight.Logic.Sys
                         id = A.id,
                         AnchorID = A.AnchorID,
                         Feedback = A.Feedback,
-                        Status=A.Status,
-                        WithdrawalAmount=A.WithdrawalAmount
+                        Status = A.Status,
+                        WithdrawalAmount = A.WithdrawalAmount
                     })
                     .First();
             }

@@ -38,10 +38,11 @@ namespace Elight.Logic.Sys
                 }
                 using (var db = GetSqlSugarDB(DbConnType.QPAgentAnchorDB))
                 {
-                    return db.Queryable<SysAnchorRebateEntity, SysAnchor, SysUser>((gt, it, at) => new object[] { JoinType.Left, gt.AnchorID == it.id,
-                       JoinType.Left,gt.parentID==at.Id
+                    return db.Queryable<SysAnchorRebateEntity, SysAnchor, SysUser,SysShopAnchorEntity>((gt, it, at,ot) => new object[] { JoinType.Left, gt.AnchorID == it.id,
+                       JoinType.Left,gt.parentID==at.Id,JoinType.Left,it.id==ot.AnchorID
                      })
                                .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (gt, it) => it.anchorName.Contains(dic["Name"].ToString()) || it.nickName.Contains(dic["Name"].ToString()))
+                               .WhereIF(dic.ContainsKey("ShopID") && Convert.ToInt32(dic["ShopID"]) != -1, (gt, it, at, ot) => ot.ShopID == Convert.ToInt32(dic["ShopID"]))
                                .Select((gt, it, at) => new SysAnchorRebateEntity
                                {
                                    id = gt.id,
@@ -54,6 +55,7 @@ namespace Elight.Logic.Sys
                                    AnchorNickName = it.nickName,
                                    UserAccount = at.Account
                                })
+                               .WithCache(60)
                                .ToPageList(parm.page, parm.limit, ref totalCount);
                 }
             }

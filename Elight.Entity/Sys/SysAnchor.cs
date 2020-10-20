@@ -105,5 +105,10 @@ namespace Elight.Entity.Sys
         /// </summary>
         [SugarColumn(IsIgnore = true)]
         public AnchorStatus status { get; set; }
+        /// <summary>
+        /// 商户名称
+        /// </summary>
+        [SugarColumn(IsIgnore = true)]
+        public string shopName { get; set; }
     }
 }

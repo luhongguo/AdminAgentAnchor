@@ -98,16 +98,7 @@ namespace Elight.WebUI.Areas.System.Controllers
             int row = sysShopLogic.Delete(idlist);
             return row > 0 ? Success() : Error();
         }
-        /// <summary>
-        /// 获取商户下拉框
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        public ActionResult GetShopSelectList()
-        {
-            var result = sysShopLogic.GetShopSelectList();
-            return Content(result.ToJson());
-        }
+       
 
         /// <summary>
         /// 商户授权主播页面
@@ -209,6 +200,16 @@ namespace Elight.WebUI.Areas.System.Controllers
                 return Success();
             }
             return Error();
+        }
+        /// <summary>
+        /// 获取商户下拉框
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult GetShopSelectList()
+        {
+            var result = sysShopLogic.GetShopSelectList();
+            return Content(result.ToJson());
         }
     }
 }
