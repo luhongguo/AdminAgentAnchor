@@ -32,6 +32,17 @@
                         </div>
                     </div>
                     <div class="layui-inline">
+                        <label class="layui-form-label">收益类型</label>
+                        <div class="layui-input-block">
+                            <select name="Type" id="TypeReload" lay-filter="Level" lay-search>
+                                <option value="-1" selected>全部</option>
+                                <option value="1">打赏礼物</option>
+                                <option value="2">房间扣费</option>
+                                <option value="3">计时扣费</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
                         <label class="layui-form-label">开始时间</label>
                         <div class="layui-input-inline">
                             <input type="text" class="layui-input" id="startTimeReload" name="startTime" placeholder="" autocomplete="off">
@@ -83,7 +94,7 @@
             , type: 'date'
             , value: getNowFormatDate("data", 0) 
         });
-        renderTable(getWhere());
+        renderTable(getWhere(1));
         function renderTable(where) {
             table.render({
                 elem: '#table'
@@ -146,15 +157,20 @@
         form.on('submit(search)', function (data) {
             reloadTable(data.field)
         });
-        function getWhere() {
+        //监听下拉框的搜索
+        form.on('select(Level)', function (data) {
+            reloadTable(getWhere(2));
+        });
+        function getWhere(flag) {
             var AgentName = $("#AgentName").val();
             var AnchorName = $("#AnchorName").val()
             var startTime = $("#startTimeReload").val();
             var endTime = $("#endTimeReload").val();
-            return { "parm.where": JSON.stringify({ AgentName: AgentName, AnchorName: AnchorName, startTime: startTime, endTime: endTime }) };
-            //var where = {
-            //    page: 1, where: JSON.stringify({ "parm.where": { userName: userName, startTime: startTime, endTime: endTime } })
-            //}
+            var Type = $("#TypeReload").val();
+            if (flag==1) {
+                return { "parm.where": JSON.stringify({ AgentName: AgentName, AnchorName: AnchorName, startTime: startTime, endTime: endTime, Type: Type }) };
+            }
+            return { AgentName: AgentName, AnchorName: AnchorName, startTime: startTime, endTime: endTime, Type: Type };
         }
         function reloadTable(field) {
             if (field.userName == "") {

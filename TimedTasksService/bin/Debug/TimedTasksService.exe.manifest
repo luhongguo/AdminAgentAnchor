@@ -73,19 +73,19 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>NEZfZUg/JZFjTuWoRsL7PmmlVPtSKlX06BVpeyXOxRw=</dsig:DigestValue>
+        <dsig:DigestValue>/C1DhNsGFniQd/GxM4BdGJkA8FifF9JfQayfzXntVKM=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Elight.Logic.dll" size="161792">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Elight.Logic.dll" size="161280">
       <assemblyIdentity name="Elight.Logic" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>mRFSjEdZ03xvk8CjJPajW7U1Ki0gJWVWcQw4herA5QE=</dsig:DigestValue>
+        <dsig:DigestValue>vBPK2iVYS5W72dZYEhN86T1MNhodPbosVJBVIFduo5o=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -97,7 +97,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>kEBiBDACdA2+TroG3kQutpN724r9pQP7tSxqI2JqSrg=</dsig:DigestValue>
+        <dsig:DigestValue>snCB39Yc0fFNJ/4yxKY85O86XXS0FSdADsPBIQaBDIw=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

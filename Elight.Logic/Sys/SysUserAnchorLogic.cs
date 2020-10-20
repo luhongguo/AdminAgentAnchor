@@ -378,6 +378,7 @@ namespace Elight.Logic.Sys
                           .Where(it => it.sendtime >= Convert.ToDateTime(dic["startTime"]) && it.sendtime < Convert.ToDateTime(dic["endTime"]))
                           .WhereIF(dic.ContainsKey("userName") && !string.IsNullOrEmpty(dic["userName"].ToString()), (it, st) => st.anchorName.Contains(dic["userName"].ToString()) || st.nickName.Contains(dic["userName"].ToString()))
                           .WhereIF(dic.ContainsKey("RewardName") && !string.IsNullOrEmpty(dic["RewardName"].ToString()), (it, st) => it.username.Contains(dic["RewardName"].ToString()) || it.userNickname.Contains(dic["RewardName"].ToString()))
+                          .WhereIF(dic.ContainsKey("Type") && Convert.ToInt32(dic["Type"].ToString())!=-1, (it, st) => it.Type== Convert.ToInt32(dic["Type"].ToString()))
                           .WithCache(60);
                     sumTotalAmount = query.Clone().Sum(it => it.totalamount);
                     res = query

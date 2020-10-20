@@ -44,7 +44,8 @@ namespace Elight.Logic.Sys
                       })
                           .Where((at, bt, ct, dt) => at.StartDate >= Convert.ToDateTime(dic["startTime"]) && at.StartDate <= Convert.ToDateTime(dic["endTime"]))
                           .WhereIF(dic.ContainsKey("AgentName") && !string.IsNullOrEmpty(dic["AgentName"].ToString()), (at, bt, ct, dt) => bt.Account.Contains(dic["AgentName"].ToString()))
-                          .WhereIF(dic.ContainsKey("AnchorName") && !string.IsNullOrEmpty(dic["AnchorName"].ToString()), (at, bt, ct, dt) => ct.anchorName.Contains(dic["AnchorName"].ToString()) || ct.nickName.Contains(dic["AnchorName"].ToString()));
+                          .WhereIF(dic.ContainsKey("AnchorName") && !string.IsNullOrEmpty(dic["AnchorName"].ToString()), (at, bt, ct, dt) => ct.anchorName.Contains(dic["AnchorName"].ToString()) || ct.nickName.Contains(dic["AnchorName"].ToString()))
+                          .WhereIF(dic.ContainsKey("Type") && Convert.ToInt32(dic["Type"].ToString()) != -1, (at, bt, ct, dt) => dt.Type == Convert.ToInt32(dic["Type"].ToString()));
                     sumModel = query.Clone().Select((at, bt, ct, dt) => new TipIncomeDetailModel
                     {
                         AnchorIncome = SqlFunc.AggregateSum(at.AnchorIncome),

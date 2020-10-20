@@ -157,7 +157,7 @@
                     }
                     , {
                         field: 'ImgUrl', title: '支付二维码', width: 120, templet: function (d) {
-                            if (d.payType != 1) {
+                            if (d.payType == 3 || d.payType==2 ) {
                                 return '<div onclick="show_img(this)"><img src="' + d.ImgUrl + '"/></div>'
                             } else {
                                 return "";
