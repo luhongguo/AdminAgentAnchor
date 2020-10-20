@@ -47,7 +47,7 @@
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">是否直播</label>
-                        <div class="layui-input-block">
+                        <div class="layui-input-block" style="width:182px">
                             <select name="isLive" id="isLiveReload" lay-filter="Level" lay-search>
                                 <option value="-1">全部</option>
                                 <option value="1">是</option>
@@ -146,6 +146,7 @@
                             }
                         }
                     }
+                    , { field: 'flvurl', title: '推流地址' }
                     //, {
                     //    field: 'source', title: '来源', templet: function (d) {
                     //        if (d.source == 0) {

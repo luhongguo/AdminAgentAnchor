@@ -74,5 +74,9 @@ namespace Elight.Entity.Model
         /// 来源 来源  0：腾讯，1：阿里
         /// </summary>
         public int source { get; set; }
+        /// <summary>
+        /// 推流地址
+        /// </summary>
+        public string flvurl { get; set; }
     }
 }
