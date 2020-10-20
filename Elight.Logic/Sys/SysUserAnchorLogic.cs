@@ -457,7 +457,7 @@ namespace Elight.Logic.Sys
                               begintime = it.ontime,
                               endtime = it.uptime,
                               duration = it.livetime,
-                              islive = SqlFunc.IIF(SqlFunc.IsNullOrEmpty(it.uptime), 1, 0)
+                              islive = SqlFunc.IIF(SqlFunc.IsNullOrEmpty(it.uptime), 1, 0) 
                           })
                           .WithCache(30)
                           .OrderBy(" it.ontime desc")
