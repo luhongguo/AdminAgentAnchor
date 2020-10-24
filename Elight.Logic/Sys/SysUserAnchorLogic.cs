@@ -60,7 +60,8 @@ namespace Elight.Logic.Sys
                                     status = st.status,
                                     createTime = it.createTime,
                                     isColletCode = it.isColletCode,
-                                    shopName = dt.Name
+                                    shopName = dt.Name,
+                                    sort=it.sort
                                 })
                                 .OrderBy(" st.agentGold desc")
                                 .ToPageList(parm.page, parm.limit, ref totalCount);

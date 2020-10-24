@@ -73,7 +73,7 @@ namespace Elight.Logic.Sys
                     model.CreateTime = DateTime.Now;
                     model.ModifiedBy = OperatorProvider.Instance.Current.Account;
                     model.ModifiedTime = model.CreateTime;
-                    return db.Insertable(model).ExecuteReturnIdentity();
+                    return db.Insertable(model).ExecuteCommand();
                 }
             }
             catch (Exception ex)

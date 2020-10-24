@@ -23,19 +23,8 @@
                 <div class="form-inline layui-form user-search">
                     <div class="layui-inline">
                         <label class="layui-form-label">主播账号</label>
-                        <div class="layui-input-block" >
-                            <input type="text" name="Name" placeholder="请输入主播账号或昵称" id="Name" autocomplete="off" class="layui-input" maxlength="25">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">提现状态</label>
                         <div class="layui-input-block">
-                            <select name="Status" id="Status" lay-filter="Level" lay-search>
-                                <option value="-1" selected>全部</option>
-                                <option value="3">待处理</option>
-                                <option value="1">成功</option>
-                                <option value="2">驳回</option>
-                            </select>
+                            <input type="text" name="Name" placeholder="请输入主播账号或昵称" id="Name" autocomplete="off" class="layui-input" maxlength="25">
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -48,6 +37,25 @@
                         <label class="layui-form-label">结束时间</label>
                         <div class="layui-input-inline">
                             <input type="text" class="layui-input" id="endTimeReload" name="endTime" placeholder="">
+                        </div>
+                    </div>
+                    <br />
+                    <div class="layui-inline">
+                        <label class="layui-form-label ">商户名称</label>
+                        <div class="layui-input-inline" style="width:182px">
+                            <select name="ShopID" id="ShopNameReload" lay-filter="Level" lay-verify="required" lay-search>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">提现状态</label>
+                        <div class="layui-input-block" style="width:182px">
+                            <select name="Status" id="Status" lay-filter="Level" lay-search>
+                                <option value="-1" selected>全部</option>
+                                <option value="3">待处理</option>
+                                <option value="1">成功</option>
+                                <option value="2">驳回</option>
+                            </select>
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -74,7 +82,7 @@
         var t = $(t).find("img");
         //页面层
         layer.open({
-            title: "头像",
+            title: "支付图片",
             type: 1,
             area: ['300px', '300px'], //宽高
             shadeClose: true, //开启遮罩关闭
@@ -176,6 +184,20 @@
                 , id: "report"
             });
         }
+        //商户下拉框
+        $.ajax({
+            url: "/System/Shop/GetShopSelectList",
+            type: "get",
+            success: function (data) {
+                var $html = " <option value='-1'>全部</option>";
+                $.each(eval("(" + data + ")"), function (i, v) {
+                    $html += "<option value='" + v.ID + "'>" + v.Name + "</option>";
+                })
+                $("select[name='ShopID']").append($html);
+                //append后必须从新渲染
+                form.render('select');
+            }
+        });
         //监听搜索
         form.on('submit(search)', function (data) {
             reloadTable(data.field)
@@ -197,14 +219,15 @@
         }
         renderTable(getWhere(1));
         function getWhere(flag) {
-            var Name = $("#Name").val()
             var startTime = $("#startTimeReload").val();
             var endTime = $("#endTimeReload").val();
-            var Status = $("#Status").val();
             if (flag==1) {
-                return { "parm.where": JSON.stringify({ Name: Name, startTime: startTime, endTime: endTime, Status: Status }) };
+                return { "parm.where": JSON.stringify({startTime: startTime, endTime: endTime }) };
             }
-            return { Name: Name, startTime: startTime, endTime: endTime, Status: Status };
+            var Name = $("#Name").val();
+            var Status = $("#Status").val();
+            var ShopID = $("#ShopNameReload").val();
+            return  { Name: Name, startTime: startTime, endTime: endTime, Status: Status, ShopID: ShopID };
         }
         //监听事件
         table.on('toolbar(test)', function (obj) {

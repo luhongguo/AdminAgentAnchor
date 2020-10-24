@@ -63,7 +63,7 @@ namespace Elight.WebUI.Areas.System.Controllers
         /// 商户授权
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet, AuthorizeChecked]
         public ActionResult ShopAuthorizeIndex()
         {
             return View();

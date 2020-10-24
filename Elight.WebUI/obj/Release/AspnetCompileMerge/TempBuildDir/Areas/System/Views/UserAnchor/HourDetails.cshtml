@@ -26,16 +26,6 @@
                         </div>
                     </div>
                     <div class="layui-inline">
-                        <label class="layui-form-label">是否直播</label>
-                        <div class="layui-input-block">
-                            <select name="isLive" id="isLiveReload" lay-filter="Level" lay-search>
-                                <option value="-1">全部</option>
-                                <option value="1">是</option>
-                                <option value="0">否</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="layui-inline">
                         <label class="layui-form-label">开始时间</label>
                         <div class="layui-input-inline">
                             <input type="text" class="layui-input" id="startTimeReload" name="startTime" placeholder="">
@@ -45,6 +35,24 @@
                         <label class="layui-form-label">结束时间</label>
                         <div class="layui-input-inline">
                             <input type="text" class="layui-input" id="endTimeReload" name="endTime" placeholder="">
+                        </div>
+                    </div>
+                    <br />
+                    <div class="layui-inline">
+                        <label class="layui-form-label ">商户名称</label>
+                        <div class="layui-input-inline" style="width:182px">
+                            <select name="ShopID" id="ShopNameReload" lay-filter="Level" lay-verify="required" lay-search>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">是否直播</label>
+                        <div class="layui-input-block" style="width:182px">
+                            <select name="isLive" id="isLiveReload" lay-filter="Level" lay-search>
+                                <option value="-1">全部</option>
+                                <option value="1">是</option>
+                                <option value="0">否</option>
+                            </select>
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -76,24 +84,37 @@
             , type: 'datetime'
             , value: getNowFormatDate("data", 1) + " 00:00:00"
         });
-
+        //$.ajax({
+        //    url: "/System/UserAnchor/AnchorUserIDSelect",
+        //    type: "get",
+        //    success: function (data) {
+        //        //if (data == "[]") {
+        //        //    return layer.msg("没有主播，请联系管理员添加！");
+        //        //}
+        //        var $html = "<option value='-1' selected>全部</option>";
+        //        $.each(eval("(" + data + ")"), function (i, v) {
+        //            $html += "<option value='" + v.id + "' >" + v.nickName + "</option>";
+        //        })
+        //        $("select[name='userName']").append($html);
+        //        //append后必须从新渲染
+        //        form.render('select');
+        //        renderTable(getWhere());
+        //    }
+        //}, 'json');
+        //商户下拉框
         $.ajax({
-            url: "/System/UserAnchor/AnchorUserIDSelect",
+            url: "/System/Shop/GetShopSelectList",
             type: "get",
             success: function (data) {
-                //if (data == "[]") {
-                //    return layer.msg("没有主播，请联系管理员添加！");
-                //}
-                var $html = "<option value='-1' selected>全部</option>";
+                var $html = " <option value='-1'>全部</option>";
                 $.each(eval("(" + data + ")"), function (i, v) {
-                    $html += "<option value='" + v.id + "' >" + v.nickName + "</option>";
+                    $html += "<option value='" + v.ID + "'>" + v.Name + "</option>";
                 })
-                $("select[name='userName']").append($html);
+                $("select[name='ShopID']").append($html);
                 //append后必须从新渲染
                 form.render('select');
-                renderTable(getWhere());
             }
-        }, 'json');
+        });
         function renderTable(where) {
             table.render({
                 elem: '#table'
@@ -125,6 +146,7 @@
                             }
                         }
                     }
+                    , { field: 'flvurl', title: '推流地址' }
                     //, {
                     //    field: 'source', title: '来源', templet: function (d) {
                     //        if (d.source == 0) {
@@ -152,16 +174,15 @@
             var Name = $("#Name").val()
             var startTime = $("#startTimeReload").val();
             var endTime = $("#endTimeReload").val();
-            var isLive = $("#isLiveReload").val()
-            var obj = { Name: Name, startTime: startTime, endTime: endTime, isLive: isLive }
+            var isLive = $("#isLiveReload").val();
+            var ShopID = $("#ShopNameReload").val();
+            var obj = { Name: Name, startTime: startTime, endTime: endTime, isLive: isLive, ShopID: ShopID }
             reloadTable(obj);
         });
         function getWhere() {
-            var Name = $("#Name").val()
             var startTime = $("#startTimeReload").val();
             var endTime = $("#endTimeReload").val();
-            var isLive = $("#isLiveReload").val()
-            return { "parm.where": JSON.stringify({ Name: Name, startTime: startTime, endTime: endTime, isLive: isLive  }) };
+            return { "parm.where": JSON.stringify({ startTime: startTime, endTime: endTime }) };
             //var where = {
             //    page: 1, where: JSON.stringify({ "parm.where": { userName: userName, startTime: startTime, endTime: endTime } })
             //}
@@ -196,6 +217,6 @@
                 }
             });
         }
-
+        renderTable(getWhere());
     });
 </script>

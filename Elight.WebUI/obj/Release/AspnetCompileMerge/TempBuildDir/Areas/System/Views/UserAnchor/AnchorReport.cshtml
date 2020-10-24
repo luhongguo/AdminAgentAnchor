@@ -29,12 +29,6 @@
                         </div>
                     </div>
                     <div class="layui-inline">
-                        <label class="layui-form-label">采集公司</label>
-                        <div class="layui-input-inline">
-                            <input type="text" name="isColletCode" placeholder="请输入采集公司名称" id="isColletCode" autocomplete="off" class="layui-input" maxlength="25">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
                         <label class="layui-form-label">开始时间</label>
                         <div class="layui-input-inline">
                             <input type="text" class="layui-input" id="startTimeReload" name="startTime" placeholder="">
@@ -44,6 +38,20 @@
                         <label class="layui-form-label">结束时间</label>
                         <div class="layui-input-inline">
                             <input type="text" class="layui-input" id="endTimeReload" name="endTime" placeholder="">
+                        </div>
+                    </div>
+                    <br />
+                    <div class="layui-inline">
+                        <label class="layui-form-label ">商户名称</label>
+                        <div class="layui-input-inline" style="width:182px">
+                            <select name="ShopID" id="ShopNameReload" lay-filter="Level" lay-verify="required" lay-search>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">采集公司</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="isColletCode" placeholder="请输入采集公司名称" id="isColletCode" autocomplete="off" class="layui-input" maxlength="25">
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -100,6 +108,30 @@
                 , id: "report"
             });
         }
+        //商户下拉框
+        $.ajax({
+            url: "/System/Shop/GetShopSelectList",
+            type: "get",
+            success: function (data) {
+                var $html = " <option value='-1'>全部</option>";
+                $.each(eval("(" + data + ")"), function (i, v) {
+                    $html += "<option value='" + v.ID + "'>" + v.Name + "</option>";
+                })
+                $("select[name='ShopID']").append($html);
+                //append后必须从新渲染
+                form.render('select');
+            }
+        });
+        //监听下拉框的搜索
+        form.on('select(Level)', function (data) {
+            var startTime = $("#startTimeReload").val();
+            var endTime = $("#endTimeReload").val();
+            var Name = $("#Name").val();
+            var isColletCode = $("#isColletCode").val();
+            var ShopID = $("#ShopNameReload").val();
+            var obj = { startTime: startTime, endTime: endTime, Name: Name, isColletCode: isColletCode, ShopID: ShopID }
+            reloadTable(obj);
+        });
         //监听搜索
         form.on('submit(search)', function (data) {
             reloadTable(data.field)
@@ -134,9 +166,7 @@
         function getWhere() {
             var startTime = $("#startTimeReload").val();
             var endTime = $("#endTimeReload").val();
-            var Name = $("#Name").val();
-            var isColletCode = $("#isColletCode").val();
-            return { "parm.where": JSON.stringify({ startTime: startTime, endTime: endTime, Name: Name, isColletCode: isColletCode }) };
+            return { "parm.where": JSON.stringify({ startTime: startTime, endTime: endTime }) };
         }
         renderTable(getWhere());
     });

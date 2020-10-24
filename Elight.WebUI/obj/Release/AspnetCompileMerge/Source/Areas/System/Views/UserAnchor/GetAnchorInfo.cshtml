@@ -35,18 +35,7 @@
                             <input type="text" name="Name" placeholder="请输入主播账号或昵称" id="Name" autocomplete="off" class="layui-input" maxlength="25">
                         </div>
                     </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">直播状态</label>
-                        <div class="layui-input-block">
-                            <select name="Status" id="Status" lay-filter="Level" lay-search>
-                                <option value="-1" selected>全部</option>
-                                <option value="1">直播</option>
-                                <option value="0">正常</option>
-                                <option value="2">离线</option>
-                                <option value="3">禁用</option>
-                            </select>
-                        </div>
-                    </div>
+
                     <div class="layui-inline">
                         <label class="layui-form-label">采集公司</label>
                         <div class="layui-input-inline">
@@ -63,6 +52,26 @@
                         <label class="layui-form-label">结束时间</label>
                         <div class="layui-input-inline">
                             <input type="text" class="layui-input" id="endTimeReload" name="endTime" autocomplete="off">
+                        </div>
+                    </div>
+                    <br />
+                    <div class="layui-inline">
+                        <label class="layui-form-label ">商户名称</label>
+                        <div class="layui-input-inline" style="width:182px">
+                            <select name="ShopID" id="ShopNameReload" lay-filter="Level" lay-verify="required" lay-search>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">直播状态</label>
+                        <div class="layui-input-inline" style="width:182px">
+                            <select name="Status" id="Status" lay-filter="Level" lay-search>
+                                <option value="-1" selected>全部</option>
+                                <option value="1">直播</option>
+                                <option value="0">正常</option>
+                                <option value="2">离线</option>
+                                <option value="3">禁用</option>
+                            </select>
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -110,12 +119,11 @@
             , type: 'datetime'
         });
 
-        function renderTable(where) {
+        function renderTable() {
             table.render({
                 elem: '#table'
                 , method: "post"
                 , url: '/System/UserAnchor/UserSelectAnchorList' //数据接口
-                , where: where
                 , page: true //开启分页
                 , cols: [[ //表头
                     { field: 'id', title: '主播ID' }
@@ -141,6 +149,7 @@
                     }
                     , { field: 'createTime', title: '注册时间' }
                     , { field: 'birthday', title: '出生日期' }
+                    , { field: 'shopName', title: '商户名称' }
                     , { field: 'isColletCode', title: '采集公司' }
                 ]]
                 , request: {
@@ -151,6 +160,20 @@
                 , id: "report"
             });
         }
+        //商户下拉框
+        $.ajax({
+            url: "/System/Shop/GetShopSelectList",
+            type: "get",
+            success: function (data) {
+                var $html = " <option value='-1'>全部</option>";
+                $.each(eval("(" + data + ")"), function (i, v) {
+                    $html += "<option value='" + v.ID + "'>" + v.Name + "</option>";
+                })
+                $("select[name='ShopID']").append($html);
+                //append后必须从新渲染
+                form.render('select');
+            }
+        });
         ////监听搜索
         form.on('submit(search)', function (data) {
             reloadTable(data.field)
@@ -161,7 +184,8 @@
             var endTime = $("#endTimeReload").val();
             var Name = $("#Name").val();
             var Status = $("#Status").val();
-            var obj = { startTime: startTime, endTime: endTime, Name: Name, Status: Status }
+            var ShopID = $("#ShopNameReload").val();
+            var obj = { startTime: startTime, endTime: endTime, Name: Name, Status: Status, ShopID: ShopID }
             reloadTable(obj);
         });
         function reloadTable(field) {
@@ -175,14 +199,14 @@
                 }
             });
         }
-        function getWhere() {
-            var startTime = $("#startTimeReload").val();
-            var endTime = $("#endTimeReload").val();
-            var Name = $("#Name").val();
-            var Status = $("#Status").val();
-            return { "parm.where": JSON.stringify({ startTime: startTime, endTime: endTime, Name: Name, Status: Status }) };
-        }
-        renderTable(getWhere());
+        //function getWhere() {
+        //    var startTime = $("#startTimeReload").val();
+        //    var endTime = $("#endTimeReload").val();
+        //    var Name = $("#Name").val();
+        //    var Status = $("#Status").val();
+        //    return { "parm.where": JSON.stringify({ startTime: startTime, endTime: endTime, Name: Name, Status: Status }) };
+        //}
+        renderTable();
 
     });
 </script>

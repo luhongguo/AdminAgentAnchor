@@ -27,6 +27,13 @@
                         </div>
                     </div>
                     <div class="layui-inline">
+                        <label class="layui-form-label ">商户名称</label>
+                        <div class="layui-input-inline" style="width:182px">
+                            <select name="ShopID" id="ShopNameReload" lay-filter="Level" lay-verify="required" lay-search>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
                         <button class="layui-btn layuiadmin-btn-admin" lay-submit lay-filter="search" data-type="reload">
                             <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
                         </button>
@@ -51,7 +58,7 @@
         var t = $(t).find("img");
         //页面层
         layer.open({
-            title: "头像",
+            title: "支付图片",
             type: 1,
             area: ['300px', '300px'], //宽高
             shadeClose: true, //开启遮罩关闭
@@ -65,7 +72,7 @@
         var form = layui.form;
         var table = layui.table;
        
-        function renderTable(where) {
+        function renderTable() {
             table.render({
                 elem: '#table'
                 , method: "post"
@@ -73,7 +80,6 @@
                 , toolbar: '#toolbar'
                 , page: true //开启分页
                 , checkbox: true
-                , where: where
                 , cols: [[ //表头
                     { type: 'checkbox' }
                     , { field: 'AgentName', title: '主播账号' }
@@ -112,13 +118,32 @@
                 , id: "report"
             });
         }
+        //商户下拉框
+        $.ajax({
+            url: "/System/Shop/GetShopSelectList",
+            type: "get",
+            success: function (data) {
+                var $html = " <option value='-1'>全部</option>";
+                $.each(eval("(" + data + ")"), function (i, v) {
+                    $html += "<option value='" + v.ID + "'>" + v.Name + "</option>";
+                })
+                $("select[name='ShopID']").append($html);
+                //append后必须从新渲染
+                form.render('select');
+            }
+        });
+        //监听下拉框的搜索
+        form.on('select(Level)', function (data) {
+            reloadTable(getWhere());
+        });
         //监听搜索
         form.on('submit(search)', function (data) {
             reloadTable(data.field)
         });
         function getWhere() {
-            var Name = $("#Name").val();
-            return { "parm.where": JSON.stringify({ Name: Name }) };
+            var Name = $("#Name").val()
+            var ShopID = $("#ShopNameReload").val();
+            return { Name: Name, ShopID: ShopID }
         }
         function reloadTable(field) {
             //执行重载
@@ -132,7 +157,7 @@
             });
         }
 
-        renderTable(getWhere());
+        renderTable();
         //监听事件
         table.on('toolbar(test)', function (obj) {
             switch (obj.event) {
