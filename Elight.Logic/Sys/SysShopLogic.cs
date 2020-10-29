@@ -186,7 +186,7 @@ namespace Elight.Logic.Sys
             return result;
         }
         /// <summary>
-        /// 商户不拥有的主播 数据分页
+        /// 未分配的主播 数据分页
         /// </summary>
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
@@ -210,7 +210,7 @@ namespace Elight.Logic.Sys
                     result = db.Queryable<SysAnchor, SysAnchorInfoEntity>((it, at) => new object[] { JoinType.Left, it.id == at.aid })
                                  .WhereIF(dic.ContainsKey("anchorUserName") && !string.IsNullOrEmpty(dic["anchorUserName"].ToString()), it => it.anchorName.Contains(dic["anchorUserName"].ToString()) || it.nickName.Contains(dic["anchorUserName"].ToString()))
                                  .WhereIF(dic.ContainsKey("isColletCode") && !string.IsNullOrEmpty(dic["isColletCode"].ToString()), (it, at) => it.isColletCode == dic["isColletCode"].ToString())
-                                 .Where(it => SqlFunc.Subqueryable<SysShopAnchorEntity>().Where(st => st.ShopID == Convert.ToInt32(dic["userID"])).Where(st => st.AnchorID == it.id).NotAny())
+                                 .Where(it => SqlFunc.Subqueryable<SysShopAnchorEntity>().Where(st => st.AnchorID == it.id).NotAny())
                                  .Select((it, at) => new SysAnchor
                                  {
                                      id = it.id,

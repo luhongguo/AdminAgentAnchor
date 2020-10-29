@@ -53,7 +53,6 @@ namespace Elight.Logic.Sys
                                  IsEnabled = it.IsEnabled,
                                  Remark = it.Remark,
                                  SortCode = it.SortCode,
-                                 Type = it.Type,
                                  ShopName = at.Name
                              }).ToPageList(pageIndex, pageSize, ref totalCount);
             }
@@ -127,7 +126,6 @@ namespace Elight.Logic.Sys
                     IsEnabled = A.IsEnabled,
                     Remark = A.Remark,
                     SortCode = A.SortCode,
-                    Type = A.Type
                 }).First();
             }
         }

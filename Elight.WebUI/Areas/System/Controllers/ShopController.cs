@@ -140,7 +140,7 @@ namespace Elight.WebUI.Areas.System.Controllers
             return View();
         }
         /// <summary>
-        /// 经纪人不拥有的主播
+        /// 未分配的主播的主播
         /// </summary>
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>

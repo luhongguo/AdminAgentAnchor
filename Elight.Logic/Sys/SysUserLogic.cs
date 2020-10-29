@@ -26,7 +26,7 @@ namespace Elight.Logic.Sys
         {
             using (var db = GetInstance())
             {
-                return db.Queryable<SysUser>().Where((A) => A.Account == account && A.ShopID == 0 && A.DeleteMark=="0").Select((A) => new SysUser
+                return db.Queryable<SysUser>().Where((A) => A.Account == account && A.ShopID == 0 && A.DeleteMark == "0").Select((A) => new SysUser
                 {
                     Id = A.Id,
                     ShopID = A.ShopID,
@@ -255,7 +255,8 @@ namespace Elight.Logic.Sys
                     IsEnabled = A.IsEnabled,
                     Balance = A.Balance,
                     Email = A.Email,
-                    Signature = A.Signature
+                    Signature = A.Signature,
+                    ShopID = A.ShopID
                 }).First();
             }
         }
