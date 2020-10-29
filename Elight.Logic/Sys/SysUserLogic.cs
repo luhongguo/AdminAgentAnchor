@@ -302,8 +302,8 @@ namespace Elight.Logic.Sys
                     db.Ado.BeginTran();
                     foreach (string primaryKey in primaryKeys)
                     {
-                        db.Updateable<SysUser>().SetColumns(it => new SysUser { DeleteMark = "1" }).Where(it => it.Id == primaryKey).ExecuteCommand();
-                        //db.Deleteable<SysUser>().Where(it => it.Id == primaryKey).ExecuteCommand();
+                        //db.Updateable<SysUser>().SetColumns(it => new SysUser { DeleteMark = "1" }).Where(it => it.Id == primaryKey).ExecuteCommand();
+                        db.Deleteable<SysUser>().Where(it => it.Id == primaryKey).ExecuteCommand();
                     }
                     db.Ado.CommitTran();
                     return 1;

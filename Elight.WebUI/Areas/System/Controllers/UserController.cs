@@ -115,9 +115,8 @@ namespace Elight.WebUI.Areas.System.Controllers
         {
             //多用户删除。删除用户角色，用户登录，用户主播
             int row = userLogic.Delete(userIds.ToStrArray());
-            //userRoleRelationLogic.Delete(userIds.ToStrArray());
-            //userLogOnLogic.Delete(userIds.ToStrArray());
-            //userAnchorLogic.Delete(userIds.ToStrArray());
+            userRoleRelationLogic.Delete(userIds.ToStrArray());
+            userLogOnLogic.Delete(userIds.ToStrArray());
             return row > 0 ? Success() : Error();
         }
 
