@@ -260,7 +260,24 @@ namespace Elight.Logic.Sys
                 }).First();
             }
         }
-
+        /// <summary>
+        /// 获取用户的角色
+        /// </summary>
+        /// <param name="primaryKey"></param>
+        /// <returns></returns>
+        public SysUser GetUserRole(string primaryKey)
+        {
+            using (var db = GetInstance())
+            {
+                return db.Queryable<SysUser, SysUserRoleRelation, SysRole>((A, B, C) => new object[] {JoinType.Left,A.Id==B.UserId,
+                JoinType.Left,B.RoleId==C.Id
+                }).Where((A) => A.Id == primaryKey).Select((A, B, C) => new SysUser
+                {
+                    ShopID = A.ShopID,
+                    SortCode = C.Type
+                }).First();
+            }
+        }
         /// <summary>
         /// 获得用户列表分页
         /// </summary>

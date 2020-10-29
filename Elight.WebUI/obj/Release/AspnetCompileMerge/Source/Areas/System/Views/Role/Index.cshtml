@@ -36,7 +36,6 @@
                         </th>
                         <th>商户名称</th>
                         <th>角色名称</th>
-                        <th>角色类型</th>
                         <th>排序码</th>
                         <th>状态</th>
                         <th>备注</th>
@@ -65,12 +64,7 @@
             {{# } }}
         </td>
         <td>{{item.Name}}</td>
-        <td>
-            {{# if(item.Type==1){ }} 管理员角色
-            {{# }else if(item.Type==2){ }} 经纪人角色
-            {{# }else{ }} 其他角色
-            {{# } }}
-        </td>
+      
         <td>{{item.SortCode}}</td>
         <td>
             {{# if(item.IsEnabled==true){ }}  <span class="label label-success label-sm">启用</span>

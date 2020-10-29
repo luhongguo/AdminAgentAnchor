@@ -86,6 +86,11 @@ namespace Elight.WebUI.Areas.System.Controllers
         [HttpPost, AuthorizeChecked]
         public ActionResult Delete(string primaryKey)
         {
+            SysRole entity = roleLogic.Get(primaryKey);
+            if (entity.ShopID==0 && entity.Type==1)
+            {
+                return Error("不能删除超管的管理员角色");
+            }
             int row = roleLogic.Delete(primaryKey.ToStrArray());
             return row > 0 ? Success() : Error();
         }

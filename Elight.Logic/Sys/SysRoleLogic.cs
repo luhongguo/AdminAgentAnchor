@@ -126,6 +126,7 @@ namespace Elight.Logic.Sys
                     IsEnabled = A.IsEnabled,
                     Remark = A.Remark,
                     SortCode = A.SortCode,
+                    Type = A.Type
                 }).First();
             }
         }
