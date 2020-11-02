@@ -74,7 +74,7 @@ namespace Elight.WebUI.Areas.System.Controllers
         {
             return View();
         }
-       
+
 
         /// <summary>
         /// 经纪人名下主播
@@ -155,7 +155,7 @@ namespace Elight.WebUI.Areas.System.Controllers
             return Error();
         }
 
-       
+
         #region  金额流水
         /// <summary>
         /// 主播财务报表
@@ -266,6 +266,44 @@ namespace Elight.WebUI.Areas.System.Controllers
                 }
             };
             return Content(result.ToJson());
+        }
+        /// <summary>
+        /// 重新计算时长
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult UpdateWorkDuration(string id)
+        {
+            var result = sysUserAnchorLogic.UpdateWorkDuration(id);
+            if (result)
+            {
+                return Success();
+            }
+            return Error();
+        }
+        /// <summary>
+        /// 主播工时编辑
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult WorkHourForm()
+        {
+            return View();
+        }
+        /// <summary>
+        /// 编辑工时记录
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult UpdateWorkHours(SysAnchorLiveRecordEntity model)
+        {
+            var result = sysUserAnchorLogic.UpdateWorkHours(model);
+            if (result)
+            {
+                return Success();
+            }
+            return Error();
         }
         #endregion
         /// <summary>

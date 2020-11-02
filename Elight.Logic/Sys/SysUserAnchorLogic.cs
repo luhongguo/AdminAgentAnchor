@@ -61,7 +61,7 @@ namespace Elight.Logic.Sys
                                     createTime = it.createTime,
                                     isColletCode = it.isColletCode,
                                     shopName = dt.Name,
-                                    sort=it.sort
+                                    sort = it.sort
                                 })
                                 .OrderBy(" st.agentGold desc")
                                 .ToPageList(parm.page, parm.limit, ref totalCount);
@@ -442,10 +442,11 @@ namespace Elight.Logic.Sys
                         JoinType.Left, st.id == ot.AnchorID
                     })
                                    .Where(it => it.ontime >= Convert.ToDateTime(dic["startTime"]) && it.ontime < Convert.ToDateTime(dic["endTime"]))
+                                   .WhereIF(dic.ContainsKey("seqid") && !string.IsNullOrEmpty(dic["seqid"].ToString()), it => it.seqid == dic["seqid"].ToString())
                                    .WhereIF(dic.ContainsKey("isLive") && Convert.ToInt32(dic["isLive"]) == 1, it => SqlFunc.IsNullOrEmpty(it.uptime))
                                    .WhereIF(dic.ContainsKey("isLive") && Convert.ToInt32(dic["isLive"]) == 0, it => !SqlFunc.IsNullOrEmpty(it.uptime))
                                    .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (it, st) => st.anchorName.Contains(dic["Name"].ToString()) || st.nickName.Contains(dic["Name"].ToString()))
-                                   .WhereIF(dic.ContainsKey("ShopID") && Convert.ToInt32(dic["ShopID"]) != -1, (it, st,  ot) => ot.ShopID == Convert.ToInt32(dic["ShopID"]))
+                                   .WhereIF(dic.ContainsKey("ShopID") && Convert.ToInt32(dic["ShopID"]) != -1, (it, st, ot) => ot.ShopID == Convert.ToInt32(dic["ShopID"]))
                                    ;//缓存30秒
                     var sumReuslt = query.Clone().Select((it, st) => new { amount = SqlFunc.AggregateSum(it.amount), duration = SqlFunc.AggregateSum(it.livetime) }).WithCache(30).First();
                     sumAmount = sumReuslt.amount;
@@ -453,13 +454,14 @@ namespace Elight.Logic.Sys
                     return query
                           .Select((it, st, ot) => new HourModel
                           {
+                              seqid = it.seqid,
                               AnchorName = st.anchorName,
                               NickName = st.nickName,
                               begintime = it.ontime,
                               endtime = it.uptime,
                               duration = it.livetime,
                               islive = SqlFunc.IIF(SqlFunc.IsNullOrEmpty(it.uptime), 1, 0),
-                              flvurl=it.flvurl
+                              flvurl = it.flvurl
                           })
                           .WithCache(30)
                           .OrderBy(" it.ontime desc")
@@ -472,6 +474,40 @@ namespace Elight.Logic.Sys
             }
             return result;
         }
+        /// <summary>
+        /// 重新计算时长
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public bool UpdateWorkDuration(string id)
+        {
+            try
+            {
+                using (var db = GetSqlSugarDB(DbConnType.QPVideoAnchorDB))
+                {
+                    var model = db.Queryable<SysAnchorLiveRecordEntity>().Where(it => it.seqid == id).First();
+                    return db.Updateable<SysAnchorLiveRecordEntity>().SetColumns(it => new SysAnchorLiveRecordEntity { livetime = (decimal)model.uptime.Subtract(model.ontime).TotalMinutes }).Where(it => it.seqid == id).ExecuteCommand() > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                new LogLogic().Write(Level.Error, "重新计算时长", ex.Message, ex.StackTrace);
+            }
+            return false;
+        }
+        /// <summary>
+        /// 编辑工时记录
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public bool UpdateWorkHours(SysAnchorLiveRecordEntity model)
+        {
+            using (var db = GetSqlSugarDB(DbConnType.QPVideoAnchorDB))
+            {
+                return db.Updateable<SysAnchorLiveRecordEntity>().SetColumns(it => new SysAnchorLiveRecordEntity { livetime = (decimal)model.uptime.Subtract(model.ontime).TotalMinutes, ontime = model.ontime, uptime = model.uptime }).Where(it => it.seqid == model.seqid).ExecuteCommand() > 0;
+            }
+        }
+
         /// <summary>
         /// 主播名称下拉框
         /// </summary>

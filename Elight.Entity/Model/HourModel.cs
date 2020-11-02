@@ -12,6 +12,10 @@ namespace Elight.Entity.Model
     public class HourModel
     {
         /// <summary>
+        /// 主键id
+        /// </summary>
+        public string seqid { get; set; }
+        /// <summary>
         /// 账号
         /// </summary>
         public string AnchorName { get; set; }
@@ -31,7 +35,7 @@ namespace Elight.Entity.Model
         /// 开播时间
         /// </summary>
         [JsonConverter(typeof(DateTimeToJson))]
-        public DateTime begintime { get; set; }
+        public DateTime? begintime { get; set; }
         /// <summary>
         /// 停播时间
         /// </summary>

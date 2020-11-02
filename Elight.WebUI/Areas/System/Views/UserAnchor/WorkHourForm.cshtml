@@ -1,0 +1,68 @@
+﻿@{
+    ViewBag.Title = "主播银行卡编辑";
+    Layout = "~/Views/Shared/_Form.cshtml";
+}
+<form id="form" class="layui-form" style="margin-top: 25px">
+    @Html.AntiForgeryToken()
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <input type="hidden" name="seqid" />
+            <label class="layui-form-label">上播时间</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" id="ontimeReload" name="ontime" placeholder="">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">下播时间</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" id="uptimeReload" name="uptime" placeholder="">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item" style="display: none">
+        <div class="layui-input-inline">
+            <button id="btnSubmit" class="layui-btn" lay-submit lay-filter="add">提交</button>
+        </div>
+    </div>
+</form>
+<script src="~/Content/dataTime/dataTime.js"></script>
+<script>
+    layui.use(['form', 'laydate'], function () {
+        var form = layui.form;
+        var laydate = layui.laydate;
+        var primaryKey = $.getQueryString("primaryKey");
+        var ontime = $.getQueryString("ontime");
+        var uptime = $.getQueryString("uptime");
+        //执行一个laydate实例
+        if (ontime != 'null') {
+            laydate.render({
+                elem: '#ontimeReload' //指定元素
+                , type: 'datetime'
+                , value: ontime
+            });
+        }
+        if (uptime != 'null') {
+            console.log(uptime);
+            laydate.render({
+                elem: '#uptimeReload' //指定元素
+                , type: 'datetime'
+                , value: uptime
+            });
+        } else {
+            laydate.render({
+                elem: '#uptimeReload' //指定元素
+                , type: 'datetime'
+            });
+        }
+        form.render();
+        form.on('submit(add)', function (data) {
+            data.field.seqid = primaryKey;
+            $.formSubmit({
+                url: "/System/UserAnchor/UpdateWorkHours",
+                data: data.field
+            });
+            return false;
+        });
+    });
+
+</script>

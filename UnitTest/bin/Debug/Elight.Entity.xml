@@ -64,6 +64,11 @@
             是否采集 0否1是
             </summary>
         </member>
+        <member name="P:Elight.Entity.Model.HourModel.seqid">
+            <summary>
+            主键id
+            </summary>
+        </member>
         <member name="P:Elight.Entity.Model.HourModel.AnchorName">
             <summary>
             账号
