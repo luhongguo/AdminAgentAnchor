@@ -272,6 +272,7 @@ namespace Elight.WebUI.Areas.System.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [HttpPost]
         public ActionResult UpdateWorkDuration(string id)
         {
             var result = sysUserAnchorLogic.UpdateWorkDuration(id);
@@ -295,7 +296,7 @@ namespace Elight.WebUI.Areas.System.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpPost]
         public ActionResult UpdateWorkHours(SysAnchorLiveRecordEntity model)
         {
             var result = sysUserAnchorLogic.UpdateWorkHours(model);

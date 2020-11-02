@@ -12,6 +12,7 @@
     <link href="~/Content/framework/css/console.css" rel="stylesheet" />
     <script src="~/Content/jquery/jquery.min.js"></script>
     <script src="~/Content/layui/layui.js"></script>
+    <script src="~/Content/framework/js/global.js"></script>
     <script src="~/Content/dataTime/dataTime.js"></script>
 </head>
 <body>
@@ -38,6 +39,12 @@
                         </div>
                     </div>
                     <br />
+                    <div class="layui-inline">
+                        <label class="layui-form-label ">id</label>
+                        <div class="layui-input-inline" style="width:182px">
+                            <input type="text" name="seqid" placeholder="" id="seqidReload" autocomplete="off" class="layui-input" maxlength="25">
+                        </div>
+                    </div>
                     <div class="layui-inline">
                         <label class="layui-form-label ">商户名称</label>
                         <div class="layui-input-inline" style="width:182px">
@@ -67,7 +74,10 @@
     </div>
 </body>
 </html>
-
+<script type="text/html" id="currentTableBar">
+    <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="ReTiming">计算时长</a>
+    <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
+</script>
 <script type="text/javascript">
     layui.use(['laydate', 'form', 'table'], function () {
         var laydate = layui.laydate;
@@ -124,7 +134,8 @@
                 , where: where
                 , totalRow: true
                 , cols: [[ //表头
-                    { field: 'AnchorName', title: '主播账号', totalRowText: '合计：' }
+                    { field: 'seqid', title: 'id', totalRowText: '合计：' }
+                    , { field: 'AnchorName', title: '主播账号' }
                     , { field: 'NickName', title: '主播昵称' }
                     , { field: 'begintime', title: '开播时间', width: 160 }
                     , {
@@ -147,6 +158,12 @@
                         }
                     }
                     , { field: 'flvurl', title: '推流地址' }
+                    , {
+                        title: '操作',
+                        toolbar: '#currentTableBar',
+                        align: "center",
+                        width: 150
+                    }
                     //, {
                     //    field: 'source', title: '来源', templet: function (d) {
                     //        if (d.source == 0) {
@@ -171,21 +188,19 @@
         });
         //监听下拉框的搜索
         form.on('select(Level)', function (data) {
-            var Name = $("#Name").val()
+            reloadTable(getWhere(2));
+        });
+        function getWhere(flag) {
             var startTime = $("#startTimeReload").val();
             var endTime = $("#endTimeReload").val();
+            if (flag == 1) {
+                return { "parm.where": JSON.stringify({ startTime: startTime, endTime: endTime }) };
+            }
+            var Name = $("#Name").val();
             var isLive = $("#isLiveReload").val();
             var ShopID = $("#ShopNameReload").val();
-            var obj = { Name: Name, startTime: startTime, endTime: endTime, isLive: isLive, ShopID: ShopID }
-            reloadTable(obj);
-        });
-        function getWhere() {
-            var startTime = $("#startTimeReload").val();
-            var endTime = $("#endTimeReload").val();
-            return { "parm.where": JSON.stringify({ startTime: startTime, endTime: endTime }) };
-            //var where = {
-            //    page: 1, where: JSON.stringify({ "parm.where": { userName: userName, startTime: startTime, endTime: endTime } })
-            //}
+            var seqid = $("#seqidReload").val();
+            return { Name: Name, startTime: startTime, endTime: endTime, isLive: isLive, ShopID: ShopID, seqid: seqid };
         }
         function reloadTable(field) {
             //if (field.userName == "") {
@@ -217,6 +232,43 @@
                 }
             });
         }
-        renderTable(getWhere());
+        table.on('tool(table)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'edit') {
+                $.layerOpen({
+                    id: "add",
+                    title: "编辑工时记录",
+                    width: "700px",
+                    height: "500px",
+                    content: "/System/UserAnchor/WorkHourForm?primaryKey=" + data.seqid + "&ontime=" + data.begintime + "&uptime=" + data.endtime,
+                    yes: function (iBody) {
+                        iBody.find('#btnSubmit').click();
+                        reloadTable(getWhere(2));
+                        //window.location.href = "/System/Shop/Index";
+                    }
+                });
+            } else if (obj.event === 'ReTiming') {
+                console.log(data.endtime)
+                if (data.begintime == null) {
+                    return layer.msg("上播时间不能为空");
+                }
+                if (data.endtime == null) {
+                    return layer.msg("下拨时间不能为空");
+                }
+                $.layerConfirm({
+                    content: "确定重新计算时长吗?",
+                    callback: function () {
+                        $.formSubmit({
+                            url: '/System/UserAnchor/UpdateWorkDuration',
+                            data: { id: data.seqid },
+                            success: function () {
+                                reloadTable(getWhere(2));
+                            }
+                        });
+                    }
+                });
+            }
+        });
+        renderTable(getWhere(1));
     });
 </script>
