@@ -59,8 +59,8 @@ namespace TimedTasksService
                                it.status = 1;
                                updateTipList.Add(new TipEntity { id = it.id, status = 0 });
                                it.PlatformIncome = it.totalamount * it.PlatformRebate / 100;//平台收益
-                               it.UserIncome = (it.totalamount - it.PlatformIncome) * it.UserRebate / 100;//经纪人收益=总金额减去平台收益 * 主播返点
-                               it.AnchorIncome = (it.totalamount - it.PlatformIncome) * (100 - it.UserRebate) / 100;//主播收益=总金额减去平台收益 * （100-主播返点）
+                               it.UserIncome = it.totalamount * it.UserRebate / 100;//经纪人收益
+                               it.AnchorIncome =it.totalamount * (100-it.PlatformRebate-it.UserRebate) / 100;//主播收益
                            })
                            .ToPageList(1, 500);
                     if (list.Count == 0)
