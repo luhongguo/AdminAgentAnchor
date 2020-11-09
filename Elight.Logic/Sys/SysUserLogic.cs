@@ -88,6 +88,24 @@ namespace Elight.Logic.Sys
             }
         }
         /// <summary>
+        /// 获取用户返点
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public UserRebateModel GetUserRebate(string account)
+        {
+            using (var db = GetInstance())
+            {
+                return db.Queryable<SysUser, SysRebateEntity>((A, B) => new
+                      object[] { JoinType.Left, A.Id == B.UserID }).Where((A) => A.Account == account).Select((A, B) => new UserRebateModel
+                      {
+                          Id = A.Id,
+                          TipRebate = B.TipRebate,
+                          HourRebate = B.HourRebate
+                      }).First();
+            }
+        }
+        /// <summary>
         /// 获取用户
         /// </summary>
         /// <param name="account"></param>

@@ -222,6 +222,7 @@
     <Compile Include="Model\Page.cs" />
     <Compile Include="Model\PageParm.cs" />
     <Compile Include="Model\SelectModel.cs" />
+    <Compile Include="Model\UserRebateModel.cs" />
     <Compile Include="Network\HttpMethods.cs" />
     <Compile Include="Network\Net.cs" />
     <Compile Include="Network\SocketHelper.cs" />

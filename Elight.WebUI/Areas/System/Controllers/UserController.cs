@@ -13,6 +13,7 @@ using Elight.Utility.Format;
 using Elight.Utility.Extension;
 using Elight.Utility.Operator;
 using Elight.Utility.Log;
+using Elight.Utility.Model;
 
 namespace Elight.WebUI.Areas.System.Controllers
 {
@@ -118,10 +119,11 @@ namespace Elight.WebUI.Areas.System.Controllers
             {
                 return Error("不能删除超管的管理员角色用户");
             }
-            //多用户删除。删除用户角色，用户登录，用户主播
+            //删除用户信息,用户角色，用户登录，用户返点
             int row = userLogic.Delete(userIds.ToStrArray());
             userRoleRelationLogic.Delete(userIds.ToStrArray());
             userLogOnLogic.Delete(userIds.ToStrArray());
+            new SysRebateLogic().DeleteRebateByUserID(userIds.ToStrArray());
             return row > 0 ? Success() : Error();
         }
 

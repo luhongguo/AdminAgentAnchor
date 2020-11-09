@@ -151,5 +151,31 @@ namespace Elight.Logic.Sys
                 return db.Deleteable<SysRebateEntity>().In(idList).ExecuteCommand();
             }
         }
+        /// <summary>
+        /// 根据用户ID删除返点信息
+        /// </summary>
+        /// <param name="userIds"></param>
+        /// <returns></returns>
+        public int DeleteRebateByUserID(params string[] userIds)
+        {
+            using (var db = GetInstance())
+            {
+                try
+                {
+                    db.Ado.BeginTran();
+                    foreach (string userId in userIds)
+                    {
+                        db.Deleteable<SysRebateEntity>().Where(it => it.UserID == userId).ExecuteCommand();
+                    }
+                    db.Ado.CommitTran();
+                    return 1;
+                }
+                catch (Exception ex)
+                {
+                    db.Ado.RollbackTran();
+                    return 0;
+                }
+            }
+        }
     }
 }

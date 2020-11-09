@@ -73,31 +73,31 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>/i3u8Qnxb0CZpnT6Q+MFof74tkeIj8iiVSU3jEsLZOU=</dsig:DigestValue>
+        <dsig:DigestValue>qjOcrURlQ4yXP7lc9f/e2m6P3bOOjcNRZGWnTznamVk=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Elight.Logic.dll" size="169984">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Elight.Logic.dll" size="171008">
       <assemblyIdentity name="Elight.Logic" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>2q11NEKxU2S7yTRrMtvLZMcibu/NL+gi3Woaqt22ZgY=</dsig:DigestValue>
+        <dsig:DigestValue>fhhU+ieBb3OqQ5l0EJqcqw7Ah9ieIQx3kz12iJhcUgU=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Elight.Utility.dll" size="137216">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Elight.Utility.dll" size="137728">
       <assemblyIdentity name="Elight.Utility" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>1crucmn2P7DIRzYccGCb9S3Ean3R1/RmXzhffgaEVNY=</dsig:DigestValue>
+        <dsig:DigestValue>saKb2rofThgXCxORIUvydh95loPOrX6TjA6R7q502Ig=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
