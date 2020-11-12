@@ -43,10 +43,11 @@ namespace Elight.Logic.Sys
                                 JoinType.Left,at.orderno==dt.orderno,
                                 JoinType.Left,ct.id==ot.AnchorID
                       })
-                          .Where((at, bt, ct, dt) => at.StartDate >= Convert.ToDateTime(dic["startTime"]) && at.StartDate <= Convert.ToDateTime(dic["endTime"]))
+                          .Where((at, bt, ct, dt) => at.StartDate >= Convert.ToDateTime(dic["startTime"]) && at.StartDate < Convert.ToDateTime(dic["endTime"]).AddDays(1))
                           .WhereIF(dic.ContainsKey("AgentName") && !string.IsNullOrEmpty(dic["AgentName"].ToString()), (at, bt, ct, dt) => bt.Account.Contains(dic["AgentName"].ToString()))
                           .WhereIF(dic.ContainsKey("AnchorName") && !string.IsNullOrEmpty(dic["AnchorName"].ToString()), (at, bt, ct, dt) => ct.anchorName.Contains(dic["AnchorName"].ToString()) || ct.nickName.Contains(dic["AnchorName"].ToString()))
-                          .WhereIF(dic.ContainsKey("Type") && Convert.ToInt32(dic["Type"].ToString()) != -1, (at, bt, ct, dt) => dt.Type == Convert.ToInt32(dic["Type"].ToString()))
+                          .WhereIF(dic.ContainsKey("Type") && Convert.ToInt32(dic["Type"].ToString()) != -1 && Convert.ToInt32(dic["Type"].ToString()) != 10, (at, bt, ct, dt) => dt.Type == Convert.ToInt32(dic["Type"].ToString()))
+                          .WhereIF(dic.ContainsKey("Type") && Convert.ToInt32(dic["Type"].ToString()) == 10, (at, bt, ct, dt) => SqlFunc.IsNullOrEmpty(dt.Type))
                           .WhereIF(dic.ContainsKey("ShopID") && Convert.ToInt32(dic["ShopID"]) != -1, (at, bt, ct, dt, ot) => ot.ShopID == Convert.ToInt32(dic["ShopID"]));
                     sumModel = query.Clone().Select((at, bt, ct, dt) => new TipIncomeDetailModel
                     {
@@ -54,7 +55,7 @@ namespace Elight.Logic.Sys
                         UserIncome = SqlFunc.AggregateSum(at.UserIncome),
                         PlatformIncome = SqlFunc.AggregateSum(at.PlatformIncome),
                         totalamount = SqlFunc.AggregateSum(dt.totalamount)
-                    }).WithCache(60).First();
+                    }).WithCache(10).First();
                     res = query
                          .Select((at, bt, ct, dt) => new TipIncomeDetailModel
                          {
@@ -72,9 +73,17 @@ namespace Elight.Logic.Sys
                              quantity = dt.quantity,
                              totalamount = dt.totalamount,
                              sendtime = dt.sendtime,
-                             Type = dt.Type
-                         }).WithCache(60)
+                             Type = dt.Type,
+                             StartDate = at.StartDate
+                         }).WithCache(10)
                          .OrderBy(" dt.sendtime desc")
+                         .Mapper(it =>
+                         {
+                             if (it.Type==0)
+                             {
+                                 it.sendtime = it.StartDate;
+                             }
+                         })
                         .ToPageList(parm.page, parm.limit, ref totalCount);
                 }
             }
@@ -83,6 +92,34 @@ namespace Elight.Logic.Sys
                 new LogLogic().Write(Level.Error, "礼物返点信息 分页信息", ex.Message, ex.StackTrace);
             }
             return res;
+        }
+        /// <summary>
+        /// 手动添加花币
+        /// </summary>
+        /// <param name="addModel"></param>
+        /// <returns></returns>
+        public bool AddTipIncome(SysTipIncomeDetailEntity addModel)
+        {
+            var result = false;
+            using (var db = GetSqlSugarDB(DbConnType.QPAnchorRecordDB))
+            {
+                try
+                {
+                    db.Ado.BeginTran();
+                    //新增数据
+                    result = db.Insertable(addModel).ExecuteCommand() > 0;
+                    //修改主播代理平台的花币余额
+                    db.Updateable<SysAnchorInfoEntity>().SetColumns(it => new SysAnchorInfoEntity { agentGold = it.agentGold + addModel.AnchorIncome })
+                      .Where(it => it.aid == addModel.AnchorID).ExecuteCommand();
+                    db.Ado.CommitTran();
+                }
+                catch (Exception ex)
+                {
+                    db.Ado.RollbackTran();
+                    new LogLogic().Write(Level.Error, "手动添加花币", ex.Message, ex.StackTrace);
+                }
+                return result;
+            }
         }
     }
 }

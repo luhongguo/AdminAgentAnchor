@@ -55,7 +55,6 @@ namespace Elight.Logic.Sys
                                    AnchorNickName = it.nickName,
                                    UserAccount = at.Account
                                })
-                               .WithCache(60)
                                .ToPageList(parm.page, parm.limit, ref totalCount);
                 }
             }

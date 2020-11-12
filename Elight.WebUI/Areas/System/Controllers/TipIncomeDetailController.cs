@@ -1,7 +1,10 @@
 ﻿using Elight.Entity.Model;
+using Elight.Entity.Sys;
 using Elight.Logic.Sys;
 using Elight.Utility.Format;
 using Elight.Utility.Model;
+using Elight.WebUI.Controllers;
+using Elight.WebUI.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +13,8 @@ using System.Web.Mvc;
 
 namespace Elight.WebUI.Areas.System.Controllers
 {
-    public class TipIncomeDetailController : Controller
+    [LoginChecked]
+    public class TipIncomeDetailController : BaseController
     {
         SysTipIncomeDetailLogic sysTipIncomeDetailLogic;
         public TipIncomeDetailController()
@@ -18,6 +22,7 @@ namespace Elight.WebUI.Areas.System.Controllers
             sysTipIncomeDetailLogic = new SysTipIncomeDetailLogic();
         }
         // GET: System/TipIncomeDetail
+        [HttpGet, AuthorizeChecked]
         public ActionResult Index()
         {
             return View();
@@ -43,13 +48,42 @@ namespace Elight.WebUI.Areas.System.Controllers
                 count = totalCount,// pageData.Count
                 totalRow = new  //合计
                 {
-                    AnchorIncome=sumModel.AnchorIncome.ToString(),
-                    UserIncome=sumModel.UserIncome.ToString(),
-                    PlatformIncome =sumModel.PlatformIncome.ToString(),
-                    totalamount =sumModel.totalamount.ToString(),
+                    AnchorIncome = sumModel.AnchorIncome.ToString(),
+                    UserIncome = sumModel.UserIncome.ToString(),
+                    PlatformIncome = sumModel.PlatformIncome.ToString(),
+                    totalamount = sumModel.totalamount.ToString(),
                 }
             };
             return Content(result.ToJson());
+        }
+        public ActionResult Form()
+        {
+            return View();
+        }
+        /// <summary>
+        /// 新增
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult Form(AddTipDetailModel model)
+        {
+            var anchorModel = new SysUserAnchorLogic().CheckAnchorName(model.anchorName);
+            if (anchorModel == null)
+            {
+                return Error("主播不存在!");
+            }
+            var agentModel = new SysAnchorRebateLogic().GetRebateByAccount(anchorModel.id);
+            var addModel = new SysTipIncomeDetailEntity
+            {
+                ShopID = 0,
+                AnchorID = anchorModel.id,
+                AnchorIncome = model.money,
+                StartDate = DateTime.Now,
+                UserID = agentModel == null ? null : agentModel.parentID
+            };
+            var result = sysTipIncomeDetailLogic.AddTipIncome(addModel);
+            return result ? Success() : Error();
         }
     }
 }

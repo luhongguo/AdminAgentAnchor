@@ -48,7 +48,7 @@ namespace Elight.Entity.Model
         /// <summary>
         /// 统计时间
         /// </summary>
-        public int StartDate { get; set; }
+        public DateTime StartDate { get; set; }
         /// <summary>
         /// 订单
         /// </summary>

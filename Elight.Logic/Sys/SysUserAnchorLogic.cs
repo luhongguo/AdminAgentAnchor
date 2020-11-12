@@ -54,7 +54,7 @@ namespace Elight.Logic.Sys
                                     anchorName = it.anchorName,
                                     nickName = it.nickName,
                                     headUrl = SqlFunc.IIF(it.headUrl.Contains("http"), it.headUrl, Image_CDN + it.headUrl),
-                                    balance = st.agentGold / 10,
+                                    balance = st.agentGold,
                                     follow = st.follow,
                                     birthday = it.birthday,
                                     status = st.status,

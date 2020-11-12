@@ -49,6 +49,21 @@
             禁用=3
             </summary>
         </member>
+        <member name="T:Elight.Entity.Model.AddTipDetailModel">
+            <summary>
+            添加花币实体
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Model.AddTipDetailModel.anchorName">
+            <summary>
+            主播名称
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Model.AddTipDetailModel.money">
+            <summary>
+            花币金额
+            </summary>
+        </member>
         <member name="P:Elight.Entity.Model.AnchorNaneListModel.id">
             <summary>
             id
@@ -781,7 +796,7 @@
         </member>
         <member name="P:Elight.Entity.Sys.SysAnchorInfoEntity.agentGold">
             <summary>
-            代理平台的主播余额
+            代理平台的主播花币余额
             </summary>
         </member>
         <member name="T:Elight.Entity.Sys.SysAnchorLiveRecordEntity">

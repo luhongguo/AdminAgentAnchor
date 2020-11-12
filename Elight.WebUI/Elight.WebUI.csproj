@@ -2118,6 +2118,7 @@
     <Content Include="Areas\System\Views\AnchorWithdrawalRecord\Index.cshtml" />
     <Content Include="Areas\System\Views\AnchorWithdrawalRecord\Handle.cshtml" />
     <Content Include="Areas\System\Views\UserAnchor\WorkHourForm.cshtml" />
+    <Content Include="Areas\System\Views\TipIncomeDetail\Form.cshtml" />
     <None Include="Properties\PublishProfiles\发布.pubxml" />
     <Content Include="Scripts\buttons.js" />
     <Content Include="Scripts\index.js.flow" />

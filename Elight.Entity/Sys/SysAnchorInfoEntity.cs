@@ -63,7 +63,7 @@ namespace Elight.Entity.Sys
         /// </summary>
         public string tgchat { get; set; }
         /// <summary>
-        /// 代理平台的主播余额
+        /// 代理平台的主播花币余额
         /// </summary>
         public decimal agentGold { get; set; }
     }

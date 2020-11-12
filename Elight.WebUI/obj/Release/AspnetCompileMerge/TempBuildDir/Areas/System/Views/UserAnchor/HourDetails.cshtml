@@ -132,7 +132,9 @@
                 , url: '/System/UserAnchor/GetHourDetailsPage' //数据接口
                 , page: true //开启分页
                 , where: where
+                , height: 580
                 , totalRow: true
+
                 , cols: [[ //表头
                     { field: 'seqid', title: 'id', totalRowText: '合计：' }
                     , { field: 'AnchorName', title: '主播账号' }
@@ -179,6 +181,7 @@
                     , limitName: 'parm.limit' //每页数据量的参数名，默认：limit
                 }
                 , limit: 10
+                , limits: [15, 50, 100, 200, 500, 1000, 2000, 4000]
                 , id: "report"
             });
         }

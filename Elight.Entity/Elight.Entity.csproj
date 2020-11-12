@@ -152,6 +152,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enum\ModuleType.cs" />
+    <Compile Include="Model\AddTipDetailModel.cs" />
     <Compile Include="Model\AnchorInfoModel.cs" />
     <Compile Include="Model\AnchorNaneListModel.cs" />
     <Compile Include="Model\HourModel.cs" />
