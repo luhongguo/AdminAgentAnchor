@@ -96,3 +96,6 @@ E:\工作项目\AdminAgentAnchorSolution\UnitTest\obj\Debug\UnitTest.csproj.Core
 E:\工作项目\AdminAgentAnchorSolution\UnitTest\obj\Debug\UnitTest.csproj.CopyComplete
 E:\工作项目\AdminAgentAnchorSolution\UnitTest\obj\Debug\UnitTest.dll
 E:\工作项目\AdminAgentAnchorSolution\UnitTest\obj\Debug\UnitTest.pdb
+E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\WorkHourService.exe
+E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\WorkHourService.pdb
+E:\工作项目\AdminAgentAnchorSolution\UnitTest\bin\Debug\WorkHourService.exe.config

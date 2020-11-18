@@ -34,7 +34,7 @@ namespace Elight.Entity.Sys
         /// </summary>
         public decimal hour_income { get; set; }
         /// <summary>
-        /// 代理收益
+        /// 代理礼物收益
         /// </summary>
         public decimal agent_income { get; set; }
         /// <summary>
@@ -49,5 +49,9 @@ namespace Elight.Entity.Sys
         /// 平台收益
         /// </summary>
         public decimal Platform_income { get; set; }
+        /// <summary>
+        /// 代理工时收益
+        /// </summary>
+        public decimal agentHour_income { get; set; }
     }
 }

@@ -192,6 +192,7 @@
     <Compile Include="Sys\SysUserAnchor.cs" />
     <Compile Include="Sys\SysUserLogOn.cs" />
     <Compile Include="Sys\SysUserRoleRelation.cs" />
+    <Compile Include="Sys\SysWorkHourIncomeDetailEntity.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Lib\Oracle.ManagedDataAccess.dll" />

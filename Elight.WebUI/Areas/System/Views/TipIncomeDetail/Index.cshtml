@@ -55,12 +55,24 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">收益类型</label>
                         <div class="layui-input-block" style="width:182px">
+                            <select name="incomeType" id="incomeTypeReload" lay-filter="Level" lay-search>
+                                <option value="-1" selected>全部</option>
+                                <option value="1">礼物</option>
+                                <option value="2">工时</option>
+                                <option value="3">手动添加</option>
+                                <option value="0">其他</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">礼物类型</label>
+                        <div class="layui-input-block" style="width:182px">
                             <select name="Type" id="TypeReload" lay-filter="Level" lay-search>
                                 <option value="-1" selected>全部</option>
                                 <option value="1">打赏礼物</option>
                                 <option value="2">房间扣费</option>
                                 <option value="3">计时扣费</option>
-                                <option value="10">手动添加</option>
+                                <option value="0">其他</option>
                             </select>
                         </div>
                     </div>
@@ -136,10 +148,21 @@
                             return d.PlatformRebate + "%";
                         }
                     }
-                    , { field: 'orderno', title: '订单号' }
-                    , { field: 'giftname', title: '礼物名称' }
                     , {
-                        field: 'Type', title: '收益类型', templet: function (d) {
+                        field: 'incomeType', title: '收益类型', templet: function (d) {
+                            if (d.incomeType == 1) {
+                                return '<span class="layui-badge layui-bg-green">礼物</span>'
+                            } else if (d.incomeType == 2) {
+                                return '<span class="layui-badge layui-bg-orange">工时</span>'
+                            } else if (d.incomeType == 3) {
+                                return ' <span class="layui-badge">手动添加</span>'
+                            } else {
+                                return ' <span class="layui-badge layui-bg-blue">其他</span>'
+                            }
+                        }
+                    }
+                    , {
+                        field: 'Type', title: '礼物类型', templet: function (d) {
                             if (d.Type == 1) {
                                 return '<span class="layui-badge layui-bg-green">打赏礼物</span>'
                             } else if (d.Type == 2) {
@@ -147,14 +170,13 @@
                             } else if(d.Type==3){
                                 return ' <span class="layui-badge">计时扣费</span>'
                             } else {
-                                return ' <span class="layui-badge layui-bg-blue">手动添加</span>'
+                                return ' <span class="layui-badge layui-bg-blue">其他</span>'
                             }
                         }
                     }
-                    , { field: 'price', title: '单价(花币)' }
-                    , { field: 'quantity', title: '数量' }
+                    , { field: 'orderno', title: '订单号' }
                     , { field: 'totalamount', title: '总金额(花币)', totalRow: true }
-                    , { field: 'sendtime', title: '打赏时间', width: 160 }
+                    , { field: 'CreateTime', title: '创建时间', width: 160 }
                 ]]
                 , request: {
                     pageName: 'parm.page' //页码的参数名称，默认：page
@@ -197,7 +219,8 @@
             var AnchorName = $("#AnchorName").val()
             var Type = $("#TypeReload").val();
             var ShopID = $("#ShopNameReload").val();
-            return { AgentName: AgentName, AnchorName: AnchorName, startTime: startTime, endTime: endTime, Type: Type, ShopID: ShopID };
+            var incomeType = $("#incomeTypeReload").val();
+            return { AgentName: AgentName, AnchorName: AnchorName, startTime: startTime, endTime: endTime, Type: Type, ShopID: ShopID, incomeType: incomeType };
         }
         function reloadTable(field) {
             if (field.userName == "") {

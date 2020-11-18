@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Elight.Entity.Sys;
 using Newtonsoft.Json;
 using SqlSugar;
-namespace Elight.Entity
+namespace Elight.Entity.Sys
 {
     /// <summary>
     /// 主播返点实例
@@ -53,6 +53,18 @@ namespace Elight.Entity
         /// </summary>
         [JsonConverter(typeof(DateTimeToJson))]
         public DateTime? ModifiedTime { get; set; }
+        /// <summary>
+        /// 基础直播时长
+        /// </summary>
+        public int LiveTime { get; set; }
+        /// <summary>
+        /// 薪资
+        /// </summary>
+        public decimal Salary { get; set; }
+        /// <summary>
+        /// 是否开启工时计算  0否1是
+        /// </summary>
+        public int IsWorkHours { get; set; }
         /// <summary>
         /// 主播账号
         /// </summary>

@@ -77,6 +77,10 @@
       <Project>{0ea7833c-0263-405b-aff3-e8f8d078aaa4}</Project>
       <Name>TimedTasksService</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WorkHourService\WorkHourService.csproj">
+      <Project>{fc4b5124-6885-4329-9f01-13161f7276a1}</Project>
+      <Name>WorkHourService</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

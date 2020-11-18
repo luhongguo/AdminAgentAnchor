@@ -80,7 +80,10 @@ namespace Elight.WebUI.Areas.System.Controllers
                 AnchorID = anchorModel.id,
                 AnchorIncome = model.money,
                 StartDate = DateTime.Now,
-                UserID = agentModel == null ? null : agentModel.parentID
+                UserID = agentModel == null ? null : agentModel.parentID,
+                TipType = Entity.Enum.TipTypeEnum.其他,
+                IncomeType = Entity.Enum.IncomeTypeEnum.手动添加,
+                CreateTime = DateTime.Now
             };
             var result = sysTipIncomeDetailLogic.AddTipIncome(addModel);
             return result ? Success() : Error();

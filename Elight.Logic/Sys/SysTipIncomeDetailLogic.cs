@@ -1,4 +1,5 @@
-﻿using Elight.Entity.Model;
+﻿using Elight.Entity.Enum;
+using Elight.Entity.Model;
 using Elight.Entity.Sys;
 using Elight.Logic.Base;
 using Elight.Utility.Log;
@@ -46,8 +47,8 @@ namespace Elight.Logic.Sys
                           .Where((at, bt, ct, dt) => at.StartDate >= Convert.ToDateTime(dic["startTime"]) && at.StartDate < Convert.ToDateTime(dic["endTime"]).AddDays(1))
                           .WhereIF(dic.ContainsKey("AgentName") && !string.IsNullOrEmpty(dic["AgentName"].ToString()), (at, bt, ct, dt) => bt.Account.Contains(dic["AgentName"].ToString()))
                           .WhereIF(dic.ContainsKey("AnchorName") && !string.IsNullOrEmpty(dic["AnchorName"].ToString()), (at, bt, ct, dt) => ct.anchorName.Contains(dic["AnchorName"].ToString()) || ct.nickName.Contains(dic["AnchorName"].ToString()))
-                          .WhereIF(dic.ContainsKey("Type") && Convert.ToInt32(dic["Type"].ToString()) != -1 && Convert.ToInt32(dic["Type"].ToString()) != 10, (at, bt, ct, dt) => dt.Type == Convert.ToInt32(dic["Type"].ToString()))
-                          .WhereIF(dic.ContainsKey("Type") && Convert.ToInt32(dic["Type"].ToString()) == 10, (at, bt, ct, dt) => SqlFunc.IsNullOrEmpty(dt.Type))
+                          .WhereIF(dic.ContainsKey("Type") && Convert.ToInt32(dic["Type"].ToString()) != -1, (at, bt, ct, dt) => at.TipType == (TipTypeEnum)Convert.ToInt32(dic["Type"].ToString()))
+                          .WhereIF(dic.ContainsKey("incomeType") && Convert.ToInt32(dic["incomeType"].ToString()) != -1, (at, bt, ct, dt) => at.IncomeType == (IncomeTypeEnum)Convert.ToInt32(dic["incomeType"].ToString()))
                           .WhereIF(dic.ContainsKey("ShopID") && Convert.ToInt32(dic["ShopID"]) != -1, (at, bt, ct, dt, ot) => ot.ShopID == Convert.ToInt32(dic["ShopID"]));
                     sumModel = query.Clone().Select((at, bt, ct, dt) => new TipIncomeDetailModel
                     {
@@ -68,23 +69,13 @@ namespace Elight.Logic.Sys
                              UserRebate = at.UserRebate,
                              PlatformRebate = at.PlatformRebate,
                              orderno = dt.orderno,
-                             giftname = dt.giftname,
-                             price = dt.price,
-                             quantity = dt.quantity,
                              totalamount = dt.totalamount,
-                             sendtime = dt.sendtime,
-                             Type = dt.Type,
-                             StartDate = at.StartDate
+                             CreateTime = at.CreateTime,
+                             Type = at.TipType,
+                             incomeType =at.IncomeType,
                          }).WithCache(10)
-                         .OrderBy(" dt.sendtime desc")
-                         .Mapper(it =>
-                         {
-                             if (it.Type==0)
-                             {
-                                 it.sendtime = it.StartDate;
-                             }
-                         })
-                        .ToPageList(parm.page, parm.limit, ref totalCount);
+                         .OrderBy(" at.CreateTime desc")
+                         .ToPageList(parm.page, parm.limit, ref totalCount);
                 }
             }
             catch (Exception ex)

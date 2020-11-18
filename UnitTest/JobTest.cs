@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TimedTasksService;
+using WorkHourService;
 
 namespace UnitTest
 {
@@ -21,7 +22,15 @@ namespace UnitTest
         [TestMethod]
         public void TestMethod2()
         {
-            TipService.StatisticsAgentTipIncome(DateTime.Now.AddDays(-3), DateTime.Now);//前一天的收益数据
+            TipService.StatisticsAgentTipIncome(DateTime.Now.AddDays(-1), DateTime.Now);//前一天的收益数据
+        }
+        /// <summary>
+        /// 测试工时收益
+        /// </summary>
+        [TestMethod]
+        public void TestWorkHour()
+        {
+            WorkHourIncomeService.StatisticsAnchorWorkHourIncome(Convert.ToDateTime("2020-10-11 00:00:00"));
         }
         [TestMethod]
         public void TestTime()

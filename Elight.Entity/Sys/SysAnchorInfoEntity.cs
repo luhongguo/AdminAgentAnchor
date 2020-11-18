@@ -25,7 +25,7 @@ namespace Elight.Entity.Sys
         /// <summary>
         /// 直播状态
         /// </summary>
-        public AnchorStatus status { get; set; }
+        public AnchorStatusEnum status { get; set; }
         /// <summary>
         /// 关注人数
         /// </summary>

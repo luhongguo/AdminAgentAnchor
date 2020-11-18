@@ -14,6 +14,7 @@ using Elight.Utility;
 using Newtonsoft.Json.Linq;
 using Elight.Entity;
 using Quartz.Util;
+using Elight.Entity.Enum;
 
 namespace TimedTasksService
 {
@@ -44,7 +45,6 @@ namespace TimedTasksService
                            .Where((at, st, ct) => at.status == 1)
                            .Select((at, st, ct) => new SysTipIncomeDetailEntity
                            {
-                               id = at.id,
                                ShopID = 0,
                                UserID = ct.UserID,
                                AnchorID = at.AnchorID,
@@ -53,6 +53,9 @@ namespace TimedTasksService
                                totalamount = at.totalamount,
                                UserRebate = st.TipRebate,
                                PlatformRebate = ct.TipRebate,
+                               CreateTime = at.sendtime,
+                               TipType = (TipTypeEnum)at.Type,
+                               IncomeType = IncomeTypeEnum.礼物
                            })
                            .Mapper((it) =>
                            {
@@ -60,7 +63,7 @@ namespace TimedTasksService
                                updateTipList.Add(new TipEntity { id = it.id, status = 0 });
                                it.PlatformIncome = it.totalamount * it.PlatformRebate / 100;//平台收益
                                it.UserIncome = it.totalamount * it.UserRebate / 100;//经纪人收益
-                               it.AnchorIncome =it.totalamount * (100-it.PlatformRebate-it.UserRebate) / 100;//主播收益
+                               it.AnchorIncome = it.totalamount * (100 - it.PlatformRebate - it.UserRebate) / 100;//主播收益
                            })
                            .ToPageList(1, 500);
                     if (list.Count == 0)
@@ -182,7 +185,7 @@ namespace TimedTasksService
                 {
                     db.Updateable<SysConfigEntity>().SetColumns(it => new SysConfigEntity { values = endTime.ToString("yyyy-MM-dd HH:mm:ss") }).Where(it => it.name == key).ExecuteCommand();
                 }
-                Console.WriteLine("打赏礼物采集成功:采集开始时间--" + startTime + "，采集礼物最大时间--" + endTime);
+                Console.WriteLine("打赏礼物采集成功:采集开始时间--" + startTime + "，采集礼物最大时间--" + endTime + ",采集数量：" + totalCount);
             }
             catch (Exception ex)
             {
@@ -212,7 +215,7 @@ namespace TimedTasksService
                                  company = p["company"].ToString(),
                                  liveId = p["liveId"].ToString(),//推流时间戳
                                  aid = int.Parse(p["anchorId"].ToString()),//主播ID
-                                 amount = decimal.Parse(p["amount"].ToString()) ,//总金额
+                                 amount = decimal.Parse(p["amount"].ToString()),//总金额
                                  num = int.Parse(p["number"].ToString()),//礼物数量
                                  Type = int.Parse(p["actionType"].ToString()),//1是打赏，2是房间,3计时
                                  code = p["code"].ToString(),//礼物编码

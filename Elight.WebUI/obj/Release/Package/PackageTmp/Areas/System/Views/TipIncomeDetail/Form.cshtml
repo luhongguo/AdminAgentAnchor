@@ -1,0 +1,54 @@
+﻿@{
+    ViewBag.Title = "主播添加花币";
+    Layout = "~/Views/Shared/_Form.cshtml";
+}
+<form id="form" class="layui-form" style="margin-top: 25px">
+    @Html.AntiForgeryToken()
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <input type="hidden" name="id" />
+            <label class="layui-form-label label-required">主播账号</label>
+            <div class="layui-input-inline">
+                <input type="text" name="anchorName" lay-verify="required" placeholder="请输入账号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <input type="hidden" name="id" />
+            <label class="layui-form-label ">花币金额</label>
+            <div class="layui-input-inline">
+                <input type="number" name="money" placeholder="请输入花币金额" autocomplete="off" class="layui-input " >
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item" style="display: none">
+        <div class="layui-input-inline">
+            <button id="btnSubmit" class="layui-btn" lay-submit lay-filter="add">提交</button>
+        </div>
+    </div>
+</form>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        var primaryKey = $.getQueryString("primaryKey");
+        if (primaryKey) {
+            $.ajax({
+                url: "/System/TipIncomeDetail/GetForm",
+                data: { primaryKey: primaryKey },
+                type: "post",
+                dataType: "json",
+                success: function (data) {
+                    $("#form").formSerialize(data);
+                }
+            });
+        }
+        form.render();
+        form.on('submit(add)', function (data) {
+            $.formSubmit({
+                url: "/System/TipIncomeDetail/Form",
+                data: data.field
+            });
+            return false;
+        });
+    });
+
+</script>

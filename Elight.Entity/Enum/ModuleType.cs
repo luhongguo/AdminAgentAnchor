@@ -27,7 +27,7 @@ namespace Elight.Entity.Enum
     /// <summary>
     /// 直播状态枚取
     /// </summary>
-    public enum AnchorStatus
+    public enum AnchorStatusEnum
     {
         /// <summary>
         /// 正常=0
@@ -45,5 +45,49 @@ namespace Elight.Entity.Enum
         /// 禁用=3
         /// </summary>
         禁用 = 3
+    }
+    /// <summary>
+    /// 礼物类型
+    /// </summary>
+    public enum TipTypeEnum
+    {
+        /// <summary>
+        /// 其他=0
+        /// </summary>
+        其他 = 0,
+        /// <summary>
+        /// 打赏礼物=1
+        /// </summary>
+        打赏礼物 = 1,
+        /// <summary>
+        /// 房间扣费=2
+        /// </summary>
+        房间扣费 = 2,
+        /// <summary>
+        /// 计时扣费=3
+        /// </summary>
+        计时扣费 = 3
+    }
+    /// <summary>
+    /// 收益类型
+    /// </summary>
+    public enum IncomeTypeEnum
+    {
+        /// <summary>
+        /// 其他=0
+        /// </summary>
+        其他 = 0,
+        /// <summary>
+        /// 礼物=1
+        /// </summary>
+        礼物 = 1,
+        /// <summary>
+        /// 工时=2
+        /// </summary>
+        工时 = 2,
+        /// <summary>
+        /// 手动添加=3
+        /// </summary>
+        手动添加 = 3
     }
 }

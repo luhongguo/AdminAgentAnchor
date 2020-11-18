@@ -104,7 +104,7 @@ namespace Elight.Entity.Sys
         /// 直播状态
         /// </summary>
         [SugarColumn(IsIgnore = true)]
-        public AnchorStatus status { get; set; }
+        public AnchorStatusEnum status { get; set; }
         /// <summary>
         /// 商户名称
         /// </summary>

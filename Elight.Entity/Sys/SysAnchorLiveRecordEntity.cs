@@ -53,6 +53,9 @@ namespace Elight.Entity.Sys
         /// 房间信息
         /// </summary>
         public string roomvalue { get; set; }
-
+        /// <summary>
+        /// 是否有效：0否，1是
+        /// </summary>
+        public int status { get; set; }
     }
 }

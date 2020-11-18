@@ -13,6 +13,7 @@
     <script src="~/Content/jquery/jquery.min.js"></script>
     <script src="~/Content/layui/layui.js"></script>
     <script src="~/Content/dataTime/dataTime.js"></script>
+    <script src="~/Content/framework/js/global.js"></script>
 </head>
 <body>
     <div class="panel animated fadeIn">
@@ -59,6 +60,7 @@
                                 <option value="1">打赏礼物</option>
                                 <option value="2">房间扣费</option>
                                 <option value="3">计时扣费</option>
+                                <option value="10">手动添加</option>
                             </select>
                         </div>
                     </div>
@@ -70,23 +72,18 @@
                     </div>
                 </div>
             </blockquote>
-            <div id="toolbar" class="elight-table-toolbar">
-                <div class="layui-btn-group">
-
-                </div>
-                @*<button id="btnSearch" class="toolbar-search-button layui-btn layui-btn-normal layui-btn-small">
-                        <i class="layui-icon">&#xe615;</i>
-                    </button>
-                    <div class="toolbar-search-input">
-                        <input type="text" id="keyWord" placeholder="主播账号或昵称" autocomplete="off" class="layui-input" style="height:39px">
-                    </div>*@
-            </div>
             <span style="color:red">温馨提示：主播收益=总金额*(100-上级返点-平台返点)%、上级收益=总金额*上级返点、平台收益=总金额*平台返点</span>
             <table id="table" lay-filter="table"></table>
         </div>
     </div>
 </body>
 </html>
+@*工具栏模板：*@
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="add">添加花币</button>
+    </div>
+</script>
 
 <script type="text/javascript">
     layui.use(['laydate', 'form', 'table'], function () {
@@ -97,17 +94,18 @@
         laydate.render({
             elem: '#startTimeReload' //指定元素
             , type: 'date'
-            , value: getNowFormatDate("data", 0) 
+            , value: getNowFormatDate("data", 0)
         });
         laydate.render({
             elem: '#endTimeReload' //指定元素
             , type: 'date'
-            , value: getNowFormatDate("data", 0) 
+            , value: getNowFormatDate("data", 0)
         });
         renderTable(getWhere(1));
         function renderTable(where) {
             table.render({
                 elem: '#table'
+                , toolbar: '#toolbar'
                 , method: "post"
                 , url: '/System/TipIncomeDetail/GetFlowDetailsPage' //数据接口
                 , page: true //开启分页
@@ -146,8 +144,10 @@
                                 return '<span class="layui-badge layui-bg-green">打赏礼物</span>'
                             } else if (d.Type == 2) {
                                 return '<span class="layui-badge layui-bg-orange">房间扣费</span>'
-                            } else {
+                            } else if(d.Type==3){
                                 return ' <span class="layui-badge">计时扣费</span>'
+                            } else {
+                                return ' <span class="layui-badge layui-bg-blue">手动添加</span>'
                             }
                         }
                     }
@@ -190,8 +190,8 @@
         function getWhere(flag) {
             var startTime = $("#startTimeReload").val();
             var endTime = $("#endTimeReload").val();
-            if (flag==1) {
-                return { "parm.where": JSON.stringify({  startTime: startTime, endTime: endTime }) };
+            if (flag == 1) {
+                return { "parm.where": JSON.stringify({ startTime: startTime, endTime: endTime }) };
             }
             var AgentName = $("#AgentName").val();
             var AnchorName = $("#AnchorName").val()
@@ -229,6 +229,33 @@
                 }
             });
         }
+
+        //监听事件
+        table.on('toolbar(table)', function (obj) {
+            switch (obj.event) {
+                case 'add':
+                    btn_add();
+                    break;
+                case 'update':
+                    btn_edit()
+                    break;
+            };
+        });
+        function btn_add() {
+            $.layerOpen({
+                id: "add",
+                title: "添加花币",
+                width: "700px",
+                height: "400px",
+                content: "/System/TipIncomeDetail/Form",
+                yes: function (iBody) {
+                    iBody.find('#btnSubmit').click();
+                    reloadTable(getWhere(2));
+                    //window.location.href = "/System/Shop/Index";
+                }
+            });
+        }
+
 
     });
 </script>

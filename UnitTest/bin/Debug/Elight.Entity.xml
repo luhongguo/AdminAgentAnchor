@@ -24,29 +24,79 @@
             请求。
             </summary>
         </member>
-        <member name="T:Elight.Entity.Enum.AnchorStatus">
+        <member name="T:Elight.Entity.Enum.AnchorStatusEnum">
             <summary>
             直播状态枚取
             </summary>
         </member>
-        <member name="F:Elight.Entity.Enum.AnchorStatus.正常">
+        <member name="F:Elight.Entity.Enum.AnchorStatusEnum.正常">
             <summary>
             正常=0
             </summary>
         </member>
-        <member name="F:Elight.Entity.Enum.AnchorStatus.直播">
+        <member name="F:Elight.Entity.Enum.AnchorStatusEnum.直播">
             <summary>
             直播=1
             </summary>
         </member>
-        <member name="F:Elight.Entity.Enum.AnchorStatus.离线">
+        <member name="F:Elight.Entity.Enum.AnchorStatusEnum.离线">
             <summary>
             离线=2
             </summary>
         </member>
-        <member name="F:Elight.Entity.Enum.AnchorStatus.禁用">
+        <member name="F:Elight.Entity.Enum.AnchorStatusEnum.禁用">
             <summary>
             禁用=3
+            </summary>
+        </member>
+        <member name="T:Elight.Entity.Enum.TipTypeEnum">
+            <summary>
+            礼物类型
+            </summary>
+        </member>
+        <member name="F:Elight.Entity.Enum.TipTypeEnum.其他">
+            <summary>
+            其他=0
+            </summary>
+        </member>
+        <member name="F:Elight.Entity.Enum.TipTypeEnum.打赏礼物">
+            <summary>
+            打赏礼物=1
+            </summary>
+        </member>
+        <member name="F:Elight.Entity.Enum.TipTypeEnum.房间扣费">
+            <summary>
+            房间扣费=2
+            </summary>
+        </member>
+        <member name="F:Elight.Entity.Enum.TipTypeEnum.计时扣费">
+            <summary>
+            计时扣费=3
+            </summary>
+        </member>
+        <member name="T:Elight.Entity.Enum.IncomeTypeEnum">
+            <summary>
+            收益类型
+            </summary>
+        </member>
+        <member name="F:Elight.Entity.Enum.IncomeTypeEnum.其他">
+            <summary>
+            其他=0
+            </summary>
+        </member>
+        <member name="F:Elight.Entity.Enum.IncomeTypeEnum.礼物">
+            <summary>
+            礼物=1
+            </summary>
+        </member>
+        <member name="F:Elight.Entity.Enum.IncomeTypeEnum.工时">
+            <summary>
+            工时=2
+            </summary>
+        </member>
+        <member name="F:Elight.Entity.Enum.IncomeTypeEnum.手动添加">
+            <summary>
+            手动添加=3
             </summary>
         </member>
         <member name="T:Elight.Entity.Model.AddTipDetailModel">
@@ -264,7 +314,7 @@
             总金额
             </summary>
         </member>
-        <member name="P:Elight.Entity.Model.TipIncomeDetailModel.sendtime">
+        <member name="P:Elight.Entity.Model.TipIncomeDetailModel.CreateTime">
             <summary>
             打赏时间
             </summary>
@@ -272,6 +322,11 @@
         <member name="P:Elight.Entity.Model.TipIncomeDetailModel.Type">
             <summary>
             类型1打赏礼物 2;房间扣费 ,3:计时扣费
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Model.TipIncomeDetailModel.incomeType">
+            <summary>
+            收益类型
             </summary>
         </member>
         <member name="T:Elight.Entity.Model.TipTemplateModel">
@@ -799,6 +854,86 @@
             代理平台的主播花币余额
             </summary>
         </member>
+        <member name="T:Elight.Entity.Sys.SysAnchorRebateEntity">
+            <summary>
+            主播返点实例
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorRebateEntity.id">
+            <summary>
+            主键ID
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorRebateEntity.ShopID">
+            <summary>
+            商户ID
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorRebateEntity.AnchorID">
+            <summary>
+            主播ID
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorRebateEntity.parentID">
+            <summary>
+            经纪人ID
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorRebateEntity.TipRebate">
+            <summary>
+            主播礼物返点
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorRebateEntity.HourRebate">
+            <summary>
+            主播工时返点
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorRebateEntity.ModifiedBy">
+            <summary>
+            修改人
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorRebateEntity.CreateTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorRebateEntity.ModifiedTime">
+            <summary>
+            修改时间
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorRebateEntity.LiveTime">
+            <summary>
+            基础直播时长
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorRebateEntity.Salary">
+            <summary>
+            薪资
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorRebateEntity.IsWorkHours">
+            <summary>
+            是否开启工时计算  0否1是
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorRebateEntity.AnchorName">
+            <summary>
+            主播账号
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorRebateEntity.AnchorNickName">
+            <summary>
+            主播昵称
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorRebateEntity.UserAccount">
+            <summary>
+            上级账号
+            </summary>
+        </member>
         <member name="T:Elight.Entity.Sys.SysAnchorLiveRecordEntity">
             <summary>
             直播记录表
@@ -852,6 +987,11 @@
         <member name="P:Elight.Entity.Sys.SysAnchorLiveRecordEntity.roomvalue">
             <summary>
             房间信息
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorLiveRecordEntity.status">
+            <summary>
+            是否有效：0否，1是
             </summary>
         </member>
         <member name="T:Elight.Entity.Sys.SysCategoryEntity">
@@ -946,7 +1086,7 @@
         </member>
         <member name="P:Elight.Entity.Sys.SysIncomeEntity.agent_income">
             <summary>
-            代理收益
+            代理礼物收益
             </summary>
         </member>
         <member name="P:Elight.Entity.Sys.SysIncomeEntity.tip_income">
@@ -962,6 +1102,11 @@
         <member name="P:Elight.Entity.Sys.SysIncomeEntity.Platform_income">
             <summary>
             平台收益
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysIncomeEntity.agentHour_income">
+            <summary>
+            代理工时收益
             </summary>
         </member>
         <member name="T:Elight.Entity.Sys.SysLog">
@@ -1311,12 +1456,12 @@
         </member>
         <member name="P:Elight.Entity.Sys.SysTipIncomeDetailEntity.UserRebate">
             <summary>
-            主播礼物返点
+            主播返点
             </summary>
         </member>
         <member name="P:Elight.Entity.Sys.SysTipIncomeDetailEntity.PlatformRebate">
             <summary>
-            经纪人礼物返点
+            经纪人返点
             </summary>
         </member>
         <member name="P:Elight.Entity.Sys.SysTipIncomeDetailEntity.StartDate">
@@ -1334,9 +1479,64 @@
             是否有效（0否，1是）
             </summary>
         </member>
+        <member name="P:Elight.Entity.Sys.SysTipIncomeDetailEntity.TipType">
+            <summary>
+            礼物类型： 0其他， 1打赏礼物 2;房间扣费 ,3:计时扣费
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysTipIncomeDetailEntity.IncomeType">
+            <summary>
+            收益类型 1礼物，2工时，3手动添加
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysTipIncomeDetailEntity.CreateTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
         <member name="P:Elight.Entity.Sys.SysUser.ShopID">
             <summary>
             商户ID
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysWorkHourIncomeDetailEntity.anchorID">
+            <summary>
+            主播ID
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysWorkHourIncomeDetailEntity.livetime">
+            <summary>
+            直播时长
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysWorkHourIncomeDetailEntity.Salary">
+            <summary>
+            薪资
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysWorkHourIncomeDetailEntity.startTime">
+            <summary>
+            统计开始时间
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysWorkHourIncomeDetailEntity.endTime">
+            <summary>
+            统计结束时间
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysWorkHourIncomeDetailEntity.agentHour_income">
+            <summary>
+            代理工时收益
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysWorkHourIncomeDetailEntity.HourRebate">
+            <summary>
+            工时返点
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysWorkHourIncomeDetailEntity.UserID">
+            <summary>
+            代理id
             </summary>
         </member>
         <member name="T:Elight.Entity.SysAgentWithdrawalRecordEntity">
@@ -1427,71 +1627,6 @@
         <member name="P:Elight.Entity.SysAgentWithdrawalRecordEntity.payType">
             <summary>
             支付类型：1：银行卡，2：支付宝，3：微信
-            </summary>
-        </member>
-        <member name="T:Elight.Entity.SysAnchorRebateEntity">
-            <summary>
-            主播返点实例
-            </summary>
-        </member>
-        <member name="P:Elight.Entity.SysAnchorRebateEntity.id">
-            <summary>
-            主键ID
-            </summary>
-        </member>
-        <member name="P:Elight.Entity.SysAnchorRebateEntity.ShopID">
-            <summary>
-            商户ID
-            </summary>
-        </member>
-        <member name="P:Elight.Entity.SysAnchorRebateEntity.AnchorID">
-            <summary>
-            主播ID
-            </summary>
-        </member>
-        <member name="P:Elight.Entity.SysAnchorRebateEntity.parentID">
-            <summary>
-            经纪人ID
-            </summary>
-        </member>
-        <member name="P:Elight.Entity.SysAnchorRebateEntity.TipRebate">
-            <summary>
-            主播礼物返点
-            </summary>
-        </member>
-        <member name="P:Elight.Entity.SysAnchorRebateEntity.HourRebate">
-            <summary>
-            主播工时返点
-            </summary>
-        </member>
-        <member name="P:Elight.Entity.SysAnchorRebateEntity.ModifiedBy">
-            <summary>
-            修改人
-            </summary>
-        </member>
-        <member name="P:Elight.Entity.SysAnchorRebateEntity.CreateTime">
-            <summary>
-            创建时间
-            </summary>
-        </member>
-        <member name="P:Elight.Entity.SysAnchorRebateEntity.ModifiedTime">
-            <summary>
-            修改时间
-            </summary>
-        </member>
-        <member name="P:Elight.Entity.SysAnchorRebateEntity.AnchorName">
-            <summary>
-            主播账号
-            </summary>
-        </member>
-        <member name="P:Elight.Entity.SysAnchorRebateEntity.AnchorNickName">
-            <summary>
-            主播昵称
-            </summary>
-        </member>
-        <member name="P:Elight.Entity.SysAnchorRebateEntity.UserAccount">
-            <summary>
-            上级账号
             </summary>
         </member>
         <member name="T:Elight.Entity.SysAnchorWithdrawalRecordEntity">

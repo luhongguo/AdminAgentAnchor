@@ -38,7 +38,7 @@ namespace Elight.Logic.Sys
                 }
                 using (var db = GetSqlSugarDB(DbConnType.QPAgentAnchorDB))
                 {
-                    return db.Queryable<SysAnchorRebateEntity, SysAnchor, SysUser,SysShopAnchorEntity>((gt, it, at,ot) => new object[] { JoinType.Left, gt.AnchorID == it.id,
+                    return db.Queryable<SysAnchorRebateEntity, SysAnchor, SysUser, SysShopAnchorEntity>((gt, it, at, ot) => new object[] { JoinType.Left, gt.AnchorID == it.id,
                        JoinType.Left,gt.parentID==at.Id,JoinType.Left,it.id==ot.AnchorID
                      })
                                .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (gt, it) => it.anchorName.Contains(dic["Name"].ToString()) || it.nickName.Contains(dic["Name"].ToString()))
@@ -53,7 +53,10 @@ namespace Elight.Logic.Sys
                                    CreateTime = gt.CreateTime,
                                    AnchorName = it.anchorName,
                                    AnchorNickName = it.nickName,
-                                   UserAccount = at.Account
+                                   UserAccount = at.Account,
+                                   LiveTime = gt.LiveTime,
+                                   Salary = gt.Salary,
+                                   IsWorkHours = gt.IsWorkHours
                                })
                                .ToPageList(parm.page, parm.limit, ref totalCount);
                 }
@@ -82,7 +85,10 @@ namespace Elight.Logic.Sys
                         AnchorNickName = B.nickName,
                         TipRebate = A.TipRebate,
                         HourRebate = A.HourRebate,
-                        UserAccount = C.Account
+                        UserAccount = C.Account,
+                        LiveTime = A.LiveTime,
+                        Salary = A.Salary,
+                        IsWorkHours = A.IsWorkHours
                     }).First();
             }
         }
@@ -125,7 +131,10 @@ namespace Elight.Logic.Sys
                     return db.Updateable(model).UpdateColumns(it => new
                     {
                         it.TipRebate,
-                        it.HourRebate
+                        it.HourRebate,
+                        it.LiveTime,
+                        it.Salary,
+                        it.IsWorkHours
                     }).ExecuteCommand();
                 }
             }

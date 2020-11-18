@@ -53,7 +53,7 @@ namespace Elight.Entity.Model
         /// <summary>
         /// 待处理pending 结算中settlement  已处理settled
         /// </summary>
-        public string status { get; set; }
+        public int status { get; set; }
         /// <summary>
         /// 是否直播 0否 1是
         /// </summary>

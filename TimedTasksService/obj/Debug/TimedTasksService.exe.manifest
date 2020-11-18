@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
-  <asmv1:assemblyIdentity name="TimedTasksService.exe" version="1.0.0.13" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
+  <asmv1:assemblyIdentity name="TimedTasksService.exe" version="1.0.0.14" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
   <application />
   <entryPoint>
     <assemblyIdentity name="TimedTasksService" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
@@ -66,26 +66,26 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Elight.Entity.dll" size="65024">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Elight.Entity.dll" size="68096">
       <assemblyIdentity name="Elight.Entity" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>n9cFjcHco7B4xkwZCuRQGTwRMnCi3Z3IAHh9pmkn8FI=</dsig:DigestValue>
+        <dsig:DigestValue>qqTsl+NUq+cKJTE79JdkYWHidwVuxEPBoS+RMlD5z/s=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Elight.Logic.dll" size="172032">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Elight.Logic.dll" size="174592">
       <assemblyIdentity name="Elight.Logic" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>ppQjsbflXJO/8ktxYYf3cjkcXAYdUKBW+MCjJHTcXMk=</dsig:DigestValue>
+        <dsig:DigestValue>lUK18cULi87ZbtN4VtucjTt/RsqJ7F5xWx3OzNG+Eng=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -97,7 +97,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>Qr8T1nKiG/xwtc1IjaVKcFa6vLx50STMURI2yfvhwZQ=</dsig:DigestValue>
+        <dsig:DigestValue>FyXjLfonVh0o4ReejvRXP2z3HUu6aD7EVf7o/JYoNBw=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -498,14 +498,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="TimedTasksService.exe" size="35344">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="TimedTasksService.exe" size="35856">
       <assemblyIdentity name="TimedTasksService" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>kG/jtGkwffzTIkwkRPHeYGbr2ausIXLcV12vg7YuWek=</dsig:DigestValue>
+        <dsig:DigestValue>qPyK6aNCTtbhuw9omsz8bE+IEnQ+ZFGzOR0C7UTXQ10=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

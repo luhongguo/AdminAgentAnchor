@@ -45,7 +45,7 @@ namespace Elight.Logic.Sys
                     })
                                 .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (it) => it.anchorName.Contains(dic["Name"].ToString()) || it.nickName.Contains(dic["Name"].ToString()))
                                 .WhereIF(dic.ContainsKey("startTime") && !string.IsNullOrEmpty(dic["startTime"].ToString()) && dic.ContainsKey("endTime") && !string.IsNullOrEmpty(dic["endTime"].ToString()), (it) => it.createTime >= Convert.ToDateTime(dic["startTime"]) && it.createTime <= Convert.ToDateTime(dic["endTime"]))
-                                .WhereIF(dic.ContainsKey("Status") && Convert.ToInt32(dic["Status"]) != -1, (it, st) => st.status == (AnchorStatus)Convert.ToInt32(dic["Status"]))
+                                .WhereIF(dic.ContainsKey("Status") && Convert.ToInt32(dic["Status"]) != -1, (it, st) => st.status == (AnchorStatusEnum)Convert.ToInt32(dic["Status"]))
                                 .WhereIF(dic.ContainsKey("isColletCode") && !string.IsNullOrEmpty(dic["isColletCode"].ToString()), (it, st) => it.isColletCode == dic["isColletCode"].ToString())
                                 .WhereIF(dic.ContainsKey("ShopID") && Convert.ToInt32(dic["ShopID"]) != -1, (it, st, ot) => ot.ShopID == Convert.ToInt32(dic["ShopID"]))
                                 .Select((it, st, ot, dt) => new SysAnchor
@@ -461,7 +461,8 @@ namespace Elight.Logic.Sys
                               endtime = it.uptime,
                               duration = it.livetime,
                               islive = SqlFunc.IIF(SqlFunc.IsNullOrEmpty(it.uptime), 1, 0),
-                              flvurl = it.flvurl
+                              flvurl = it.flvurl,
+                              status=it.status
                           })
                           .WithCache(30)
                           .OrderBy(" it.ontime desc")

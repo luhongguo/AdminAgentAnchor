@@ -159,6 +159,15 @@
                             }
                         }
                     }
+                    , {
+                        field: 'status', title: '是否有效', templet: function (d) {
+                            if (d.status == 1) {
+                                return '<span class="label label-success label-sm">是</span>';
+                            } else {
+                                return '<span class="label label-dark label-sm">否</span>';
+                            }
+                        }
+                    }
                     , { field: 'flvurl', title: '推流地址' }
                     , {
                         title: '操作',

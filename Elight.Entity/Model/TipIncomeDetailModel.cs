@@ -1,4 +1,5 @@
-﻿using Elight.Entity.Sys;
+﻿using Elight.Entity.Enum;
+using Elight.Entity.Sys;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -74,7 +75,7 @@ namespace Elight.Entity.Model
         /// 打赏时间
         /// </summary>
         [JsonConverter(typeof(DateTimeToJson))]
-        public DateTime? sendtime { get; set; }
+        public DateTime? CreateTime { get; set; }
         ///// <summary>
         ///// 打赏人
         ///// </summary>
@@ -82,6 +83,10 @@ namespace Elight.Entity.Model
         /// <summary>
         /// 类型1打赏礼物 2;房间扣费 ,3:计时扣费
         /// </summary>
-        public int Type { get; set; }
+        public TipTypeEnum Type { get; set; }
+        /// <summary>
+        /// 收益类型
+        /// </summary>
+        public IncomeTypeEnum incomeType { get; set; }
     }
 }
