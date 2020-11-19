@@ -209,19 +209,29 @@
             余额
             </summary>
         </member>
+        <member name="P:Elight.Entity.Model.IncomeTemplateModel.tip_income">
+            <summary>
+            主播礼物收益
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Model.IncomeTemplateModel.agent_income">
+            <summary>
+            代理礼物收益
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Model.IncomeTemplateModel.Platform_income">
+            <summary>
+            平台礼物收益
+            </summary>
+        </member>
         <member name="P:Elight.Entity.Model.IncomeTemplateModel.hour_income">
             <summary>
             工时收益
             </summary>
         </member>
-        <member name="P:Elight.Entity.Model.IncomeTemplateModel.agent_income">
+        <member name="P:Elight.Entity.Model.IncomeTemplateModel.agentHour_income">
             <summary>
-            代理收益
-            </summary>
-        </member>
-        <member name="P:Elight.Entity.Model.IncomeTemplateModel.tip_income">
-            <summary>
-            打赏收益
+            代理工时收益
             </summary>
         </member>
         <member name="P:Elight.Entity.Model.IncomeTemplateModel.test_income">
@@ -229,14 +239,9 @@
             带玩收益
             </summary>
         </member>
-        <member name="P:Elight.Entity.Model.IncomeTemplateModel.Platform_income">
+        <member name="P:Elight.Entity.Model.IncomeTemplateModel.livetime">
             <summary>
-            平台收益
-            </summary>
-        </member>
-        <member name="P:Elight.Entity.Model.IncomeTemplateModel.isCollet">
-            <summary>
-            是否是采集主播  1 是  0不是
+            直播时长
             </summary>
         </member>
         <member name="T:Elight.Entity.Model.TipIncomeDetailModel">
@@ -1081,7 +1086,7 @@
         </member>
         <member name="P:Elight.Entity.Sys.SysIncomeEntity.hour_income">
             <summary>
-            /工时收益
+            主播工时收益
             </summary>
         </member>
         <member name="P:Elight.Entity.Sys.SysIncomeEntity.agent_income">
@@ -1101,12 +1106,17 @@
         </member>
         <member name="P:Elight.Entity.Sys.SysIncomeEntity.Platform_income">
             <summary>
-            平台收益
+            平台礼物收益
             </summary>
         </member>
         <member name="P:Elight.Entity.Sys.SysIncomeEntity.agentHour_income">
             <summary>
             代理工时收益
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysIncomeEntity.livetime">
+            <summary>
+            直播时长
             </summary>
         </member>
         <member name="T:Elight.Entity.Sys.SysLog">

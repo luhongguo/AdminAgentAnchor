@@ -51,5 +51,9 @@ namespace Elight.Entity.Model
         /// 带玩收益
         /// </summary>
         public decimal test_income { get; set; }
+        /// <summary>
+        /// 直播时长
+        /// </summary>
+        public decimal livetime { get; set; }
     }
 }

@@ -61,19 +61,19 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>snXOiz2PRIFlIjer24PSejx/2eIgokC4i3UUeVjDBto=</dsig:DigestValue>
+        <dsig:DigestValue>lsrwQ0bYogddpb5UPgfXfbQkl41ZIfSWPRg3Zpw4jE4=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Elight.Logic.dll" size="185344">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Elight.Logic.dll" size="185856">
       <assemblyIdentity name="Elight.Logic" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>/X7BjdlKe5MK25P6kqyWgHYrooUQ7bHLYEIv7yZIPvY=</dsig:DigestValue>
+        <dsig:DigestValue>pZfLcVzkKkgJpoc7rkh2AUefq2Efe03j5JBAkL+xPpQ=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -85,7 +85,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>3Z+g5yhsCdEJADnAWbiHTg4DPH2R7UrMV0y1N+0JxB8=</dsig:DigestValue>
+        <dsig:DigestValue>hVTJy5YwHiGyff96HppsJwmAZvfZzcR0qoMcxdBRoqc=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -414,14 +414,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="WorkHourService.exe" size="24080">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="WorkHourService.exe" size="27664">
       <assemblyIdentity name="WorkHourService" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>awArH8czdTieOolFVuCq+HD9K4bdU81KnRBpy1LekA8=</dsig:DigestValue>
+        <dsig:DigestValue>hEJDROvAzvOm6Q3+2adm+wolCA1dgFV7NfiO6UXNpkk=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -437,13 +437,13 @@
       </hash>
     </dependentAssembly>
   </dependency>
-  <file name="WorkHourService.exe.config" size="5018">
+  <file name="WorkHourService.exe.config" size="5083">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>UwDCkr3op7BsZ3nRPU0MCAMvpKHAhH91aV+8HNnoKxw=</dsig:DigestValue>
+      <dsig:DigestValue>PcXOp8mZ997kmf/S94t9eUqhR8qC2PLsuiiuAstcgyg=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>

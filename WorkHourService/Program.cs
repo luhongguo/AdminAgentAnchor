@@ -26,6 +26,22 @@ namespace WorkHourService
                 .WithCronSchedule(WorkHourIncomeByDayJobCron)     //每天凌晨0点10分执行      0 10 0 * * ?                                       
                 .Build();
             sched.ScheduleJob(job, trigger);
+
+            //2、创建第二个任务
+            string AnchorLiveTimeByDayJobCron = ConfigurationManager.AppSettings["AnchorLiveTimeByDayJobCron"];
+            IJobDetail job2 = JobBuilder.Create<AnchorLiveTimeByDayJob>()
+              .WithIdentity("job11", "group11")
+              .Build();
+
+            //3、创建二个触发器
+            //DateTimeOffset runTime = DateBuilder.EvenMinuteDate(DateTimeOffset.UtcNow);
+            ITrigger trigger2 = TriggerBuilder.Create()
+                .WithIdentity("trigger11", "group11")
+                .WithCronSchedule(AnchorLiveTimeByDayJobCron)                    
+                .Build();
+
+            sched.ScheduleJob(job2, trigger2);
+
             //启动任务
             sched.Start();
             Console.Read();

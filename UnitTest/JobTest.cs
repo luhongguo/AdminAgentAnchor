@@ -32,6 +32,14 @@ namespace UnitTest
         {
             WorkHourIncomeService.StatisticsAnchorWorkHourIncome(Convert.ToDateTime("2020-10-11 00:00:00"));
         }
+        /// <summary>
+        /// 测试直播时长
+        /// </summary>
+        [TestMethod]
+        public void TestLiveTime()
+        {
+            WorkHourIncomeService.StatisticsAnchorLiveTime(Convert.ToDateTime("2020-10-11 00:00:00"));
+        }
         [TestMethod]
         public void TestTime()
         {

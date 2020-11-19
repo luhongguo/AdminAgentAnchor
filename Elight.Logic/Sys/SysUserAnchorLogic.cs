@@ -264,6 +264,7 @@ namespace Elight.Logic.Sys
                         Platform_income = SqlFunc.AggregateSum(it.Platform_income),
                         hour_income = SqlFunc.AggregateSum(it.hour_income),
                         agentHour_income = SqlFunc.AggregateSum(it.agentHour_income),
+                        livetime = SqlFunc.AggregateSum(it.livetime),
                     }).First();
                     if (sumModel == null)
                     {
@@ -281,6 +282,7 @@ namespace Elight.Logic.Sys
                               Platform_income = SqlFunc.AggregateSum(it.Platform_income),
                               hour_income = SqlFunc.AggregateSum(it.hour_income),
                               agentHour_income = SqlFunc.AggregateSum(it.agentHour_income),
+                              livetime = SqlFunc.AggregateSum(it.livetime)
                           })
                           .OrderBy(" sum(it.tip_income) desc")
                           .ToPageList(parm.page, parm.limit, ref totalCount);
@@ -576,7 +578,7 @@ namespace Elight.Logic.Sys
                 catch (Exception ex)
                 {
                     db.Ado.RollbackTran();
-                    LogHelper.WriteLogTips("按天统计工时收益异常：开始时间：" + startTime + ",结束时间：" + endTime +"。错误信息："+ ex.Message + "------" + ex.StackTrace);
+                    LogHelper.WriteLogTips("按天统计工时收益异常：开始时间：" + startTime + ",结束时间：" + endTime + "。错误信息：" + ex.Message + "------" + ex.StackTrace);
                     return false;
                 }
             }
