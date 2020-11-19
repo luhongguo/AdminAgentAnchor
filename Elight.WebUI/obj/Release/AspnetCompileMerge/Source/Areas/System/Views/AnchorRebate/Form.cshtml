@@ -2,6 +2,12 @@
     ViewBag.Title = "返点编辑";
     Layout = "~/Views/Shared/_Form.cshtml";
 }
+<style>
+    .layui-form-label {
+        width: 100px
+    }
+</style>
+
 <form id="form" class="layui-form" style="margin-top: 25px">
     @Html.AntiForgeryToken()
     <div class="layui-form-item">
@@ -10,6 +16,14 @@
             <label class="layui-form-label label-required">主播账号</label>
             <div class="layui-input-inline">
                 <input type="text" name="AnchorName" lay-verify="required" placeholder="请输入主播账号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label label-required">上级账号</label>
+            <div class="layui-input-inline">
+                <input type="text" name="UserAccount" lay-verify="required" placeholder="请输入上级账号" autocomplete="off" class="layui-input">
             </div>
         </div>
     </div>
@@ -34,9 +48,26 @@
     </div>
     <div class="layui-form-item">
         <div class="layui-inline">
-            <label class="layui-form-label label-required">上级账号</label>
+            <label class="layui-form-label label-required">直播时长(小时)</label>
             <div class="layui-input-inline">
-                <input type="text" name="UserAccount" lay-verify="required" placeholder="请输入上级账号" autocomplete="off" class="layui-input">
+                <input type="number" name="LiveTime" lay-verify="required" placeholder="请输入直播时长" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label label-required">薪资(花币)</label>
+            <div class="layui-input-inline">
+                <input type="text" name="Salary" lay-verify="required" placeholder="请输入薪资" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label label-required">工时计算</label>
+            <div class="layui-input-inline">
+                <input type="radio" name="IsWorkHours" value="1" title="开">
+                <input type="radio" name="IsWorkHours" value="0" title="关" checked>
             </div>
         </div>
     </div>
@@ -66,12 +97,12 @@
         }
         form.render();
         form.on('submit(add)', function (data) {
-            if (data.field.TipRebate > 100 || data.field.HourRebate>100) {
-                $.layerMsg("返点不能大于100%", "warning",2);
+            if (data.field.TipRebate > 100 || data.field.HourRebate > 100) {
+                $.layerMsg("返点不能大于100%", "warning", 2);
                 return false;
             }
             if (data.field.TipRebate < 0 || data.field.HourRebate < 0) {
-                $.layerMsg("返点不能小于0", "warning",2);
+                $.layerMsg("返点不能小于0", "warning", 2);
                 return false;
             }
             $.formSubmit({

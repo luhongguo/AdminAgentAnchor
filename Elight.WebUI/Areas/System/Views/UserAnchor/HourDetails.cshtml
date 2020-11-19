@@ -74,6 +74,12 @@
     </div>
 </body>
 </html>
+@*工具栏模板：*@
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="WorkHourIncome">核算工时收益</button>
+    </div>
+</script>
 <script type="text/html" id="currentTableBar">
     <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="ReTiming">计算时长</a>
     <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
@@ -134,7 +140,7 @@
                 , where: where
                 , height: 580
                 , totalRow: true
-
+                , toolbar: '#toolbar'
                 , cols: [[ //表头
                     { field: 'seqid', title: 'id', totalRowText: '合计：' }
                     , { field: 'AnchorName', title: '主播账号' }
@@ -160,11 +166,11 @@
                         }
                     }
                     , {
-                        field: 'status', title: '是否有效', templet: function (d) {
+                        field: 'status', title: '收益', templet: function (d) {
                             if (d.status == 1) {
-                                return '<span class="label label-success label-sm">是</span>';
+                                return '<span class="label label-dark label-sm">暂未核算</span>';
                             } else {
-                                return '<span class="label label-dark label-sm">否</span>';
+                                return '<span class="label label-success label-sm">核算成功</span>';
                             }
                         }
                     }
@@ -281,6 +287,30 @@
                 });
             }
         });
+        //监听事件
+        table.on('toolbar(table)', function (obj) {
+            switch (obj.event) {
+                case 'WorkHourIncome':
+                    btn_WorkHourIncome();
+                    break;
+            };
+        });
+        function btn_WorkHourIncome() {
+            var startTime = $("#startTimeReload").val();
+            var endTime = $("#endTimeReload").val();
+            $.layerConfirm({
+                content: "确定核算" + startTime + "---" + endTime + "的工时收益吗？",
+                callback: function () {
+                    $.formSubmit({
+                        url: '/System/UserAnchor/WorkHourIncome',
+                        data: { startTime: startTime, endTime: endTime },
+                        success: function () {
+                            reloadTable({ Name: $("#Name").val() });
+                        }
+                    });
+                }
+            });
+        }
         renderTable(getWhere(1));
     });
 </script>

@@ -75,6 +75,17 @@
                     , { field: 'UserAccount', title: '上级账号' }
                     , { field: 'TipRebate', title: '礼物返点(%)' }
                     , { field: 'HourRebate', title: '工时返点(%)' }
+                    , { field: 'LiveTime', title: '最低直播时长' }
+                    , { field: 'Salary', title: '薪资' }
+                    , {
+                        field: 'IsWorkHours', title: '是否计算工时', templet: function (d) {
+                            if (d.islive == 1) {
+                                return '<span class="label label-success label-sm">是</span>';
+                            } else {
+                                return '<span class="label label-dark label-sm">否</span>';
+                            }
+                        }
+                    }
                     , { field: 'ModifiedBy', title: '修改人' }
                     , { field: 'ModifiedTime', title: '修改时间' }
                     , { field: 'CreateTime', title: '创建时间' }
@@ -147,7 +158,7 @@
                 id: "add",
                 title: "新增返点",
                 width: "500px",
-                height: "400px",
+                height: "550px",
                 content: "/System/AnchorRebate/Form",
                 yes: function (iBody) {
                     iBody.find('#btnSubmit').click();
@@ -167,7 +178,7 @@
                 id: "edit",
                 title: "修改返点",
                 width: "500px",
-                height: "400px",
+                height: "550px",
                 content: "/System/AnchorRebate/Form?primaryKey=" + ids[0].id,
                 yes: function (iBody) {
                     iBody.find('#btnSubmit').click();

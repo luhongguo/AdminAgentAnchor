@@ -41,10 +41,11 @@ namespace TimedTasksService
                             JoinType.Left, at.AnchorID==st.AnchorID,
                             JoinType.Left,st.parentID==ct.UserID
                      })
-                          .Where((at, st, ct) => at.sendtime >= startTime && at.sendtime < time)
+                           .Where((at, st, ct) => at.sendtime >= startTime && at.sendtime < time)
                            .Where((at, st, ct) => at.status == 1)
                            .Select((at, st, ct) => new SysTipIncomeDetailEntity
                            {
+                               id = at.id,
                                ShopID = 0,
                                UserID = ct.UserID,
                                AnchorID = at.AnchorID,
@@ -198,7 +199,7 @@ namespace TimedTasksService
             try
             {
                 string api_url = System.Configuration.ConfigurationManager.AppSettings["tips_data_api"];
-                //时间段内的n条数据，
+                //时间段内的n条数据， 踩过来的数据 按时间升序
                 string result = Utils.HttpGet(api_url + string.Format("?pageIndex={0}&pageSize={1}&startTime={2}&endTime={3}",
                      1, pageSize, startTime, endTime), "Bearer QW5jaG9yX01vtaunclo66M2ak1odXFSSW54YUQ=");
                 //将json转换为JObject  
@@ -213,7 +214,7 @@ namespace TimedTasksService
                                  orderId = p["orderId"].ToString(),
                                  account = p["account"].ToString(),
                                  company = p["company"].ToString(),
-                                 liveId = p["liveId"].ToString(),//推流时间戳
+                                 //liveId = p["liveId"].ToString(),//推流时间戳
                                  aid = int.Parse(p["anchorId"].ToString()),//主播ID
                                  amount = decimal.Parse(p["amount"].ToString()),//总金额
                                  num = int.Parse(p["number"].ToString()),//礼物数量
@@ -267,7 +268,7 @@ namespace TimedTasksService
                         model.confirmtime = item.orderCreateTime;
                         model.totalamount = item.amount;// * (model.ratio / (decimal)100.0); 暂时没有 比率
                         model.Type = item.Type;
-                        model.liveId = item.liveId;
+                        //model.liveId = item.liveId;
                         //添加到集合
                         addList.Add(model);
                         ordernoList.Add(model.orderno);
@@ -284,7 +285,7 @@ namespace TimedTasksService
                         }
                         int count = db.Insertable(addList).ExecuteCommand();
                     }
-                    totalCount = int.Parse(jObj["et"]["count"].ToString());
+                    totalCount = addList.Count;
                     return;
                 }
                 totalCount = 0;

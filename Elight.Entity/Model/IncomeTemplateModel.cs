@@ -28,28 +28,28 @@ namespace Elight.Entity.Model
         /// </summary>
         public decimal Balance { get; set; }
         /// <summary>
+        /// 主播礼物收益
+        /// </summary>
+        public decimal tip_income { get; set; }
+        /// <summary>
+        /// 代理礼物收益
+        /// </summary>
+        public decimal agent_income { get; set; }
+        /// <summary>
+        /// 平台礼物收益
+        /// </summary>
+        public decimal Platform_income { get; set; }
+        /// <summary>
         /// 工时收益
         /// </summary>
         public decimal hour_income { get; set; }
         /// <summary>
-        /// 代理收益
+        /// 代理工时收益
         /// </summary>
-        public decimal agent_income { get; set; }
-        /// <summary>
-        /// 打赏收益
-        /// </summary>
-        public decimal tip_income { get; set; }
+        public decimal agentHour_income { get; set; }
         /// <summary>
         /// 带玩收益
         /// </summary>
         public decimal test_income { get; set; }
-        /// <summary>
-        /// 平台收益
-        /// </summary>
-        public decimal Platform_income { get; set; }
-        /// <summary>
-        /// 是否是采集主播  1 是  0不是
-        /// </summary>
-        public int isCollet { get; set; }
     }
 }

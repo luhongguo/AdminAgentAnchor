@@ -30,7 +30,7 @@ namespace Elight.Entity.Sys
         /// </summary>
         public DateTime opdate { get; set; }
         /// <summary>
-        /// /工时收益
+        /// 主播工时收益
         /// </summary>
         public decimal hour_income { get; set; }
         /// <summary>
@@ -46,12 +46,16 @@ namespace Elight.Entity.Sys
         /// </summary>
         public decimal test_income { get; set; }
         /// <summary>
-        /// 平台收益
+        /// 平台礼物收益
         /// </summary>
         public decimal Platform_income { get; set; }
         /// <summary>
         /// 代理工时收益
         /// </summary>
         public decimal agentHour_income { get; set; }
+        /// <summary>
+        /// 直播时长
+        /// </summary>
+        public decimal livetime { get; set; }
     }
 }

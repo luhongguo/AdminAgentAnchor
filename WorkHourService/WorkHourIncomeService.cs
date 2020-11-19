@@ -18,21 +18,9 @@ namespace WorkHourService
         {
             using (var db = sugarClient.GetSqlSugarDB(sugarClient.DbConnType.QPAnchorRecordDB))
             {
+                var startTime = endTime.AddHours(-24);
                 try
                 {
-                    //List<SysAnchorRebateEntity> anchorRebateList = db.Queryable<SysAnchorRebateEntity>()
-                    //    .Where((it) => it.IsWorkHours == 1)
-                    //    .ToList();
-                    //List<SysAnchorLiveRecordEntity> liveRecordList = db.Queryable<SysAnchorLiveRecordEntity>()
-                    //    .Where((it) => it.ontime >= startTime && it.ontime < time)
-                    //    .GroupBy(it => new { it.aid })
-                    //    .Select(it => new SysAnchorLiveRecordEntity
-                    //    {
-                    //        aid = it.aid,
-                    //        livetime = SqlFunc.AggregateSum(it.livetime)
-                    //    })
-                    //    .ToList();
-                    var startTime = endTime.AddHours(-24);
                     db.Ado.BeginTran();
                     var list = db.Queryable<SysAnchorRebateEntity, SysAnchorLiveRecordEntity>((it, st) => new object[] { JoinType.Left, it.AnchorID == st.aid })
                           .Where((it, st) => it.IsWorkHours == 1 && st.ontime >= startTime && st.ontime < endTime && st.status==1)
@@ -52,6 +40,10 @@ namespace WorkHourService
                               UserIncome=it.Salary*it.HourRebate/100
                           })
                           .ToList();
+                    if (list.Count == 0)
+                    {
+                        return ;
+                    }
                     //批量插入工时收益明细
                     db.Insertable(list).ExecuteCommand();
                     List<int> anchorIDList = list.Select(it => it.AnchorID).ToList();
@@ -69,8 +61,8 @@ namespace WorkHourService
                         var updateModel = incomeList.Where(st => st.AnchorID == it.AnchorID).FirstOrDefault();
                         if (updateModel != null)//存在
                         {
-                            updateModel.hour_income += it.AnchorIncome;
-                            updateModel.agentHour_income += it.UserIncome;
+                            updateModel.hour_income = it.AnchorIncome;
+                            updateModel.agentHour_income = it.UserIncome;
                             updateIncomeList.Add(updateModel);
                         }
                         else
@@ -120,8 +112,8 @@ namespace WorkHourService
                 {
                     db.Ado.RollbackTran();
                     //统一记录日志
-                    Console.WriteLine("按天统计工时收益异常：" + ex.Message + "------" + ex.StackTrace);
-                    LogHelper.WriteLogTips("按天统计工时收益异常：" + ex.Message + "------" + ex.StackTrace);
+                    Console.WriteLine("按天统计工时收益异常：统计开始时间--" + startTime + ",统计结束时间：--"+endTime +"。错误信息："+ ex.Message + "------" + ex.StackTrace);
+                    LogHelper.WriteLogTips("按天统计工时收益异常：统计开始时间--" + startTime + ",统计结束时间：--" + endTime + "。错误信息：" + ex.Message + "------" + ex.StackTrace);
                 }
             }
         }

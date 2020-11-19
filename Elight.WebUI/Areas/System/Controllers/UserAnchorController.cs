@@ -191,6 +191,7 @@ namespace Elight.WebUI.Areas.System.Controllers
                     agent_income = sumModel.agent_income.ToString(),
                     tip_income = sumModel.tip_income.ToString(),
                     Platform_income = sumModel.Platform_income.ToString(),
+                    agentHour_income=sumModel.agentHour_income.ToString()
                 }
             };
             return Content(result.ToJson());
@@ -266,6 +267,17 @@ namespace Elight.WebUI.Areas.System.Controllers
                 }
             };
             return Content(result.ToJson());
+        }
+        /// <summary>
+        /// 核算工时收益
+        /// </summary>
+        /// <param name="primaryKey"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult WorkHourIncome(string startTime, string endTime)
+        {
+            var result= sysUserAnchorLogic.StatisticsAnchorWorkHourIncome(Convert.ToDateTime(startTime), Convert.ToDateTime(endTime));
+            return result ? Success() : Error();
         }
         /// <summary>
         /// 重新计算时长
