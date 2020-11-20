@@ -34,7 +34,7 @@ namespace WorkHourService.Jobs
         /// <returns></returns>
         public Task Execute(IJobExecutionContext context)
         {
-            WorkHourIncomeService.StatisticsAnchorWorkHourIncome(DateTime.Now.Date);
+            WorkHourIncomeService.StatisticsAnchorLiveTime(DateTime.Now.Date);
             return Task.FromResult(0);
         }
     }

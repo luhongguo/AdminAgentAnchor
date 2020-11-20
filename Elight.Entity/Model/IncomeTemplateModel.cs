@@ -55,5 +55,25 @@ namespace Elight.Entity.Model
         /// 直播时长
         /// </summary>
         public decimal livetime { get; set; }
+        /// <summary>
+        /// 最低时长
+        /// </summary>
+        public decimal MinimumLiveTime { get; set; }
+        /// <summary>
+        /// 薪资
+        /// </summary>
+        public decimal Salary { get; set; }
+        /// <summary>
+        /// 是否开启工时计算  0否1是
+        /// </summary>
+        public int IsWorkHours { get; set; }
+        /// <summary>
+        /// 主播礼物返点
+        /// </summary>
+        public decimal TipRebate { get; set; }
+        /// <summary>
+        /// 主播工时返点
+        /// </summary>
+        public decimal HourRebate { get; set; }
     }
 }

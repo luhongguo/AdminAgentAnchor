@@ -251,11 +251,17 @@ namespace Elight.Logic.Sys
                 }
                 using (var db = GetSqlSugarDB(DbConnType.QPAnchorRecordDB))
                 {
-                    var query = db.Queryable<SysIncomeEntity, SysAnchor, SysAnchorInfoEntity, SysShopAnchorEntity>((it, st, at, ot) => new object[] { JoinType.Left, it.AnchorID == st.id, JoinType.Left, st.id == at.aid, JoinType.Left, st.id == ot.AnchorID })
+                    var query = db.Queryable<SysIncomeEntity, SysAnchor, SysAnchorInfoEntity, SysShopAnchorEntity, SysAnchorRebateEntity>((it, st, at, ot, rt) =>
+                     new object[] {
+                        JoinType.Left, it.AnchorID == st.id,
+                        JoinType.Left, st.id == at.aid,
+                        JoinType.Left, st.id == ot.AnchorID,
+                        JoinType.Left, st.id==rt.AnchorID
+                     })
                           .Where((it, st) => it.opdate >= Convert.ToDateTime(dic["startTime"]) && it.opdate < Convert.ToDateTime(dic["endTime"]))
                           .WhereIF(dic.ContainsKey("Name") && !string.IsNullOrEmpty(dic["Name"].ToString()), (it, st) => st.anchorName.Contains(dic["Name"].ToString()) || st.nickName.Contains(dic["Name"].ToString()))
-                           .WhereIF(dic.ContainsKey("isColletCode") && !string.IsNullOrEmpty(dic["isColletCode"].ToString()), (it, st, at) => st.isColletCode == dic["isColletCode"].ToString())
-                            .WhereIF(dic.ContainsKey("ShopID") && Convert.ToInt32(dic["ShopID"]) != -1, (it, st, at, ot) => ot.ShopID == Convert.ToInt32(dic["ShopID"]))
+                          .WhereIF(dic.ContainsKey("isColletCode") && !string.IsNullOrEmpty(dic["isColletCode"].ToString()), (it, st, at) => st.isColletCode == dic["isColletCode"].ToString())
+                          .WhereIF(dic.ContainsKey("ShopID") && Convert.ToInt32(dic["ShopID"]) != -1, (it, st, at, ot) => ot.ShopID == Convert.ToInt32(dic["ShopID"]))
                             ;
                     sumModel = query.Clone().Select((it, st, at) => new IncomeTemplateModel
                     {
@@ -270,8 +276,8 @@ namespace Elight.Logic.Sys
                     {
                         sumModel = new IncomeTemplateModel();
                     }
-                    res = query.GroupBy((it, st, at) => new { it.AnchorID, st.anchorName, st.nickName, at.agentGold })
-                          .Select((it, st, at) => new IncomeTemplateModel
+                    res = query.GroupBy((it, st, at, ot, rt) => new { it.AnchorID, st.anchorName, st.nickName, at.agentGold, rt.IsWorkHours, rt.LiveTime, rt.Salary, rt.TipRebate, rt.HourRebate })
+                          .Select((it, st, at, ot, rt) => new IncomeTemplateModel
                           {
                               AnchorID = it.AnchorID,
                               AnchorName = st.anchorName,
@@ -282,7 +288,12 @@ namespace Elight.Logic.Sys
                               Platform_income = SqlFunc.AggregateSum(it.Platform_income),
                               hour_income = SqlFunc.AggregateSum(it.hour_income),
                               agentHour_income = SqlFunc.AggregateSum(it.agentHour_income),
-                              livetime = SqlFunc.AggregateSum(it.livetime)
+                              livetime = SqlFunc.AggregateSum(it.livetime),
+                              IsWorkHours = rt.IsWorkHours,
+                              MinimumLiveTime = rt.LiveTime,
+                              Salary = rt.Salary,
+                              TipRebate = rt.TipRebate,
+                              HourRebate = rt.HourRebate
                           })
                           .OrderBy(" sum(it.tip_income) desc")
                           .ToPageList(parm.page, parm.limit, ref totalCount);
@@ -611,10 +622,45 @@ namespace Elight.Logic.Sys
         /// <returns></returns>
         public bool UpdateWorkHours(SysAnchorLiveRecordEntity model)
         {
+            var result = 0;
             using (var db = GetSqlSugarDB(DbConnType.QPVideoAnchorDB))
             {
-                return db.Updateable<SysAnchorLiveRecordEntity>().SetColumns(it => new SysAnchorLiveRecordEntity { livetime = (decimal)model.uptime.Subtract(model.ontime).TotalMinutes, ontime = model.ontime, uptime = model.uptime }).Where(it => it.seqid == model.seqid).ExecuteCommand() > 0;
+                try
+                {
+                    db.Ado.BeginTran();
+                    var opdate = model.ontime.Date;
+                    var aid = db.Queryable<SysAnchorLiveRecordEntity>().Where(it => it.seqid == model.seqid).Select(it => it.aid).First();
+                    decimal liveTime = (decimal)model.uptime.Subtract(model.ontime).TotalMinutes;
+                    result = db.Updateable<SysAnchorLiveRecordEntity>().SetColumns(it => new SysAnchorLiveRecordEntity { livetime = liveTime, ontime = model.ontime, uptime = model.uptime }).Where(it => it.seqid == model.seqid).ExecuteCommand();
+                    //判断报表数据是否存在
+                    var incomeModel = db.Queryable<SysIncomeEntity>().Where(it => it.AnchorID == aid && it.opdate == opdate).First();
+                    //获取修改时间当天的 直播时长和
+                    decimal sumLiveTime = db.Queryable<SysAnchorLiveRecordEntity>()
+                                            .Where(it => it.aid == aid && it.ontime >= opdate && it.ontime < opdate.AddDays(1))
+                                            .Select(it => SqlFunc.AggregateSum(it.livetime)).First();
+                    if (incomeModel == null)
+                    {
+                        db.Insertable(new SysIncomeEntity
+                        {
+                            AnchorID = aid,
+                            opdate = opdate,
+                            livetime = sumLiveTime,
+                        }).ExecuteCommand();
+                    }
+                    else
+                    {
+                        incomeModel.livetime = sumLiveTime;
+                        db.Updateable(incomeModel).UpdateColumns(it => new { it.livetime }).ExecuteCommand();
+                    }
+                    db.Ado.CommitTran();
+                }
+                catch (Exception ex)
+                {
+                    db.Ado.RollbackTran();
+                    new LogLogic().Write(Level.Error, "编辑工时记录", ex.Message, ex.StackTrace);
+                }
             }
+            return result > 0;
         }
 
         /// <summary>

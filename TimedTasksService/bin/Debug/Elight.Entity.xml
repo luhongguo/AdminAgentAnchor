@@ -244,6 +244,31 @@
             直播时长
             </summary>
         </member>
+        <member name="P:Elight.Entity.Model.IncomeTemplateModel.MinimumLiveTime">
+            <summary>
+            最低时长
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Model.IncomeTemplateModel.Salary">
+            <summary>
+            薪资
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Model.IncomeTemplateModel.IsWorkHours">
+            <summary>
+            是否开启工时计算  0否1是
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Model.IncomeTemplateModel.TipRebate">
+            <summary>
+            主播礼物返点
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Model.IncomeTemplateModel.HourRebate">
+            <summary>
+            主播工时返点
+            </summary>
+        </member>
         <member name="T:Elight.Entity.Model.TipIncomeDetailModel">
             <summary>
             返回礼物收益详情实体
@@ -911,7 +936,7 @@
         </member>
         <member name="P:Elight.Entity.Sys.SysAnchorRebateEntity.LiveTime">
             <summary>
-            基础直播时长
+            基础直播时长(小时)
             </summary>
         </member>
         <member name="P:Elight.Entity.Sys.SysAnchorRebateEntity.Salary">

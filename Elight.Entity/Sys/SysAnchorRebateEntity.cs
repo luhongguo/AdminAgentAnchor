@@ -54,9 +54,9 @@ namespace Elight.Entity.Sys
         [JsonConverter(typeof(DateTimeToJson))]
         public DateTime? ModifiedTime { get; set; }
         /// <summary>
-        /// 基础直播时长
+        /// 基础直播时长(小时)
         /// </summary>
-        public int LiveTime { get; set; }
+        public decimal LiveTime { get; set; }
         /// <summary>
         /// 薪资
         /// </summary>

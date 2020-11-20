@@ -81,7 +81,7 @@
     </div>
 </script>
 <script type="text/html" id="currentTableBar">
-    <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="ReTiming">计算时长</a>
+    @*<a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="ReTiming">计算时长</a>*@
     <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
 </script>
 <script type="text/javascript">
@@ -305,7 +305,7 @@
                         url: '/System/UserAnchor/WorkHourIncome',
                         data: { startTime: startTime, endTime: endTime },
                         success: function () {
-                            reloadTable({ Name: $("#Name").val() });
+                            reloadTable(getWhere(2));
                         }
                     });
                 }

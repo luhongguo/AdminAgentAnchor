@@ -102,6 +102,19 @@
                     , { field: 'hour_income', title: '主播工时收益(花币)', totalRow: true }
                     , { field: 'agentHour_income', title: '代理工时收益(花币)', totalRow: true }
                     , { field: 'livetime', title: '直播时长', totalRow: true }
+                    , {
+                        field: 'IsWorkHours', title: '是否核算工时', templet: function (d) {
+                            if (d.islive == 1) {
+                                return '<span class="label label-success label-sm">是</span>';
+                            } else {
+                                return '<span class="label label-dark label-sm">否</span>';
+                            }
+                        }
+                    }
+                    , { field: 'MinimumLiveTime', title: '最低直播时长' }
+                    , { field: 'Salary', title: '工时薪资' }
+                    , { field: 'TipRebate', title: '礼物返点(%)' }
+                    , { field: 'HourRebate', title: '工时返点(%)' }
                 ]]
                 , request: {
                     pageName: 'parm.page' //页码的参数名称，默认：page
