@@ -91,20 +91,37 @@
                 , where: where
                 , page: true //开启分页
                 , totalRow: true
+                , toolbar: true 
                 , cols: [[ //表头
                     { field: 'AnchorName', title: '主播账号', totalRowText: "合计：" }
                     , { field: 'NickName', title: '主播昵称' }
                     , { field: 'Balance', title: '余额(花币)'}
-                    , { field: 'tip_income', title: '打赏收益(花币)', totalRow: true }
-                    , { field: 'hour_income', title: '工时收益(花币)', totalRow: true }
-                    , { field: 'agent_income', title: '代理收益(花币)', totalRow: true }
-                    , { field: 'Platform_income', title: '平台收益(花币)', totalRow: true }
+                    , { field: 'tip_income', title: '礼物收益(花币)', totalRow: true }
+                    , { field: 'agent_income', title: '代理礼物收益(花币)', totalRow: true }
+                    , { field: 'Platform_income', title: '平台礼物收益(花币)', totalRow: true }
+                    , { field: 'hour_income', title: '主播工时收益(花币)', totalRow: true }
+                    , { field: 'agentHour_income', title: '代理工时收益(花币)', totalRow: true }
+                    , { field: 'livetime', title: '直播时长', totalRow: true }
+                    , {
+                        field: 'IsWorkHours', title: '是否核算工时', templet: function (d) {
+                            if (d.islive == 1) {
+                                return '<span class="label label-success label-sm">是</span>';
+                            } else {
+                                return '<span class="label label-dark label-sm">否</span>';
+                            }
+                        }
+                    }
+                    , { field: 'MinimumLiveTime', title: '最低直播时长' }
+                    , { field: 'Salary', title: '工时薪资' }
+                    , { field: 'TipRebate', title: '礼物返点(%)' }
+                    , { field: 'HourRebate', title: '工时返点(%)' }
                 ]]
                 , request: {
                     pageName: 'parm.page' //页码的参数名称，默认：page
                     , limitName: 'parm.limit' //每页数据量的参数名，默认：limit
                 }
                 , limit: 10
+                , limits: [10, 20, 40, 100, 500, 1000, 2000, 4000]
                 , id: "report"
             });
         }

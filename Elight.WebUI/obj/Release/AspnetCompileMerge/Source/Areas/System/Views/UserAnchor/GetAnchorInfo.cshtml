@@ -125,6 +125,7 @@
                 , method: "post"
                 , url: '/System/UserAnchor/UserSelectAnchorList' //数据接口
                 , page: true //开启分页
+                , toolbar: true 
                 , cols: [[ //表头
                     { field: 'id', title: '主播ID' }
                     , { field: 'anchorName', title: '主播账号' }
@@ -158,6 +159,7 @@
                     , limitName: 'parm.limit' //每页数据量的参数名，默认：limit
                 }
                 , limit: 10
+                , limits: [10, 20, 40, 100, 500, 1000,2000,4000]
                 , id: "report"
             });
         }

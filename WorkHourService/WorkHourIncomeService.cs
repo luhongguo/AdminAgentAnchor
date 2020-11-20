@@ -42,6 +42,7 @@ namespace WorkHourService
                           .ToList();
                     if (list.Count == 0)
                     {
+                        Console.WriteLine("统计主播的工时收益：统计开始时间--" + startTime + ",统计结束时间：--" + endTime + "，统计数据+" + list.Count);
                         return;
                     }
                     //批量插入工时收益明细
@@ -139,6 +140,7 @@ namespace WorkHourService
                                  .ToList();
                     if (list.Count == 0)
                     {
+                        Console.WriteLine("统计主播的直播时长：统计开始时间--" + startTime + ",统计结束时间：--" + endTime + "，统计数据+" + list.Count);
                         return;
                     }
                     // 处理总收益报表
