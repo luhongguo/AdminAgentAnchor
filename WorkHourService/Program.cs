@@ -34,13 +34,24 @@ namespace WorkHourService
               .Build();
 
             //3、创建二个触发器
-            //DateTimeOffset runTime = DateBuilder.EvenMinuteDate(DateTimeOffset.UtcNow);
             ITrigger trigger2 = TriggerBuilder.Create()
                 .WithIdentity("trigger11", "group11")
                 .WithCronSchedule(AnchorLiveTimeByDayJobCron)                    
-                .Build();
-
+                .Build();          
             sched.ScheduleJob(job2, trigger2);
+
+            ////3、创建三个任务
+            string WorkHourIncomeCrossDayJobCron = ConfigurationManager.AppSettings["WorkHourIncomeCrossDayJobCron"];
+            IJobDetail job3 = JobBuilder.Create<WorkHourIncomeCrossDayJob>()
+              .WithIdentity("job12", "group12")
+              .Build();
+
+            //3、创建三个触发器
+            ITrigger trigger3 = TriggerBuilder.Create()
+                .WithIdentity("trigger12", "group12")
+                .WithCronSchedule(WorkHourIncomeCrossDayJobCron)                                       
+                .Build();
+            sched.ScheduleJob(job3, trigger3);
 
             //启动任务
             sched.Start();

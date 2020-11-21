@@ -35,7 +35,6 @@ namespace TimedTasksService
                     startTime = Convert.ToDateTime(db.Queryable<SysConfigEntity>().Where(it => it.name == key).First().values).AddSeconds(-2);
                     db.Ado.BeginTran();//开启事务
                     List<TipEntity> updateTipList = new List<TipEntity>();//采集礼物的id集合
-                    //处理500条数据
                     List<SysTipIncomeDetailEntity> list = db.Queryable<TipEntity, SysAnchorRebateEntity, SysRebateEntity>((at, st, ct) =>
                      new object[] {
                             JoinType.Left, at.AnchorID==st.AnchorID,
@@ -66,7 +65,7 @@ namespace TimedTasksService
                                it.UserIncome = it.totalamount * it.UserRebate / 100;//经纪人收益
                                it.AnchorIncome = it.totalamount * (100 - it.PlatformRebate - it.UserRebate) / 100;//主播收益
                            })
-                           .ToPageList(1, 500);
+                           .ToList();
                     if (list.Count == 0)
                     {
                         //将查询的结束时间写入 

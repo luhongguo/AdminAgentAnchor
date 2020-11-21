@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
-  <asmv1:assemblyIdentity name="WorkHourService.exe" version="1.0.0.7" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
+  <asmv1:assemblyIdentity name="WorkHourService.exe" version="1.0.0.11" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
   <application />
   <entryPoint>
     <assemblyIdentity name="WorkHourService" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
@@ -61,7 +61,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>h5U7hU6R2q2E+P/3lSCP2DDd59jKcRICa0Rx0bEgVxI=</dsig:DigestValue>
+        <dsig:DigestValue>n3g/P/VkgSx4ur/qm8Ga4pbIpLg3v/eW9/JyxVp+Gao=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -73,7 +73,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>SOv3TTKFCnuC/9mfT8uALqbQRlYc8rseNDwtw5i+3i0=</dsig:DigestValue>
+        <dsig:DigestValue>Zg2wXhX4ZT4qGu8JXpeEXVm0b3z6HM9hDa3nZ73oJL0=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -85,7 +85,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>C4XUeYEx/iQSel5+Ne/AgMpOr0zJbk/pwx2uloBaob8=</dsig:DigestValue>
+        <dsig:DigestValue>3pZcUVc56R3zIUKQBDRyxBIbmIcGUJtS0TB9rIYyNiw=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -414,14 +414,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="WorkHourService.exe" size="27664">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="WorkHourService.exe" size="28176">
       <assemblyIdentity name="WorkHourService" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>TcmE19gMmm8C6SWYKdIYErAwi2asyxaeO75GPBYOl5E=</dsig:DigestValue>
+        <dsig:DigestValue>N7pwYOIvyFIccxyW+pKdu1AhQzQHT3TaKuePIGgdw/M=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -437,13 +437,13 @@
       </hash>
     </dependentAssembly>
   </dependency>
-  <file name="WorkHourService.exe.config" size="5150">
+  <file name="WorkHourService.exe.config" size="5288">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>MCQzm0G/DmjkUThb9VjODTXoFHcN6Z+FWsO2sUBnNcg=</dsig:DigestValue>
+      <dsig:DigestValue>2vcNV1+Jqx0M5u79B0lxFwZ5dKRnexX2tXCPohCUvsw=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>

@@ -73,7 +73,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>h5U7hU6R2q2E+P/3lSCP2DDd59jKcRICa0Rx0bEgVxI=</dsig:DigestValue>
+        <dsig:DigestValue>n3g/P/VkgSx4ur/qm8Ga4pbIpLg3v/eW9/JyxVp+Gao=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -85,7 +85,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>SOv3TTKFCnuC/9mfT8uALqbQRlYc8rseNDwtw5i+3i0=</dsig:DigestValue>
+        <dsig:DigestValue>Zg2wXhX4ZT4qGu8JXpeEXVm0b3z6HM9hDa3nZ73oJL0=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -97,7 +97,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>C4XUeYEx/iQSel5+Ne/AgMpOr0zJbk/pwx2uloBaob8=</dsig:DigestValue>
+        <dsig:DigestValue>3pZcUVc56R3zIUKQBDRyxBIbmIcGUJtS0TB9rIYyNiw=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -505,7 +505,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>4158a/3S/4JQP7Isb/sOJ4u8EoLK0qG7kJV0NUdPBSo=</dsig:DigestValue>
+        <dsig:DigestValue>jxSdBOXzcz2bVmo8cgpthQ1m8f5RsKRFKcOzNrrxh3U=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -542,13 +542,13 @@
       <dsig:DigestValue>PsWlKzj1q0X12D/cMO/0XPWj2vsYj40Jhzeox5n2HOE=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="TimedTasksService.exe.config" size="5127">
+  <file name="TimedTasksService.exe.config" size="5126">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>CCzljTe6FmqprOAI5gqRMaqxcuKTz7INTFBdWzw9aXk=</dsig:DigestValue>
+      <dsig:DigestValue>v7B6/S/tpoCFIfHWnoSjHlLMrO/HoV50n4mYJnv9fCY=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>

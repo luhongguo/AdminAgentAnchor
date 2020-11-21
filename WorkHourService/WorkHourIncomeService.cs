@@ -14,11 +14,10 @@ namespace WorkHourService
         /// <summary>
         /// 统计主播的 工时收益
         /// </summary>
-        public static void StatisticsAnchorWorkHourIncome(DateTime endTime)
+        public static void StatisticsAnchorWorkHourIncome(DateTime startTime,DateTime endTime)
         {
             using (var db = sugarClient.GetSqlSugarDB(sugarClient.DbConnType.QPAnchorRecordDB))
             {
-                var startTime = endTime.AddHours(-24);
                 try
                 {
                     db.Ado.BeginTran();
@@ -42,7 +41,7 @@ namespace WorkHourService
                           .ToList();
                     if (list.Count == 0)
                     {
-                        Console.WriteLine("统计主播的工时收益：统计开始时间--" + startTime + ",统计结束时间：--" + endTime + "，统计数据+" + list.Count);
+                        Console.WriteLine("统计主播的工时收益：执行时间：" + DateTime.Now + ",统计开始时间--" + startTime + ",统计结束时间：--" + endTime + "，统计数据+" + list.Count);
                         return;
                     }
                     //批量插入工时收益明细
@@ -107,13 +106,13 @@ namespace WorkHourService
                         .Where(gt => gt.aid == it.aid).ExecuteCommand();
                     });
                     db.Ado.CommitTran();
-                    Console.WriteLine("统计主播的工时收益：统计开始时间--" + startTime + ",统计结束时间：--" + endTime + "，统计数据+" + list.Count);
+                    Console.WriteLine("统计主播的工时收益：执行时间：" + DateTime.Now + ",统计开始时间--" + startTime + ",统计结束时间：--" + endTime + "，统计数据+" + list.Count);
                 }
                 catch (Exception ex)
                 {
                     db.Ado.RollbackTran();
                     //统一记录日志
-                    Console.WriteLine("按天统计工时收益异常：统计开始时间--" + startTime + ",统计结束时间：--" + endTime + "。错误信息：" + ex.Message + "------" + ex.StackTrace);
+                    Console.WriteLine("按天统计工时收益异常：执行时间：" + DateTime.Now + ",统计开始时间--" + startTime + ",统计结束时间：--" + endTime + "。错误信息：" + ex.Message + "------" + ex.StackTrace);
                     LogHelper.WriteLogTips("按天统计工时收益异常：统计开始时间--" + startTime + ",统计结束时间：--" + endTime + "。错误信息：" + ex.Message + "------" + ex.StackTrace);
                 }
             }
@@ -140,7 +139,7 @@ namespace WorkHourService
                                  .ToList();
                     if (list.Count == 0)
                     {
-                        Console.WriteLine("统计主播的直播时长：统计开始时间--" + startTime + ",统计结束时间：--" + endTime + "，统计数据+" + list.Count);
+                        Console.WriteLine("统计主播的直播时长：执行时间：" + DateTime.Now + ",统计开始时间--" + startTime + ",统计结束时间：--" + endTime + "，统计数据+" + list.Count);
                         return;
                     }
                     // 处理总收益报表
@@ -170,13 +169,13 @@ namespace WorkHourService
                         db.Updateable(updateIncomeList).UpdateColumns(it => new { it.livetime }).ExecuteCommand();
                     }
                     db.Ado.CommitTran();
-                    Console.WriteLine("统计主播的直播时长：统计开始时间--" + startTime + ",统计结束时间：--" + endTime + "，统计数据+" + list.Count);
+                    Console.WriteLine("统计主播的直播时长：执行时间：" + DateTime.Now + ",统计开始时间--" + startTime + ",统计结束时间：--" + endTime + "，统计数据+" + list.Count);
                 }
                 catch (Exception ex)
                 {
                     db.Ado.RollbackTran();
                     //统一记录日志
-                    Console.WriteLine("统计主播的直播时长异常：统计开始时间--" + startTime + ",统计结束时间：--" + endTime + "。错误信息：" + ex.Message + "------" + ex.StackTrace);
+                    Console.WriteLine("统计主播的直播时长异常：执行时间：" + DateTime.Now + ",统计开始时间--" + startTime + ",统计结束时间：--" + endTime + "。错误信息：" + ex.Message + "------" + ex.StackTrace);
                     LogHelper.WriteLogTips("统计主播的直播时长异常：统计开始时间--" + startTime + ",统计结束时间：--" + endTime + "。错误信息：" + ex.Message + "------" + ex.StackTrace);
                 }
             }

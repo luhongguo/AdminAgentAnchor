@@ -57,10 +57,10 @@
       <publishTime>10/20/2020 14:19:16</publishTime>
     </File>
     <File Include="Areas/System/Views/AnchorRebate/Form.cshtml">
-      <publishTime>11/20/2020 10:38:44</publishTime>
+      <publishTime>11/20/2020 15:03:08</publishTime>
     </File>
     <File Include="Areas/System/Views/AnchorRebate/Index.cshtml">
-      <publishTime>11/20/2020 10:31:09</publishTime>
+      <publishTime>11/20/2020 15:04:06</publishTime>
     </File>
     <File Include="Areas/System/Views/AnchorWithdrawalRecord/Form.cshtml">
       <publishTime>10/09/2020 16:57:53</publishTime>
@@ -156,7 +156,7 @@
       <publishTime>11/12/2020 16:44:25</publishTime>
     </File>
     <File Include="Areas/System/Views/TipIncomeDetail/Index.cshtml">
-      <publishTime>11/19/2020 15:29:38</publishTime>
+      <publishTime>11/20/2020 14:43:29</publishTime>
     </File>
     <File Include="Areas/System/Views/User/Detail.cshtml">
       <publishTime>08/17/2020 19:15:32</publishTime>
@@ -171,7 +171,7 @@
       <publishTime>09/23/2020 11:10:36</publishTime>
     </File>
     <File Include="Areas/System/Views/UserAnchor/AnchorReport.cshtml">
-      <publishTime>11/20/2020 10:38:56</publishTime>
+      <publishTime>11/20/2020 15:04:45</publishTime>
     </File>
     <File Include="Areas/System/Views/UserAnchor/Distribution.cshtml">
       <publishTime>09/28/2020 19:01:40</publishTime>
@@ -204,10 +204,10 @@
       <publishTime>09/10/2013 16:29:20</publishTime>
     </File>
     <File Include="bin/App_global.asax.compiled">
-      <publishTime>11/20/2020 11:43:05</publishTime>
+      <publishTime>11/20/2020 15:15:07</publishTime>
     </File>
     <File Include="bin/App_global.asax.dll">
-      <publishTime>11/20/2020 11:43:05</publishTime>
+      <publishTime>11/20/2020 15:15:06</publishTime>
     </File>
     <File Include="bin/BouncyCastle.Crypto.dll">
       <publishTime>03/29/2020 23:08:14</publishTime>
@@ -246,10 +246,10 @@
       <publishTime>11/09/2020 17:07:38</publishTime>
     </File>
     <File Include="bin/Elight.WebUI.dll">
-      <publishTime>11/20/2020 11:42:57</publishTime>
+      <publishTime>11/20/2020 15:15:01</publishTime>
     </File>
     <File Include="bin/Elight.WebUI.pdb">
-      <publishTime>11/20/2020 11:42:57</publishTime>
+      <publishTime>11/20/2020 15:15:01</publishTime>
     </File>
     <File Include="bin/EntityFramework.dll">
       <publishTime>04/16/2020 20:38:42</publishTime>
@@ -5556,7 +5556,7 @@
       <publishTime>08/19/2020 11:43:12</publishTime>
     </File>
     <File Include="PrecompiledApp.config">
-      <publishTime>11/20/2020 11:42:59</publishTime>
+      <publishTime>11/20/2020 15:15:03</publishTime>
     </File>
     <File Include="Scripts/bootstrap.js">
       <publishTime>08/19/2020 11:43:10</publishTime>
