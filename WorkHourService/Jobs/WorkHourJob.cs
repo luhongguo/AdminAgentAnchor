@@ -25,7 +25,7 @@ namespace WorkHourService.Jobs
         }
     }
     /// <summary>
-    /// 统计主播 跨天工时收益   处理跨天数据   中午12点执行前天晚上8点-凌晨3点的数据
+    /// 统计主播 跨天工时收益   处理跨天数据   中午12点执行前天晚上8点-凌晨4点的数据
     /// </summary>
     public class WorkHourIncomeCrossDayJob : IJob
     {
@@ -36,8 +36,11 @@ namespace WorkHourService.Jobs
         /// <returns></returns>
         public Task Execute(IJobExecutionContext context)
         {
-            var endTime = DateTime.Now.Date.AddHours(3);
-            var startTime = endTime.AddHours(-7);
+            //先处理当天0点到6点的数据，在处理昨天跨天直播数据
+            var date = DateTime.Now.Date;
+            WorkHourIncomeService.StatisticsAnchorWorkHourIncome(date, date.AddHours(6));
+            var endTime = date.AddHours(4);
+            var startTime = endTime.AddHours(-8);
             WorkHourIncomeService.StatisticsAnchorWorkHourIncome(startTime, endTime);
             return Task.FromResult(0);
         }
