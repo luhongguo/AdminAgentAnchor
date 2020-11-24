@@ -7,6 +7,7 @@ using Elight.Entity.Enum;
 using Elight.Entity.Sys;
 using Elight.Utility.Log;
 using SqlSugar;
+
 namespace WorkHourService
 {
     public class WorkHourIncomeService
@@ -14,7 +15,7 @@ namespace WorkHourService
         /// <summary>
         /// 统计主播的 工时收益
         /// </summary>
-        public static void StatisticsAnchorWorkHourIncome(DateTime startTime,DateTime endTime)
+        public static void StatisticsAnchorWorkHourIncome(DateTime startTime, DateTime endTime)
         {
             using (var db = sugarClient.GetSqlSugarDB(sugarClient.DbConnType.QPAnchorRecordDB))
             {
@@ -23,8 +24,9 @@ namespace WorkHourService
                     db.Ado.BeginTran();
                     var list = db.Queryable<SysAnchorRebateEntity, SysAnchorLiveRecordEntity>((it, st) => new object[] { JoinType.Left, it.AnchorID == st.aid })
                           .Where((it, st) => it.IsWorkHours == 1 && st.ontime >= startTime && st.ontime < endTime && st.status == 1)
-                          .GroupBy((it, st) => new { it.AnchorID, it.LiveTime, it.Salary, it.HourRebate, it.parentID })
-                          .Having((it, st) => SqlFunc.AggregateSum(st.livetime) >= it.LiveTime * 60)
+                          .GroupBy((it, st) => new { it.AnchorID, it.LiveTime, it.Salary, it.HourRebate, it.parentID, it.GiftAmount })
+                          .Having((it, st) => SqlFunc.AggregateSum(st.livetime) >= it.LiveTime * 60 &&
+                          SqlFunc.Subqueryable<TipEntity>().Where(gt => gt.sendtime >= startTime && gt.sendtime < SqlFunc.AggregateMax(st.uptime).AddMinutes(3)).Where(gt => gt.AnchorID == it.AnchorID).Sum(gt => gt.totalamount) > it.GiftAmount)
                           .Select((it, st) => new SysTipIncomeDetailEntity
                           {
                               ShopID = 0,
@@ -37,8 +39,7 @@ namespace WorkHourService
                               IncomeType = IncomeTypeEnum.工时,
                               AnchorIncome = it.Salary * (100 - it.HourRebate) / 100,
                               UserIncome = it.Salary * it.HourRebate / 100
-                          })
-                          .ToList();
+                          }).ToList();
                     if (list.Count == 0)
                     {
                         Console.WriteLine("统计主播的工时收益：执行时间：" + DateTime.Now + ",统计开始时间--" + startTime + ",统计结束时间：--" + endTime + "，统计数据+" + list.Count);

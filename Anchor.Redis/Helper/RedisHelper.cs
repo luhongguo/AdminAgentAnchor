@@ -968,8 +968,8 @@ namespace Anchor.StackExchange.Redis.Helper
 
         private string AddSysCustomKey(string oldKey)
         {
-            var prefixKey = CustomKey ?? RedisConnectionHelp.SysCustomKey;
-            return prefixKey + oldKey;
+            //var prefixKey = CustomKey ?? RedisConnectionHelp.SysCustomKey;
+            return oldKey;
         }
 
         private T Do<T>(Func<IDatabase, T> func)

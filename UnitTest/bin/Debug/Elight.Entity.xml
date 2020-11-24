@@ -269,6 +269,11 @@
             主播工时返点
             </summary>
         </member>
+        <member name="P:Elight.Entity.Model.IncomeTemplateModel.GiftAmount">
+            <summary>
+            最低礼物金额
+            </summary>
+        </member>
         <member name="T:Elight.Entity.Model.TipIncomeDetailModel">
             <summary>
             返回礼物收益详情实体
@@ -947,6 +952,11 @@
         <member name="P:Elight.Entity.Sys.SysAnchorRebateEntity.IsWorkHours">
             <summary>
             是否开启工时计算  0否1是
+            </summary>
+        </member>
+        <member name="P:Elight.Entity.Sys.SysAnchorRebateEntity.GiftAmount">
+            <summary>
+            礼物金额
             </summary>
         </member>
         <member name="P:Elight.Entity.Sys.SysAnchorRebateEntity.AnchorName">

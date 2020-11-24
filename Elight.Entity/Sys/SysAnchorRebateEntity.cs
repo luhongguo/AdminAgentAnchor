@@ -66,6 +66,10 @@ namespace Elight.Entity.Sys
         /// </summary>
         public int IsWorkHours { get; set; }
         /// <summary>
+        /// 礼物金额
+        /// </summary>
+        public decimal GiftAmount { get; set; }
+        /// <summary>
         /// 主播账号
         /// </summary>
         [SugarColumn(IsIgnore = true)]

@@ -75,5 +75,9 @@ namespace Elight.Entity.Model
         /// 主播工时返点
         /// </summary>
         public decimal HourRebate { get; set; }
+        /// <summary>
+        /// 最低礼物金额
+        /// </summary>
+        public decimal GiftAmount { get; set; }
     }
 }

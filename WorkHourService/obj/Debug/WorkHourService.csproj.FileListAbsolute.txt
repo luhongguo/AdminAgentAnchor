@@ -72,3 +72,16 @@ E:\工作项目\AdminAgentAnchorSolution\WorkHourService\bin\Debug\WorkHourServi
 E:\工作项目\AdminAgentAnchorSolution\WorkHourService\bin\Debug\WorkHourService.application
 E:\工作项目\AdminAgentAnchorSolution\WorkHourService\obj\Debug\WorkHourService.exe.manifest
 E:\工作项目\AdminAgentAnchorSolution\WorkHourService\obj\Debug\WorkHourService.application
+E:\工作项目\AdminAgentAnchorSolution\WorkHourService\bin\Debug\Microsoft.Bcl.AsyncInterfaces.dll
+E:\工作项目\AdminAgentAnchorSolution\WorkHourService\bin\Debug\Pipelines.Sockets.Unofficial.dll
+E:\工作项目\AdminAgentAnchorSolution\WorkHourService\bin\Debug\System.Diagnostics.PerformanceCounter.dll
+E:\工作项目\AdminAgentAnchorSolution\WorkHourService\bin\Debug\System.IO.Pipelines.dll
+E:\工作项目\AdminAgentAnchorSolution\WorkHourService\bin\Debug\System.Threading.Channels.dll
+E:\工作项目\AdminAgentAnchorSolution\WorkHourService\bin\Debug\System.Threading.Tasks.Extensions.dll
+E:\工作项目\AdminAgentAnchorSolution\WorkHourService\bin\Debug\System.ValueTuple.dll
+E:\工作项目\AdminAgentAnchorSolution\WorkHourService\bin\Debug\Microsoft.Bcl.AsyncInterfaces.xml
+E:\工作项目\AdminAgentAnchorSolution\WorkHourService\bin\Debug\Pipelines.Sockets.Unofficial.xml
+E:\工作项目\AdminAgentAnchorSolution\WorkHourService\bin\Debug\System.Diagnostics.PerformanceCounter.xml
+E:\工作项目\AdminAgentAnchorSolution\WorkHourService\bin\Debug\System.IO.Pipelines.xml
+E:\工作项目\AdminAgentAnchorSolution\WorkHourService\bin\Debug\System.Threading.Channels.xml
+E:\工作项目\AdminAgentAnchorSolution\WorkHourService\bin\Debug\System.Threading.Tasks.Extensions.xml

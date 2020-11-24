@@ -30,7 +30,7 @@ namespace UnitTest
         [TestMethod]
         public void TestWorkHour()
         {
-            //WorkHourIncomeService.StatisticsAnchorWorkHourIncome(Convert.ToDateTime("2020-10-11 00:00:00"));
+            WorkHourIncomeService.StatisticsAnchorWorkHourIncome(Convert.ToDateTime("2020-11-23 00:00:00"),Convert.ToDateTime("2020-11-24 00:00:00"));
         }
         /// <summary>
         /// 测试直播时长

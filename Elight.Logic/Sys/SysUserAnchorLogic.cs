@@ -276,7 +276,7 @@ namespace Elight.Logic.Sys
                     {
                         sumModel = new IncomeTemplateModel();
                     }
-                    res = query.GroupBy((it, st, at, ot, rt) => new { it.AnchorID, st.anchorName, st.nickName, at.agentGold, rt.IsWorkHours, rt.LiveTime, rt.Salary, rt.TipRebate, rt.HourRebate })
+                    res = query.GroupBy((it, st, at, ot, rt) => new { it.AnchorID, st.anchorName, st.nickName, at.agentGold, rt.IsWorkHours, rt.LiveTime, rt.Salary, rt.TipRebate, rt.HourRebate,rt.GiftAmount })
                           .Select((it, st, at, ot, rt) => new IncomeTemplateModel
                           {
                               AnchorID = it.AnchorID,
@@ -293,7 +293,8 @@ namespace Elight.Logic.Sys
                               MinimumLiveTime = rt.LiveTime,
                               Salary = rt.Salary,
                               TipRebate = rt.TipRebate,
-                              HourRebate = rt.HourRebate
+                              HourRebate = rt.HourRebate,
+                              GiftAmount=rt.GiftAmount
                           })
                           .OrderBy(" sum(it.tip_income) desc")
                           .ToPageList(parm.page, parm.limit, ref totalCount);
@@ -502,8 +503,9 @@ namespace Elight.Logic.Sys
                     db.Ado.BeginTran();
                     var list = db.Queryable<SysAnchorRebateEntity, SysAnchorLiveRecordEntity>((it, st) => new object[] { JoinType.Left, it.AnchorID == st.aid })
                           .Where((it, st) => it.IsWorkHours == 1 && st.ontime >= startTime && st.ontime < endTime && st.status == 1)
-                          .GroupBy((it, st) => new { it.AnchorID, it.LiveTime, it.Salary, it.HourRebate, it.parentID })
-                          .Having((it, st) => SqlFunc.AggregateSum(st.livetime) >= it.LiveTime * 60)
+                          .GroupBy((it, st) => new { it.AnchorID, it.LiveTime, it.Salary, it.HourRebate, it.parentID,it.GiftAmount })
+                          .Having((it, st) => SqlFunc.AggregateSum(st.livetime) >= it.LiveTime * 60 &&
+                           SqlFunc.Subqueryable<TipEntity>().Where(gt => gt.sendtime >= startTime && gt.sendtime < SqlFunc.AggregateMax(st.uptime).AddMinutes(3)).Where(gt => gt.AnchorID == it.AnchorID).Sum(gt => gt.totalamount) > it.GiftAmount)
                           .Select((it, st) => new SysTipIncomeDetailEntity
                           {
                               ShopID = 0,
@@ -539,8 +541,8 @@ namespace Elight.Logic.Sys
                         var updateModel = incomeList.Where(st => st.AnchorID == it.AnchorID).FirstOrDefault();
                         if (updateModel != null)//存在
                         {
-                            updateModel.hour_income += it.AnchorIncome;
-                            updateModel.agentHour_income += it.UserIncome;
+                            updateModel.hour_income = it.AnchorIncome;
+                            updateModel.agentHour_income = it.UserIncome;
                             updateIncomeList.Add(updateModel);
                         }
                         else
