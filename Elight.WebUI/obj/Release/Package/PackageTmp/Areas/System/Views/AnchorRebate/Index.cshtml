@@ -76,6 +76,7 @@
                     , { field: 'TipRebate', title: '礼物返点(%)' }
                     , { field: 'HourRebate', title: '工时返点(%)' }
                     , { field: 'LiveTime', title: '最低直播时长' }
+                    ,{ field: 'GiftAmount', title: '最低礼物金额' }
                     , { field: 'Salary', title: '工时薪资' }
                     , {
                         field: 'IsWorkHours', title: '工时收益核算', templet: function (d) {
@@ -158,7 +159,7 @@
                 id: "add",
                 title: "新增返点",
                 width: "500px",
-                height: "550px",
+                height: "560px",
                 content: "/System/AnchorRebate/Form",
                 yes: function (iBody) {
                     iBody.find('#btnSubmit').click();
@@ -178,7 +179,7 @@
                 id: "edit",
                 title: "修改返点",
                 width: "500px",
-                height: "550px",
+                height: "560px",
                 content: "/System/AnchorRebate/Form?primaryKey=" + ids[0].id,
                 yes: function (iBody) {
                     iBody.find('#btnSubmit').click();

@@ -73,7 +73,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>43vlK1KyODWJGp1XB19TOjp0qo7BaJo253hURKcAMKE=</dsig:DigestValue>
+        <dsig:DigestValue>wPPTCPb3cq/8MiMuRzrmfyrPz4jKlHn51BGjIorhErg=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -85,7 +85,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>GjyPi3LydnZxJLMHxQtPYiApwXYSl1lNgr7nStptBWQ=</dsig:DigestValue>
+        <dsig:DigestValue>UrOYrTqnUL/sBBetIb+dsocmlKUadYBEGBnhp+FA0bI=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -97,7 +97,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>xwbzdIgPxy5gRMUCnaKXxCuGwWw0QhJ20hInWY4mMh4=</dsig:DigestValue>
+        <dsig:DigestValue>99dgYoA79ohFijyIxAQAk57W7oBMcWZvA8qQMQ+94/c=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -542,13 +542,13 @@
       <dsig:DigestValue>PsWlKzj1q0X12D/cMO/0XPWj2vsYj40Jhzeox5n2HOE=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="TimedTasksService.exe.config" size="5126">
+  <file name="TimedTasksService.exe.config" size="5772">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>YTLc7pj/7m1PRnu9WXGrL2XiciwPfkwj5xpNvW28cP8=</dsig:DigestValue>
+      <dsig:DigestValue>NzaaJDGXpEt85VSAgmY4uCUC0Q0tLP7Y8vID8+xm4Ts=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>

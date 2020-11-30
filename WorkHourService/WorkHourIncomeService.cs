@@ -26,7 +26,7 @@ namespace WorkHourService
                           .Where((it, st) => it.IsWorkHours == 1 && st.ontime >= startTime && st.ontime < endTime && st.status == 1)
                           .GroupBy((it, st) => new { it.AnchorID, it.LiveTime, it.Salary, it.HourRebate, it.parentID, it.GiftAmount })
                           .Having((it, st) => SqlFunc.AggregateSum(st.livetime) >= it.LiveTime * 60 &&
-                          SqlFunc.Subqueryable<TipEntity>().Where(gt => gt.sendtime >= startTime && gt.sendtime < SqlFunc.AggregateMax(st.uptime).AddMinutes(3)).Where(gt => gt.AnchorID == it.AnchorID).Sum(gt => gt.totalamount) > it.GiftAmount)
+                          SqlFunc.Subqueryable<TipEntity>().Where(gt => gt.sendtime >= startTime && gt.sendtime < SqlFunc.AggregateMax(st.uptime).AddMinutes(3)).Where(gt => gt.AnchorID == it.AnchorID).Sum(gt => gt.totalamount) >= it.GiftAmount)
                           .Select((it, st) => new SysTipIncomeDetailEntity
                           {
                               ShopID = 0,
